@@ -20,3 +20,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 //export const analytics = getAnalytics(app);
+
+//https://language-masteryy.firebaseapp.com/__/auth/handler

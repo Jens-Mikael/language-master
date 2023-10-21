@@ -79,7 +79,7 @@ const Navbar = () => {
         <SVG
           src="icons/search.svg"
           className="h-6 w-6 fill-white absolute left-3"
-          loader={<div className="h-6 w-6" />}
+          loader={<div className="h-6 w-6 absolute left-3" />}
         />
         <input
           type="text"
@@ -96,43 +96,47 @@ const Navbar = () => {
             !input && "hidden"
           }`}
           onClick={() => setInput("")}
-          loader={<div className="h-6 w-6" />}
+          loader={<div className="h-6 w-6 absolute right-3" />}
         />
       </div>
       {/* LAST SECTION */}
       <div className="flex gap-8 items-center">
-        <div className="relative h-full flex items-center">
-          <div
-            className="z-20 bg-blue-500 hover:bg-blue-600 transition-all rounded-full p-1 cursor-pointer"
-            onClick={() => setIsNewOpen((prev) => !prev)}
-          >
-            <SVG
-              src="icons/new.svg"
-              className="h-8 w-8 fill-white"
-              loader={<div className="h-8 w-8" />}
-            />
-          </div>
-          {/* DROPDOWN */}
-          {isNewOpen && (
-            <>
-              <div className="flex z-20 absolute top-full right-0 mt-2 border border-white/20 rounded-xl flex-col overflow-hidden bg-[#0A092D]">
-                {newDropdown.map((i) => (
-                  <Link
-                    onClick={() => setIsNewOpen(false)}
-                    href={i.link}
-                    className="hover:bg-white/10 p-2"
-                  >
-                    {i.title}
-                  </Link>
-                ))}
-              </div>
-              <div
-                className="z-10 fixed inset-0"
-                onClick={() => setIsNewOpen(false)}
+        {currentUser && (
+          <div className="relative h-full flex items-center">
+            <div
+              className="z-20 bg-blue-500 hover:bg-blue-600 transition-all rounded-full p-1 cursor-pointer"
+              onClick={() => setIsNewOpen((prev) => !prev)}
+            >
+              <SVG
+                src="icons/new.svg"
+                className="h-8 w-8 fill-white"
+                loader={<div className="h-8 w-8" />}
               />
-            </>
-          )}
-        </div>
+            </div>
+            {/* DROPDOWN */}
+            {isNewOpen && (
+              <>
+                <div className="flex z-20 absolute top-full right-0 mt-2 border border-white/20 rounded-xl flex-col overflow-hidden bg-[#0A092D]">
+                  {newDropdown.map((i) => (
+                    <Link
+                      onClick={() => {
+                        setIsNewOpen(false);
+                      }}
+                      href={i.link}
+                      className="hover:bg-white/10 p-2"
+                    >
+                      {i.title}
+                    </Link>
+                  ))}
+                </div>
+                <div
+                  className="z-10 fixed inset-0"
+                  onClick={() => setIsNewOpen(false)}
+                />
+              </>
+            )}
+          </div>
+        )}
         <div className="flex gap-3">
           {currentUser ? (
             <>

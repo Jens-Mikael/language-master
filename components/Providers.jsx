@@ -1,7 +1,6 @@
 "use client";
 import { ThemeProvider } from "next-themes";
 import { QueryClientProvider, QueryClient } from "react-query";
-
 import { useEffect, useState } from "react";
 import { AuthProvider } from "@/firebase/context/AuthContext";
 
