@@ -26,10 +26,10 @@ const NewStudySetCard = ({ obj, dbIndex, index, studySetId }) => {
       {/* HEADER */}
       <div className="border-b-2 border-black/30 p-5 flex justify-between">
         <div className="font-bold text-lg">{index + 1}</div>
-        <button onClick={() => removeCard()} className="hover:scale-110">
+        <button onClick={() => removeCard()} className="hover:scale-110 group">
           <SVG
             src="icons/trash.svg"
-            className="h-6 w-6 fill-white"
+            className="h-6 w-6 fill-white group-hover:fill-indigo-500 transition"
             loader={<div className="h-6 w-6" />}
           />
         </button>

@@ -12,18 +12,6 @@ const newDropdown = [
     title: "Study set",
     link: "/create-set",
   },
-  {
-    title: "Study set",
-    link: "/create-set",
-  },
-  {
-    title: "Study set",
-    link: "/create-set",
-  },
-  {
-    title: "Study set",
-    link: "/create-set",
-  },
 ];
 
 const Navbar = () => {
@@ -105,7 +93,7 @@ const Navbar = () => {
           currentUser ? (
             <div className="relative h-full flex items-center gap-5">
               <div
-                className="z-20 bg-blue-500 hover:bg-blue-600 transition-all rounded-full p-1 cursor-pointer"
+                className="z-20 bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition-all rounded-full p-1 cursor-pointer"
                 onClick={() => setIsNewOpen((prev) => !prev)}
               >
                 <SVG

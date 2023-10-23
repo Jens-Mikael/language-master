@@ -31,7 +31,9 @@ const CreateSet = ({ uid }) => {
             <div className="text-2xl font-bold">Create a new study set</div>
             <div className="text-sm">Saving...</div>
           </div>
-          <div>Create</div>
+          <button className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-3 py-2 rounded-lg">
+            Create
+          </button>
         </div>
 
         {/* SET DETAILS */}
@@ -71,9 +73,9 @@ const CreateSet = ({ uid }) => {
           ))}
           <button
             onClick={() => addStudyCard()}
-            className="w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
+            className="group w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
           >
-            <div className="border-b-4 border-sky-400 pb-2 font-bold text-xl ">
+            <div className="border-b-4 border-blue-500 pb-2 font-bold text-xl group-hover:border-indigo-600 transition">
               + New Card
             </div>
             <div className="absolute left-10 font-bold text-xl">
