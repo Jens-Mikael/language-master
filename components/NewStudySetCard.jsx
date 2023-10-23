@@ -1,13 +1,38 @@
 "use client";
 import { useState } from "react";
 import InputField from "./InputField";
+import SVG from "react-inlinesvg";
+import { useMutation, useQueryClient } from "react-query";
+import { mutateStudyCardAmount } from "@/firebase/hooks";
 
-const NewStudySetCard = ({ obj, setArr, index }) => {
+const NewStudySetCard = ({ obj, dbIndex, index, studySetId }) => {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: removeCard } = useMutation(
+    "studyDraft",
+    () => mutateStudyCardAmount("remove", dbIndex, studySetId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("studyDraft");
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    }
+  );
+
   return (
     <div className="w-full bg-white/10 rounded-xl">
       {/* HEADER */}
-      <div className="border-b-2 border-black/30 p-5">
+      <div className="border-b-2 border-black/30 p-5 flex justify-between">
         <div className="font-bold text-lg">{index + 1}</div>
+        <button onClick={() => removeCard()} className="hover:scale-110">
+          <SVG
+            src="icons/trash.svg"
+            className="h-6 w-6 fill-white"
+            loader={<div className="h-6 w-6" />}
+          />
+        </button>
       </div>
 
       {/* MAIN CONTENT */}
@@ -15,24 +40,24 @@ const NewStudySetCard = ({ obj, setArr, index }) => {
         {/* TERM */}
         <div className="grow">
           <InputField
-            value={obj}
-            setValue={setArr}
+            value={obj.term}
             type="term"
-            index={index}
+            dbIndex={dbIndex}
             label="TERM"
             placeholder="Enter something..."
+            studySetId={studySetId}
           />
         </div>
 
         {/* DEF */}
         <div className="grow">
           <InputField
-            value={obj}
-            setValue={setArr}
-            index={index}
+            value={obj.definition}
+            dbIndex={dbIndex}
             type="definition"
             label="DEFINITION"
             placeholder="Enter something..."
+            studySetId={studySetId}
           />
         </div>
       </div>

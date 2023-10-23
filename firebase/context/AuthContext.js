@@ -22,7 +22,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [uid, setUid] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   //AUTH METHODS
 
@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user) setUid(user.uid);
-      setLoading(false);
+      setIsLoading(false);
     });
     return;
   }, []);
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     signUp,
     logIn,
     logout,
-    loading,
+    isLoading,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -4,12 +4,20 @@ import { mutateStudySet } from "@/firebase/hooks";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
-const InputField = ({ label, placeholder, value, setValue, type, index }) => {
+const InputField = ({
+  label,
+  placeholder,
+  type,
+  value,
+  dbIndex,
+  studySetId,
+}) => {
   const [focus, setFocus] = useState(false);
+  const [input, setInput] = useState(value);
   const queryClient = useQueryClient();
 
-  const { mutate: editStudyDraft } = useMutation(
-    mutateStudySet(type, index, value),
+  const { mutate: mutateStudyDraft } = useMutation(
+    (input) => mutateStudySet(type, dbIndex, input, studySetId),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("studyDraft");
@@ -25,25 +33,17 @@ const InputField = ({ label, placeholder, value, setValue, type, index }) => {
           rows="1"
           placeholder={placeholder}
           onFocus={() => setFocus(true)}
-          onBlur={() => {
+          onBlur={(e) => {
             setFocus(false);
+            mutateStudyDraft(e.target.value);
           }}
-          value={value}
+          value={input}
           onChange={(e) => {
             const textarea = e.target;
             textarea.style.height = "auto";
             const scrollHeight = textarea.scrollHeight;
             textarea.style.height = `${scrollHeight}px`;
-            //if studycard arr
-            if (type) {
-              setValue((prev) => {
-                prev[index][type] = textarea.value;
-                return prev;
-              });
-            } // if default input
-            else {
-              setValue(textarea.value);
-            }
+            setInput(textarea.value);
           }}
         />
         <div className="h-1">

@@ -1,27 +1,26 @@
 "use client";
 import InputField from "@/components/InputField";
 import NewStudySetCard from "@/components/NewStudySetCard";
-import { getStudyDraft } from "@/firebase/hooks";
-import { useQuery } from "react-query";
+import { getStudyDraft, mutateStudyCardAmount } from "@/firebase/hooks";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useState } from "react";
 
 const CreateSet = ({ uid }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [studyArr, setStudyArr] = useState([
-    {
-      term: "",
-      definition: "",
-    },
-    {
-      term: "",
-      definition: "",
-    },
-  ]);
-
   const { data, isLoading, isError, error } = useQuery("studyDraft", () =>
     getStudyDraft(uid)
   );
+  const queryClient = useQueryClient();
+  const { mutateAsync: addStudyCard } = useMutation(
+    () => mutateStudyCardAmount("add", max <= 0 ? 1 : max + 1, data.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("studyDraft");
+      },
+    }
+  );
+
+  if (isLoading) return <div>Loading</div>;
+  const max = Math.max(...Object.keys(data.data.body));
 
   return (
     <div className="min-h-full flex justify-center px-10 py-14">
@@ -42,8 +41,9 @@ const CreateSet = ({ uid }) => {
               label="TITLE"
               placeholder="Enter a title..."
               id="createSetTitle"
-              value={title}
-              setValue={setTitle}
+              value={data.data.head.title}
+              studySetId={data.id}
+              type="title"
             />
           </div>
           <div>
@@ -51,35 +51,35 @@ const CreateSet = ({ uid }) => {
               label="DESCRIPTION"
               placeholder="Add a description..."
               id="createSetDesc"
-              value={description}
-              setValue={setDescription}
+              value={data.data.head.description}
+              studySetId={data.id}
+              type="description"
             />
           </div>
         </div>
 
         {/* CARDS */}
         <div className="flex flex-col gap-10">
-          {studyArr.map((obj, i) => (
+          {Object.keys(data.data.body).map((key, i) => (
             <NewStudySetCard
-              obj={obj[i]}
-              setArr={setStudyArr}
+              obj={data.data.body[key]}
+              dbIndex={key}
               index={i}
               key={i}
+              studySetId={data.id}
             />
           ))}
-          <div
-            onClick={() =>
-              setStudyArr((prev) => [...prev, { term: "", definition: "" }])
-            }
+          <button
+            onClick={() => addStudyCard()}
             className="w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
           >
             <div className="border-b-4 border-sky-400 pb-2 font-bold text-xl ">
               + New Card
             </div>
             <div className="absolute left-10 font-bold text-xl">
-              {studyArr.length + 1}
+              {Object.keys(data.data.body).length + 1}
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </div>

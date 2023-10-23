@@ -32,7 +32,7 @@ const Navbar = () => {
   const [input, setInput] = useState("");
   const [authType, setAuthType] = useState("");
 
-  const { currentUser } = useAuth();
+  const { currentUser, isLoading } = useAuth();
 
   const pathName = usePathname();
 
@@ -101,84 +101,83 @@ const Navbar = () => {
       </div>
       {/* LAST SECTION */}
       <div className="flex gap-8 items-center">
-        {currentUser && (
-          <div className="relative h-full flex items-center">
-            <div
-              className="z-20 bg-blue-500 hover:bg-blue-600 transition-all rounded-full p-1 cursor-pointer"
-              onClick={() => setIsNewOpen((prev) => !prev)}
-            >
-              <SVG
-                src="icons/new.svg"
-                className="h-8 w-8 fill-white"
-                loader={<div className="h-8 w-8" />}
-              />
-            </div>
-            {/* DROPDOWN */}
-            {isNewOpen && (
-              <>
-                <div className="flex z-20 absolute top-full right-0 mt-2 border border-white/20 rounded-xl flex-col overflow-hidden bg-[#0A092D]">
-                  {newDropdown.map((i) => (
-                    <Link
-                      onClick={() => {
-                        setIsNewOpen(false);
-                      }}
-                      href={i.link}
-                      className="hover:bg-white/10 p-2"
-                    >
-                      {i.title}
-                    </Link>
-                  ))}
-                </div>
-                <div
-                  className="z-10 fixed inset-0"
-                  onClick={() => setIsNewOpen(false)}
-                />
-              </>
-            )}
-          </div>
-        )}
-        <div className="flex gap-3">
-          {currentUser ? (
-            <>
-              <div>Notifications</div>
-              <div>Profile</div>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => {
-                  setIsAuthOpen(true);
-                  setAuthType("logIn");
-                }}
-                className="border border-white/20 px-2 py-1 rounded-lg"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => {
-                  setIsAuthOpen(true);
-                  setAuthType("signUp");
-                }}
-                className="bg-cyan-400 hover:bg-opacity-80 rounded-lg px-2 py-1"
-              >
-                Sign up
-              </button>
+        {!isLoading ? (
+          currentUser ? (
+            <div className="relative h-full flex items-center gap-5">
               <div
-                className={`absolute inset-0 z-40 bg-black/80 transition duration-500 ${
-                  isAuthOpen
-                    ? " translate-y-0 opacity-100"
-                    : "-translate-y-full opacity-0"
-                }`}
+                className="z-20 bg-blue-500 hover:bg-blue-600 transition-all rounded-full p-1 cursor-pointer"
+                onClick={() => setIsNewOpen((prev) => !prev)}
               >
-                <AuthPage
-                  setIsAuthOpen={setIsAuthOpen}
-                  authType={authType}
-                  setAuthType={setAuthType}
+                <SVG
+                  src="icons/new.svg"
+                  className="h-8 w-8 fill-white"
+                  loader={<div className="h-8 w-8" />}
                 />
               </div>
+              <div>Profile</div>
+              {/* DROPDOWN */}
+              {isNewOpen && (
+                <>
+                  <div className="flex z-20 absolute top-full right-0 mt-2 border border-white/20 rounded-xl flex-col overflow-hidden bg-[#0A092D]">
+                    {newDropdown.map((i) => (
+                      <Link
+                        onClick={() => {
+                          setIsNewOpen(false);
+                        }}
+                        href={i.link}
+                        className="hover:bg-white/10 p-2"
+                      >
+                        {i.title}
+                      </Link>
+                    ))}
+                  </div>
+                  <div
+                    className="z-10 fixed inset-0"
+                    onClick={() => setIsNewOpen(false)}
+                  />
+                </>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setIsAuthOpen(true);
+                    setAuthType("logIn");
+                  }}
+                  className="border border-white/20 px-2 py-1 rounded-lg"
+                >
+                  Log in
+                </button>
+                <button
+                  onClick={() => {
+                    setIsAuthOpen(true);
+                    setAuthType("signUp");
+                  }}
+                  className="bg-cyan-400 hover:bg-opacity-80 rounded-lg px-2 py-1"
+                >
+                  Sign up
+                </button>
+                <div
+                  className={`absolute inset-0 z-40 bg-black/80 transition duration-500 ${
+                    isAuthOpen
+                      ? " translate-y-0 opacity-100"
+                      : "-translate-y-full opacity-0"
+                  }`}
+                >
+                  <AuthPage
+                    setIsAuthOpen={setIsAuthOpen}
+                    authType={authType}
+                    setAuthType={setAuthType}
+                  />
+                </div>
+              </div>
             </>
-          )}
-        </div>
+          )
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
