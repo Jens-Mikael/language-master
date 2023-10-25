@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/firebase/context/AuthContext";
 import AuthPage from "./AuthPage";
+import LibraryDropdown from "./LibraryDropdown";
 
 const newDropdown = [
   {
@@ -17,6 +18,7 @@ const newDropdown = [
 const Navbar = () => {
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [input, setInput] = useState("");
   const [authType, setAuthType] = useState("");
 
@@ -43,29 +45,42 @@ const Navbar = () => {
           />
         </Link>
 
-        <Link
-          href="/library"
-          className="relative h-full items-center flex group"
-        >
-          <div className="flex gap-2">
-            Your Library
-            <SVG
-              src="icons/arrow-down.svg"
-              className="h-6 w-6 fill-white"
-              loader={<div className="h-6 w-6" />}
+        <div className="h-full relative">
+          <button
+            className=" h-full items-center flex group"
+            onClick={() => setIsLibraryOpen((prev) => !prev)}
+          >
+            <div className="flex gap-2">
+              Your Library
+              <SVG
+                src="/icons/arrow-down.svg"
+                className={`h-6 w-6 fill-white transition ${
+                  isLibraryOpen ? "rotate-180" : "rotate-0"
+                }`}
+                loader={<div className="h-6 w-6" />}
+              />
+            </div>
+            <div
+              className={`${
+                pathName === "/library" ? "h-1" : "group-hover:h-1 h-0"
+              } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
             />
-          </div>
-          <div
-            className={`${
-              pathName === "/library" ? "h-1" : "group-hover:h-1 h-0"
-            } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
-          />
-        </Link>
+          </button>
+          {isLibraryOpen && (
+            <>
+              <LibraryDropdown setIsLibraryOpen={setIsLibraryOpen} />
+              <div
+                className="z-10 fixed inset-0"
+                onClick={() => setIsLibraryOpen(false)}
+              />
+            </>
+          )}
+        </div>
       </div>
       {/* SEARCH BAR */}
       <div className="grow min-w-[200px] items-center justify-center flex text-sm relative">
         <SVG
-          src="icons/search.svg"
+          src="/icons/search.svg"
           className="h-6 w-6 fill-white absolute left-3"
           loader={<div className="h-6 w-6 absolute left-3" />}
         />
@@ -79,7 +94,7 @@ const Navbar = () => {
           }`}
         />
         <SVG
-          src="icons/remove.svg"
+          src="/icons/remove.svg"
           className={`h-6 w-6 fill-white absolute right-3 cursor-pointer ${
             !input && "hidden"
           }`}
@@ -97,7 +112,7 @@ const Navbar = () => {
                 onClick={() => setIsNewOpen((prev) => !prev)}
               >
                 <SVG
-                  src="icons/new.svg"
+                  src="/icons/new.svg"
                   className="h-8 w-8 fill-white"
                   loader={<div className="h-8 w-8" />}
                 />

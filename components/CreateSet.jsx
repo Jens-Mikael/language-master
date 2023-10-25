@@ -1,17 +1,30 @@
 "use client";
 import InputField from "@/components/InputField";
 import NewStudySetCard from "@/components/NewStudySetCard";
-import { getStudyDraft, mutateStudyCardAmount } from "@/firebase/hooks";
+import {
+  getStudyDraft,
+  mutateStudyCardAmount,
+  submitStudySet,
+} from "@/firebase/hooks";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useState } from "react";
 
 const CreateSet = ({ uid }) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const { data, isLoading, isError, error } = useQuery("studyDraft", () =>
     getStudyDraft(uid)
   );
-  const queryClient = useQueryClient();
   const { mutateAsync: addStudyCard } = useMutation(
     () => mutateStudyCardAmount("add", max <= 0 ? 1 : max + 1, data.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("studyDraft");
+      },
+    }
+  );
+  const { mutateAsync: submitSet } = useMutation(
+    () => submitStudySet(data.id, uid),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("studyDraft");
@@ -31,7 +44,15 @@ const CreateSet = ({ uid }) => {
             <div className="text-2xl font-bold">Create a new study set</div>
             <div className="text-sm">Saving...</div>
           </div>
-          <button className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-3 py-2 rounded-lg">
+          <button
+            onClick={() => {
+              if (data.data.head.title !== "") {
+                router.push("/");
+                submitSet();
+              }
+            }}
+            className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-3 py-2 rounded-lg"
+          >
             Create
           </button>
         </div>

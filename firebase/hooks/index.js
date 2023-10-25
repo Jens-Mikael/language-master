@@ -6,6 +6,8 @@ import {
   addDoc,
   setDoc,
   deleteField,
+  writeBatch,
+  arrayUnion,
 } from "firebase/firestore";
 
 export const isUsernameAvailable = async (username) => {
@@ -59,7 +61,6 @@ const createStudyDraft = async (uid) => {
       {
         studySets: {
           draft: draftId,
-          created: [],
         },
       },
       { merge: true }
@@ -85,12 +86,39 @@ export const getStudyDraft = async (uid) => {
   }
 };
 
-export const mutateStudySet = async (type, index, value, id) => {
+export const getLibrarySets = async (uid) => {
+  const userDocRef = doc(firestore, `users/${uid}`);
+
+  //get user created sets
+  const docSnap = await getDoc(userDocRef);
+  const createdSets = docSnap.data().studySets.created;
+
+  //loop through created sets
+  const dataArr = [];
+  for (let i = 0; i < createdSets.length; i++) {
+    const studySetRef = doc(firestore, `studySets/${createdSets[i]}`);
+    const studyDocSnap = await getDoc(studySetRef);
+    dataArr.unshift({
+      title: studyDocSnap.data().head.title,
+      id: createdSets[i],
+      creator: studyDocSnap.data().creator,
+    });
+  }
+  return dataArr;
+};
+
+export const getStudySet = async (id) => {
+  const docRef = doc(firestore, `studySets/${id}`);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
+};
+
+export const mutateStudySet = (type, index, value, id) => {
   const docRef = doc(firestore, `studySets/${id}`);
 
   //body
   if (type === "term" || type === "definition") {
-    await setDoc(
+    return setDoc(
       docRef,
       {
         body: {
@@ -102,7 +130,7 @@ export const mutateStudySet = async (type, index, value, id) => {
       { merge: true }
     );
   } else if (type === "title" || type === "description") {
-    await setDoc(
+    return setDoc(
       docRef,
       {
         head: {
@@ -119,10 +147,10 @@ export const mutateStudySet = async (type, index, value, id) => {
   return;
 };
 
-export const mutateStudyCardAmount = async (type, index, id) => {
+export const mutateStudyCardAmount = (type, index, id) => {
   const docRef = doc(firestore, `studySets/${id}`);
   if (type === "add") {
-    return await setDoc(
+    return setDoc(
       docRef,
       {
         body: {
@@ -137,7 +165,7 @@ export const mutateStudyCardAmount = async (type, index, id) => {
   } else if (type === "remove") {
     console.log("hook ran");
     console.log(index);
-    await setDoc(
+    return setDoc(
       docRef,
       {
         body: {
@@ -146,9 +174,23 @@ export const mutateStudyCardAmount = async (type, index, id) => {
       },
       { merge: true }
     );
-    return;
   } else {
     console.log("else ran in mutateCardAmount");
   }
   console.log("mutation ran in cardAmount");
+  return;
+};
+
+export const submitStudySet = (id, uid) => {
+  const userDocRef = doc(firestore, `users/${uid}`);
+  return setDoc(
+    userDocRef,
+    {
+      studySets: {
+        draft: "",
+        created: arrayUnion(id),
+      },
+    },
+    { merge: true }
+  );
 };
