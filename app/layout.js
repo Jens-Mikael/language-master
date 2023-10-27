@@ -16,7 +16,6 @@ export default function RootLayout({ children }) {
           <div className="bg-[#0A092D] min-h-screen">
             <div className="">
               <Navbar />
-
               {children}
             </div>
           </div>

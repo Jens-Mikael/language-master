@@ -19,7 +19,7 @@ const Navbar = () => {
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("")
   const [authType, setAuthType] = useState("");
 
   const { currentUser, isLoading } = useAuth();
