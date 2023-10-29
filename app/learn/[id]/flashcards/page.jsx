@@ -28,7 +28,7 @@ const LearnFlashcards = () => {
   const [currentKey, setCurrentKey] = useState();
   const [count, setCount] = useState(0);
   const [success, setSuccess] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState("");
   const pathname = useParams();
   const { data, isLoading, error } = useQuery(pathname.id, () =>
     getStudySet(pathname.id)
@@ -44,11 +44,11 @@ const LearnFlashcards = () => {
     if (keys) {
       setCurrentKey(keys[count]);
       setProgress(
-        Math.round(
+        `${Math.round(
           ((Object.keys(data.body).length - keys.length) /
             Object.keys(data.body).length) *
             100
-        ).toString()
+        ).toString()}%`
       );
       if (keys.length <= count) {
         setCount(0);
@@ -70,14 +70,13 @@ const LearnFlashcards = () => {
 
   if (isLoading || !keys) return <div className="">loading...</div>;
   if (error) return <div>erro</div>;
-
-  console.log(keys);
-
+  console.log(progress);
   return (
     <div className="h-full">
       {/* PROGRESS BAR */}
       <div
-        className={`h-0.5 bg-blue-500 w-[${progress}%] transition-[width] duration-1000`}
+        style={{ width: progress }}
+        className={`h-0.5 bg-blue-500 transition-[width] duration-500`}
       />
       {success ? (
         <>
