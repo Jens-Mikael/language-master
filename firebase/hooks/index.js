@@ -81,8 +81,8 @@ export const getStudyDraft = async (uid) => {
   console.log("fetch data ran");
   const studyDraftSnap = await getDoc(studyDraftRef);
   if (studyDraftSnap.exists()) {
-    console.log();
-    return { data: studyDraftSnap.data(), id: draftId };
+    const data = studyDraftSnap.data();
+    return { data: data, id: draftId };
   }
 };
 

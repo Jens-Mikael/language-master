@@ -1,4 +1,38 @@
 /** @type {import('tailwindcss').Config} */
+
+const plugin = require("tailwindcss/plugin");
+
+const backfaceVisibility = plugin(function ({ addUtilities }) {
+  addUtilities({
+    ".backface-visible": {
+      "backface-visibility": "visible",
+    },
+    ".backface-hidden": {
+      "-webkit-backface-visibility": "hidden",
+    },
+  });
+});
+
+const transformStyle = plugin(function ({ addUtilities }) {
+  addUtilities({
+    ".transformStyle-3d": {
+      "-webkit-transform-style": "preserve-3d",
+    },
+  });
+});
+
+const transform = plugin(function ({ addUtilities }) {
+  addUtilities({
+    ".transform-y-180": {
+      "-webkit-transform": "rotateY(180deg)",
+    },
+  });
+});
+
+module.exports = {
+  plugins: [backfaceVisibility],
+};
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,9 +48,9 @@ module.exports = {
       },
       fontFamily: {
         croissantOne: ["var(--font-croissantOne)"],
-        ubuntu: ["var(--font-ubuntu)"]
+        ubuntu: ["var(--font-ubuntu)"],
       },
     },
   },
-  plugins: [],
+  plugins: [backfaceVisibility, transformStyle, transform],
 };
