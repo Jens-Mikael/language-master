@@ -2,7 +2,6 @@ import { firestore } from "../firebase-init";
 import {
   getDoc,
   doc,
-  collection,
   addDoc,
   setDoc,
   deleteField,
@@ -10,6 +9,9 @@ import {
   arrayUnion,
   arrayRemove,
   deleteDoc,
+  collection,
+  getDocs,
+  updateDoc,
 } from "firebase/firestore";
 
 export const isUsernameAvailable = async (username) => {
@@ -223,5 +225,32 @@ export const deleteStudySet = async (id, uid) => {
     return deleteDoc(studySetRef);
   } catch (error) {
     return error;
+  }
+};
+
+export const setToCollection = async (id) => {
+  const studyDocSnap = doc(firestore, `studySets/${id}`);
+  console.log(id);
+  
+  try {
+    const docSnap = await getDoc(studyDocSnap);
+    const bodyData = docSnap.data().body;
+
+    Object.keys(bodyData).forEach(async (index) => {
+      const collectionRef = collection(firestore, `studySets/${id}/body`);
+      console.log(bodyData[index].definition);
+      await addDoc(
+        collectionRef,
+        {
+          definition: bodyData[index].definition,
+          term: bodyData[index].term,
+        },
+        { merge: true }
+      );
+    });
+    await updateDoc(studyDocSnap, { body: deleteField() });
+    return "success";
+  } catch (error) {
+    return error.message;
   }
 };

@@ -1,5 +1,5 @@
 "use client";
-import { getStudySet } from "@/firebase/hooks";
+import { getStudySet, setToCollection } from "@/firebase/hooks";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
@@ -45,7 +45,13 @@ const LearnSetPage = () => {
           </div>
           <div>
             <div>Your Learnings statistics</div>
-            <div>display line chart</div>
+            <div
+              onClick={async () => {
+                console.log(await setToCollection(pathname.id));
+              }}
+            >
+              Write to collection doc
+            </div>
           </div>
           <div>Created by</div>
           {/* EDIT SET */}
