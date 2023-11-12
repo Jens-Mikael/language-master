@@ -1,38 +1,23 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getStudySet } from "@/firebase/hooks";
 import SVG from "react-inlinesvg";
-import { AnimatePresence, motion, useIsPresent } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import PractiseSuccess from "./PractiseSuccess";
 
-const variants = {
-  visible: { scale: 1, x: 0, rotate: 0 },
-  entry: { scale: 0.25, x: "-100vh" },
-  exitRight: {
-    opacity: 0,
-    scale: 0.5,
-    x: "100vh",
-    rotate: 30,
-  },
-  exitLeft: {
-    opacity: 0,
-    scale: 0.5,
-    x: "-100vh",
-    rotate: -30,
-  },
-};
-
-const LearnFlashcards = () => {
-  const [keys, setKeys] = useState();
+const PractiseFlashcards = ({ keys, setKeys }) => {
   const [currentKey, setCurrentKey] = useState();
   const [count, setCount] = useState(0);
   const [success, setSuccess] = useState(false);
-  const [progress, setProgress] = useState("");
-  const pathname = useParams();
-  const { data, isLoading, error } = useQuery(pathname.id, () =>
-    getStudySet(pathname.id)
-  );
+  const [side, setSide] = useState("term");
+  const [fails, setFails] = useState(0);
+  const pathParams = useParams();
+  const { data, isLoading, error } = useQuery({
+    queryKey: [pathParams.id],
+    queryFn: () => getStudySet(pathParams.id),
+  });
   useEffect(() => {
     if (data) {
       setKeys(Object.keys(data.body));
@@ -42,20 +27,22 @@ const LearnFlashcards = () => {
 
   useEffect(() => {
     if (keys) {
+      console.log("dew");
       setCurrentKey(keys[count]);
-      setProgress(
-        `${Math.round(
-          ((Object.keys(data.body).length - keys.length) /
-            Object.keys(data.body).length) *
-            100
-        ).toString()}%`
-      );
       if (keys.length <= count) {
         setCount(0);
+        setFails((prev) => (count > prev ? count : prev));
         setCurrentKey(keys[0]);
+        console.log("ran");
       }
     }
   }, [keys]);
+
+  useEffect(() => {
+    if (success) {
+      document.addEventListener("keydown", reset);
+    }
+  }, [success]);
 
   const handleClick = () => {
     if (keys.length <= 1) setSuccess(true);
@@ -68,30 +55,45 @@ const LearnFlashcards = () => {
     setKeys((prev) => prev.sort((a, b) => 0.5 - Math.random()));
   };
 
-  if (isLoading || !keys) return <div className="">loading...</div>;
+  const reset = (e) => {
+    if (e.key === "Enter") {
+      setSuccess(false);
+      setFails(0);
+      setCount(0);
+      setKeys(Object.keys(data.body));
+      setCurrentKey(Object.keys(data.body)[0]);
+      document.removeEventListener("keydown", reset);
+    }
+  };
+
+  const variants = {
+    visible: { scale: 1, x: 0, rotateY: side === "definition" ? 180 : 0 },
+    entry: { scale: 0.25, x: "-100vh" },
+    exitRight: {
+      opacity: 0,
+      scale: 0.5,
+      x: "100vh",
+      rotate: 30,
+    },
+    exitLeft: {
+      opacity: 0,
+      scale: 0.5,
+      x: "-100vh",
+      rotate: -30,
+    },
+  };
+
+  if (isLoading || !keys) return <div>loading...</div>;
   if (error) return <div>erro</div>;
-  console.log(progress);
+
   return (
     <div className="h-full">
-      {/* PROGRESS BAR */}
-      <div
-        style={{ width: progress }}
-        className={`h-0.5 bg-blue-500 transition-[width] duration-500`}
-      />
       {success ? (
         <>
-          <div className="h-full flex justify-center py-20">
-            <div className="flex flex-col gap-16">
-              <div className="font-bold text-5xl">Nice Work!</div>
-              <div className="flex flex-col gap-2">
-                <div className="font-bold text-2xl">How you're doing</div>
-                <div className="flex">
-                  <div>Icons</div>
-                  <div>Statistics</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <PractiseSuccess
+            fails={fails}
+            bodyLength={Object.keys(data.body).length}
+          />
         </>
       ) : (
         <>
@@ -103,15 +105,19 @@ const LearnFlashcards = () => {
                   transition={{ duration: 0.5 }}
                   initial="entry"
                   animate="visible"
-                  whileTap={{ rotateY: 180 }}
+                  whileTap={{ rotateY: side === "term" ? 180 : 0 }}
                   exit="exitRight"
                   variants={variants}
                   className="transformStyle-3d relative cursor-pointer flex items-center justify-center text-4xl font-light w-full h-full bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20"
                 >
-                  <div className="backface-hidden transformStyle-3d absolute rotate-0 opacity-95">
+                  <div
+                    className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 `}
+                  >
                     {data.body[currentKey].term}
                   </div>
-                  <div className="backface-hidden transformStyle-3d absolute transform-y-180 opacity-95">
+                  <div
+                    className={`backface-hidden transformStyle-3d absolute transition-all transform-y-180 opacity-95 `}
+                  >
                     {data.body[currentKey].definition}
                   </div>
                 </motion.div>
@@ -157,16 +163,32 @@ const LearnFlashcards = () => {
                     />
                   </button>
                 </div>
-                <button
-                  onClick={shuffleKeys}
-                  className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
-                >
-                  <SVG
-                    src="/icons/shuffle.svg"
-                    className="h-7 w-7 fill-white"
-                    loader={<div className="h-7 w-7" />}
-                  />
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={shuffleKeys}
+                    className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
+                  >
+                    <SVG
+                      src="/icons/shuffle.svg"
+                      className="h-7 w-7 fill-white"
+                      loader={<div className="h-7 w-7" />}
+                    />
+                  </button>
+                  <button
+                    onClick={() =>
+                      setSide((prev) =>
+                        prev === "term" ? "definition" : "term"
+                      )
+                    }
+                    className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
+                  >
+                    <SVG
+                      src="/icons/switch-card.svg"
+                      className="h-7 w-7 fill-white"
+                      loader={<div className="h-7 w-7" />}
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -176,4 +198,4 @@ const LearnFlashcards = () => {
   );
 };
 
-export default LearnFlashcards;
+export default PractiseFlashcards;

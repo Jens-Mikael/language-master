@@ -2,38 +2,48 @@
 import InputField from "@/components/InputField";
 import NewStudySetCard from "@/components/NewStudySetCard";
 import {
+  deleteStudySet,
   getStudyDraft,
+  getStudySet,
   mutateStudyCardAmount,
   submitStudySet,
 } from "@/firebase/hooks";
 import { useRouter } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
-const CreateSet = ({ uid }) => {
+const SetEditor = ({ uid, type }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { data, isLoading, isError, error } = useQuery("studyDraft", () =>
-    getStudyDraft(uid)
-  );
-  const { mutateAsync: addStudyCard } = useMutation(
-    () => mutateStudyCardAmount("add", max <= 0 ? 1 : max + 1, data.id),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("studyDraft");
-      },
-    }
-  );
-  const { mutateAsync: submitSet } = useMutation(
-    () => submitStudySet(data.id, uid),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("studyDraft");
-      },
-    }
-  );
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: [type],
+    queryFn: () =>
+      type === "studyDraft" ? getStudyDraft(uid) : getStudySet(type),
+  });
+  const { mutateAsync: addStudyCard } = useMutation({
+    mutationFn: () =>
+      mutateStudyCardAmount("add", max <= 0 ? 1 : max + 1, data.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [type] });
+    },
+  });
+  const { mutateAsync: submitSet } = useMutation({
+    mutationFn: () => submitStudySet(data.id, uid),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [type] });
+    },
+  });
+
+  const { mutateAsync: deleteSet } = useMutation({
+    mutationFn: () => deleteStudySet(type, uid),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [type] });
+    },
+  });
 
   if (isLoading) return <div>Loading</div>;
-  const max = Math.max(...Object.keys(data.data.body));
+  const max = Math.max(...Object.keys(data.body));
 
   return (
     <div className="min-h-full flex justify-center px-10 py-14">
@@ -46,14 +56,18 @@ const CreateSet = ({ uid }) => {
           </div>
           <button
             onClick={() => {
-              if (data.data.head.title !== "") {
-                router.push("/");
-                submitSet();
+              if (data.head.title !== "") {
+                if (type === "studyDraft") {
+                  submitSet();
+                  router.push("/");
+                } else {
+                  router.push(`/sets/${type}`);
+                }
               }
             }}
-            className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-3 py-2 rounded-lg"
+            className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-6 py-4 rounded-lg text-lg font-medium"
           >
-            Create
+            {type === "studyDraft" ? "Create" : "Save"}
           </button>
         </div>
 
@@ -63,8 +77,8 @@ const CreateSet = ({ uid }) => {
             <InputField
               label="TITLE"
               placeholder="Enter a title..."
-              id="createSetTitle"
-              value={data.data.head.title}
+              id="editSetTitle"
+              value={data.head.title}
               studySetId={data.id}
               type="title"
             />
@@ -73,8 +87,8 @@ const CreateSet = ({ uid }) => {
             <InputField
               label="DESCRIPTION"
               placeholder="Add a description..."
-              id="createSetDesc"
-              value={data.data.head.description}
+              id="editSetDesc"
+              value={data.head.description}
               studySetId={data.id}
               type="description"
             />
@@ -83,13 +97,14 @@ const CreateSet = ({ uid }) => {
 
         {/* CARDS */}
         <div className="flex flex-col gap-10">
-          {Object.keys(data.data.body).map((key, i) => (
+          {Object.keys(data.body).map((key, i) => (
             <NewStudySetCard
-              obj={data.data.body[key]}
+              obj={data.body[key]}
               dbIndex={key}
               index={i}
               key={i}
               studySetId={data.id}
+              type={type}
             />
           ))}
           <button
@@ -100,13 +115,24 @@ const CreateSet = ({ uid }) => {
               + New Card
             </div>
             <div className="absolute left-10 font-bold text-xl">
-              {Object.keys(data.data.body).length + 1}
+              {Object.keys(data.body).length + 1}
             </div>
           </button>
+          {type != "studyDraft" && (
+            <div className="flex justify-end">
+              <Link
+                href="/"
+                onClick={deleteSet}
+                className="py-3 px-5 rounded-lg border border-white/40 bg-white/5 hover:bg-white/10 hover:scale-105 transition"
+              >
+                Delete Set
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default CreateSet;
+export default SetEditor;

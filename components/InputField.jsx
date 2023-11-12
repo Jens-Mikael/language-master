@@ -2,7 +2,7 @@
 
 import { mutateStudySet } from "@/firebase/hooks";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const InputField = ({
   label,
@@ -16,14 +16,12 @@ const InputField = ({
   const [input, setInput] = useState(value);
   const queryClient = useQueryClient();
 
-  const { mutate: mutateStudyDraft } = useMutation(
-    (input) => mutateStudySet(type, dbIndex, input, studySetId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("studyDraft");
-      },
-    }
-  );
+  const { mutate: mutateStudyDraft } = useMutation({
+    mutationFn: (input) => mutateStudySet(type, dbIndex, input, studySetId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["studyDraft"] });
+    },
+  });
 
   return (
     <div className="gap-1.5 flex flex-col">

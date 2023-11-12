@@ -1,8 +1,9 @@
 "use client";
 import { ThemeProvider } from "next-themes";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "@/firebase/context/AuthContext";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const Providers = ({ children }) => {
   const [mounted, setMounted] = useState(false);
@@ -18,6 +19,7 @@ const Providers = ({ children }) => {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             {children}
+            {/* <ReactQueryDevtools /> */}
           </QueryClientProvider>
         </AuthProvider>
       </>
@@ -27,6 +29,7 @@ const Providers = ({ children }) => {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider attribute="class">{children}</ThemeProvider>
+          {/* <ReactQueryDevtools /> */}
         </QueryClientProvider>
       </AuthProvider>
     </>

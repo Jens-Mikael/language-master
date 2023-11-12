@@ -1,5 +1,5 @@
 "use client";
-import CreateSet from "@/components/CreateSet";
+import SetEditor from "@/components/SetEditor";
 import { useAuth } from "@/firebase/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -16,7 +16,7 @@ const CreateSetPage = () => {
   if (currentUser)
     return (
       <>
-        <CreateSet uid={currentUser.uid} />
+        <SetEditor uid={currentUser.uid} type="studyDraft" />
       </>
     );
 };

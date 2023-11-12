@@ -8,6 +8,8 @@ import {
   deleteField,
   writeBatch,
   arrayUnion,
+  arrayRemove,
+  deleteDoc,
 } from "firebase/firestore";
 
 export const isUsernameAvailable = async (username) => {
@@ -78,39 +80,49 @@ export const getStudyDraft = async (uid) => {
   //get studyDraft
   const studyDraftRef = doc(firestore, `studySets/${draftId}`);
 
-  console.log("fetch data ran");
   const studyDraftSnap = await getDoc(studyDraftRef);
   if (studyDraftSnap.exists()) {
     const data = studyDraftSnap.data();
-    return { data: data, id: draftId };
+    return {
+      body: data.body,
+      head: data.head,
+      creator: data.creator,
+      id: draftId,
+    };
   }
 };
 
 export const getLibrarySets = async (uid) => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
-  //get user created sets
-  const docSnap = await getDoc(userDocRef);
-  const createdSets = docSnap.data().studySets.created;
+  try {
+    //get user created sets
+    const docSnap = await getDoc(userDocRef);
+    if (!docSnap.exists()) return;
+    const createdSets = docSnap.data().studySets.created;
 
-  //loop through created sets
-  const dataArr = [];
-  for (let i = 0; i < createdSets.length; i++) {
-    const studySetRef = doc(firestore, `studySets/${createdSets[i]}`);
-    const studyDocSnap = await getDoc(studySetRef);
-    dataArr.unshift({
-      title: studyDocSnap.data().head.title,
-      id: createdSets[i],
-      creator: studyDocSnap.data().creator,
-    });
+    //loop through created sets
+    const dataArr = [];
+    for (let i = 0; i < createdSets.length; i++) {
+      const studySetRef = doc(firestore, `studySets/${createdSets[i]}`);
+      const studyDocSnap = await getDoc(studySetRef);
+      dataArr.unshift({
+        title: studyDocSnap.data().head.title,
+        id: createdSets[i],
+        creator: studyDocSnap.data().creator,
+      });
+    }
+    return dataArr;
+  } catch (error) {
+    return error;
   }
-  return dataArr;
 };
 
 export const getStudySet = async (id) => {
   const docRef = doc(firestore, `studySets/${id}`);
   const docSnap = await getDoc(docRef);
-  return docSnap.data();
+  const data = docSnap.data();
+  return { body: data.body, head: data.head, creator: data.creator, id };
 };
 
 export const mutateStudySet = (type, index, value, id) => {
@@ -193,4 +205,23 @@ export const submitStudySet = (id, uid) => {
     },
     { merge: true }
   );
+};
+
+export const deleteStudySet = async (id, uid) => {
+  const studySetRef = doc(firestore, `studySets/${id}`);
+  const userRef = doc(firestore, `users/${uid}`);
+  try {
+    await setDoc(
+      userRef,
+      {
+        studySets: {
+          created: arrayRemove(id),
+        },
+      },
+      { merge: true }
+    );
+    return deleteDoc(studySetRef);
+  } catch (error) {
+    return error;
+  }
 };

@@ -2,24 +2,22 @@
 import { useState } from "react";
 import InputField from "./InputField";
 import SVG from "react-inlinesvg";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutateStudyCardAmount } from "@/firebase/hooks";
 
-const NewStudySetCard = ({ obj, dbIndex, index, studySetId }) => {
+const NewStudySetCard = ({ obj, dbIndex, index, studySetId, type }) => {
   const queryClient = useQueryClient();
 
-  const { mutateAsync: removeCard } = useMutation(
-    "studyDraft",
-    () => mutateStudyCardAmount("remove", dbIndex, studySetId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("studyDraft");
-      },
-      onError: (err) => {
-        console.log(err);
-      },
-    }
-  );
+  const { mutateAsync: removeCard } = useMutation({
+    queryKey: [type],
+    mutationFn: () => mutateStudyCardAmount("remove", dbIndex, studySetId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(type);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   return (
     <div className="w-full bg-white/10 rounded-xl">
@@ -28,7 +26,7 @@ const NewStudySetCard = ({ obj, dbIndex, index, studySetId }) => {
         <div className="font-bold text-lg">{index + 1}</div>
         <button onClick={() => removeCard()} className="hover:scale-110 group">
           <SVG
-            src="icons/trash.svg"
+            src="/icons/trash.svg"
             className="h-6 w-6 fill-white group-hover:fill-indigo-500 transition"
             loader={<div className="h-6 w-6" />}
           />

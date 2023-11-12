@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nivo/core": "^0.46.0",
+    "@nivo/line": "^0.46.0",
     "@tanstack/react-query": "^4.35.3",
+    "@tanstack/react-query-devtools": "^5.7.1",
     "autoprefixer": "10.4.15",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
@@ -17,10 +20,12 @@
     "framer-motion": "^10.16.4",
     "next": "^14.0.0",
     "next-themes": "^0.2.1",
+    "nivo": "^0.31.0",
     "node": "^21.1.0",
     "postcss": "^8.4.31",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.2.0",
+    "react-circle-chart": "^1.0.4",
+    "react-dom": "^18.2.0",
     "react-inlinesvg": "^4.0.3",
     "react-query": "^3.39.3",
     "tailwindcss": "3.3.3"
