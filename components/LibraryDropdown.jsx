@@ -9,7 +9,6 @@ const LibraryDropdown = ({ setIsLibraryOpen }) => {
     queryKey: ["librarySets"],
     queryFn: () => getLibrarySets(currentUser.uid),
   });
-  console.log(data);
   if (isLoading) return <div>loading</div>;
   if (error) return console.log(error);
   return (

@@ -124,6 +124,7 @@ const Navbar = () => {
                   <div className="flex z-20 absolute top-full right-0 mt-2 border border-white/20 rounded-xl flex-col overflow-hidden bg-[#0A092D]">
                     {newDropdown.map((i) => (
                       <Link
+                        key={i}
                         onClick={() => {
                           setIsNewOpen(false);
                         }}

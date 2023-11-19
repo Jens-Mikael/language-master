@@ -19,7 +19,6 @@ const Providers = ({ children }) => {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             {children}
-            {/* <ReactQueryDevtools /> */}
           </QueryClientProvider>
         </AuthProvider>
       </>
@@ -29,7 +28,7 @@ const Providers = ({ children }) => {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider attribute="class">{children}</ThemeProvider>
-          {/* <ReactQueryDevtools /> */}
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </AuthProvider>
     </>

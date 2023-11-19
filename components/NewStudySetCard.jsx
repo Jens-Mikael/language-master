@@ -5,14 +5,13 @@ import SVG from "react-inlinesvg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutateStudyCardAmount } from "@/firebase/hooks";
 
-const NewStudySetCard = ({ obj, dbIndex, index, studySetId, type }) => {
+const NewStudySetCard = ({ obj, cardId, index, setId, type }) => {
   const queryClient = useQueryClient();
-
   const { mutateAsync: removeCard } = useMutation({
-    queryKey: [type],
-    mutationFn: () => mutateStudyCardAmount("remove", dbIndex, studySetId),
+    mutationFn: () => mutateStudyCardAmount("remove", cardId, setId),
     onSuccess: () => {
-      queryClient.invalidateQueries(type);
+      console.log(type);
+      queryClient.invalidateQueries({ queryKey: [type] });
     },
     onError: (err) => {
       console.log(err);
@@ -40,10 +39,10 @@ const NewStudySetCard = ({ obj, dbIndex, index, studySetId, type }) => {
           <InputField
             value={obj.term}
             type="term"
-            dbIndex={dbIndex}
+            cardId={cardId}
             label="TERM"
             placeholder="Enter something..."
-            studySetId={studySetId}
+            setId={setId}
           />
         </div>
 
@@ -51,11 +50,11 @@ const NewStudySetCard = ({ obj, dbIndex, index, studySetId, type }) => {
         <div className="grow">
           <InputField
             value={obj.definition}
-            dbIndex={dbIndex}
+            cardId={cardId}
             type="definition"
             label="DEFINITION"
             placeholder="Enter something..."
-            studySetId={studySetId}
+            setId={setId}
           />
         </div>
       </div>

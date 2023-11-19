@@ -1,6 +1,7 @@
 "use client";
 import InputField from "@/components/InputField";
 import NewStudySetCard from "@/components/NewStudySetCard";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   deleteStudySet,
   getStudyDraft,
@@ -11,20 +12,21 @@ import {
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const SetEditor = ({ uid, type }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [type],
     queryFn: () =>
       type === "studyDraft" ? getStudyDraft(uid) : getStudySet(type),
   });
   const { mutateAsync: addStudyCard } = useMutation({
-    mutationFn: () =>
-      mutateStudyCardAmount("add", max <= 0 ? 1 : max + 1, data.id),
+    mutationFn: () => mutateStudyCardAmount("add", null, data.id),
     onSuccess: () => {
+      console.log(type);
       queryClient.invalidateQueries({ queryKey: [type] });
     },
   });
@@ -79,7 +81,7 @@ const SetEditor = ({ uid, type }) => {
               placeholder="Enter a title..."
               id="editSetTitle"
               value={data.head.title}
-              studySetId={data.id}
+              setId={data.id}
               type="title"
             />
           </div>
@@ -89,7 +91,7 @@ const SetEditor = ({ uid, type }) => {
               placeholder="Add a description..."
               id="editSetDesc"
               value={data.head.description}
-              studySetId={data.id}
+              setId={data.id}
               type="description"
             />
           </div>
@@ -97,15 +99,24 @@ const SetEditor = ({ uid, type }) => {
 
         {/* CARDS */}
         <div className="flex flex-col gap-10">
-          {Object.keys(data.body).map((key, i) => (
-            <NewStudySetCard
-              obj={data.body[key]}
-              dbIndex={key}
-              index={i}
-              key={i}
-              studySetId={data.id}
-              type={type}
-            />
+          {Object.keys(data.body).map((cardId, i) => (
+            <AnimatePresence mode="popLayout">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0.5, scale: 0.5 }}
+              >
+                <NewStudySetCard
+                  obj={data.body[cardId]}
+                  cardId={cardId}
+                  index={i}
+                  key={cardId}
+                  setId={data.id}
+                  type={type}
+                />
+              </motion.div>
+            </AnimatePresence>
           ))}
           <button
             onClick={() => addStudyCard()}

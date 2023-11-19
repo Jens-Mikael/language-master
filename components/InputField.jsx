@@ -4,20 +4,13 @@ import { mutateStudySet } from "@/firebase/hooks";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const InputField = ({
-  label,
-  placeholder,
-  type,
-  value,
-  dbIndex,
-  studySetId,
-}) => {
+const InputField = ({ label, placeholder, type, value, cardId, setId }) => {
   const [focus, setFocus] = useState(false);
   const [input, setInput] = useState(value);
   const queryClient = useQueryClient();
 
   const { mutate: mutateStudyDraft } = useMutation({
-    mutationFn: (input) => mutateStudySet(type, dbIndex, input, studySetId),
+    mutationFn: (input) => mutateStudySet(type, cardId, input, setId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["studyDraft"] });
     },

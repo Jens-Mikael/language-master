@@ -1,5 +1,5 @@
 "use client";
-import { getStudySet, setToCollection } from "@/firebase/hooks";
+import { addTimestamp, getStudySet, setToCollection } from "@/firebase/hooks";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
@@ -9,11 +9,12 @@ import { useAuth } from "@/firebase/context/AuthContext";
 const LearnSetPage = () => {
   const pathname = useParams();
   const { currentUser } = useAuth();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: [pathname.id],
     queryFn: () => getStudySet(pathname.id),
   });
   if (isLoading) return <div>loading...</div>;
+  if (error) return <div>error</div>;
   return (
     <div className="flex justify-center gap-10">
       <div className="max-w-5xl w-full p-10">
@@ -45,13 +46,20 @@ const LearnSetPage = () => {
           </div>
           <div>
             <div>Your Learnings statistics</div>
-            <div
+            {/* <div
               onClick={async () => {
                 console.log(await setToCollection(pathname.id));
               }}
             >
               Write to collection doc
             </div>
+            <div
+              onClick={async () => {
+                console.log(await addTimestamp(pathname.id));
+              }}
+            >
+              Add time stamp
+            </div> */}
           </div>
           <div>Created by</div>
           {/* EDIT SET */}
@@ -59,7 +67,10 @@ const LearnSetPage = () => {
             <div>Set content (32)</div>
             <div className="flex flex-col gap-3">
               {Object.keys(data.body).map((key, i) => (
-                <div className="flex bg-white/[0.15] rounded-lg text-lg ">
+                <div
+                  key={key}
+                  className="flex bg-white/[0.15] rounded-lg text-lg "
+                >
                   <div className="py-5 px-8">{i + 1}</div>
                   <div className="w-0.5 bg-black/40" />
                   <div className="font-medium flex flex-1 gap-3 p-5">

@@ -12,6 +12,10 @@ import {
   collection,
   getDocs,
   updateDoc,
+  orderBy,
+  serverTimestamp,
+  query,
+  where,
 } from "firebase/firestore";
 
 export const isUsernameAvailable = async (username) => {
@@ -38,26 +42,41 @@ const createStudyDraft = async (uid) => {
     //create a new draft
     const docRef = await addDoc(collection(firestore, "studySets"), {
       creator: uid,
-      head: {
-        title: "",
-        description: "",
-      },
-      body: {
-        1: {
-          term: "",
-          definition: "",
-        },
-        2: {
-          term: "",
-          definition: "",
-        },
-        3: {
-          term: "",
-          definition: "",
-        },
-      },
+      head: { title: "", description: "" },
+      timestamp: serverTimestamp(),
     });
     const draftId = docRef.id;
+    const draftbodyCollection = collection(
+      firestore,
+      `studySets/${draftId}/body`
+    );
+    await addDoc(
+      draftbodyCollection,
+      {
+        term: "",
+        definition: "",
+        timestamp: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    await addDoc(
+      draftbodyCollection,
+      {
+        term: "",
+        definition: "",
+        timestamp: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    await addDoc(
+      draftbodyCollection,
+      {
+        term: "",
+        definition: "",
+        timestamp: serverTimestamp(),
+      },
+      { merge: true }
+    );
 
     //add draft to users studySets
     const res = await setDoc(
@@ -82,15 +101,27 @@ export const getStudyDraft = async (uid) => {
   //get studyDraft
   const studyDraftRef = doc(firestore, `studySets/${draftId}`);
 
-  const studyDraftSnap = await getDoc(studyDraftRef);
-  if (studyDraftSnap.exists()) {
-    const data = studyDraftSnap.data();
-    return {
-      body: data.body,
-      head: data.head,
-      creator: data.creator,
-      id: draftId,
-    };
+  const bodyCollectionRef = collection(firestore, `studySets/${draftId}/body`);
+  const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
+  const body = {};
+  try {
+    const studyDraftSnap = await getDoc(studyDraftRef);
+    const docsSnap = await getDocs(docQuery);
+
+    if (studyDraftSnap.exists()) {
+      const data = studyDraftSnap.data();
+      docsSnap.forEach((doc) => {
+        body[doc.id] = doc.data();
+      });
+      return {
+        body,
+        head: data.head,
+        creator: data.creator,
+        id: draftId,
+      };
+    }
+  } catch (error) {
+    return error;
   }
 };
 
@@ -98,52 +129,58 @@ export const getLibrarySets = async (uid) => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
   try {
-    //get user created sets
-    const docSnap = await getDoc(userDocRef);
-    if (!docSnap.exists()) return;
-    const createdSets = docSnap.data().studySets.created;
-
-    //loop through created sets
-    const dataArr = [];
-    for (let i = 0; i < createdSets.length; i++) {
-      const studySetRef = doc(firestore, `studySets/${createdSets[i]}`);
-      const studyDocSnap = await getDoc(studySetRef);
-      dataArr.unshift({
-        title: studyDocSnap.data().head.title,
-        id: createdSets[i],
-        creator: studyDocSnap.data().creator,
+    const userDocSnap = await getDoc(userDocRef);
+    const createdSets = userDocSnap.data().studySets.created;
+    const setsQuery = query(
+      collection(firestore, `studySets`),
+      where("__name__", "in", createdSets)
+    );
+    const arr = [];
+    const docsSnap = await getDocs(setsQuery);
+    docsSnap.forEach((doc) => {
+      const data = doc.data();
+      arr.push({
+        title: data.head.title,
+        id: doc.id,
+        creator: data.creator,
       });
-    }
-    return dataArr;
-  } catch (error) {
-    return error;
+    });
+    return arr;
+  } catch (err) {
+    return err;
   }
 };
 
 export const getStudySet = async (id) => {
   const docRef = doc(firestore, `studySets/${id}`);
-  const docSnap = await getDoc(docRef);
-  const data = docSnap.data();
-  return { body: data.body, head: data.head, creator: data.creator, id };
+  const bodyCollectionRef = collection(firestore, `studySets/${id}/body`);
+  const body = {};
+  try {
+    const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    const docsSnap = await getDocs(docQuery);
+    docsSnap.forEach((doc) => {
+      body[doc.id] = doc.data();
+    });
+    return { body, head: data.head, creator: data.creator, id };
+  } catch (error) {
+    console.log(error.message);
+    return error;
+  }
 };
 
-export const mutateStudySet = (type, index, value, id) => {
-  const docRef = doc(firestore, `studySets/${id}`);
-
+export const mutateStudySet = (type, cardId, value, setId) => {
+  console.log(cardId);
   //body
   if (type === "term" || type === "definition") {
-    return setDoc(
-      docRef,
-      {
-        body: {
-          [index]: {
-            [type]: value,
-          },
-        },
-      },
-      { merge: true }
+    const collectionDocRef = doc(
+      firestore,
+      `studySets/${setId}/body/${cardId}`
     );
+    return setDoc(collectionDocRef, { [type]: value }, { merge: true });
   } else if (type === "title" || type === "description") {
+    const docRef = doc(firestore, `studySets/${setId}`);
     return setDoc(
       docRef,
       {
@@ -161,38 +198,25 @@ export const mutateStudySet = (type, index, value, id) => {
   return;
 };
 
-export const mutateStudyCardAmount = (type, index, id) => {
-  const docRef = doc(firestore, `studySets/${id}`);
-  if (type === "add") {
-    return setDoc(
-      docRef,
-      {
-        body: {
-          [index]: {
-            definition: "",
-            term: "",
-          },
-        },
-      },
-      { merge: true }
-    );
-  } else if (type === "remove") {
-    console.log("hook ran");
-    console.log(index);
-    return setDoc(
-      docRef,
-      {
-        body: {
-          [index]: deleteField(),
-        },
-      },
-      { merge: true }
-    );
-  } else {
-    console.log("else ran in mutateCardAmount");
+export const mutateStudyCardAmount = async (type, cardId, setId) => {
+  const collectionRef = collection(firestore, `studySets/${setId}/body`);
+  try {
+    if (type === "add") {
+      return addDoc(collectionRef, {
+        definition: "",
+        term: "",
+        timestamp: serverTimestamp(),
+      });
+    } else if (type === "remove") {
+      const cardDocRef = doc(firestore, `studySets/${setId}/body/${cardId}`);
+      return deleteDoc(cardDocRef);
+    } else {
+      console.log("else ran in mutateCardAmount");
+    }
+  } catch (error) {
+    console.log(error.message);
+    return error;
   }
-  console.log("mutation ran in cardAmount");
-  return;
 };
 
 export const submitStudySet = (id, uid) => {
@@ -231,7 +255,7 @@ export const deleteStudySet = async (id, uid) => {
 export const setToCollection = async (id) => {
   const studyDocSnap = doc(firestore, `studySets/${id}`);
   console.log(id);
-  
+
   try {
     const docSnap = await getDoc(studyDocSnap);
     const bodyData = docSnap.data().body;
@@ -244,11 +268,34 @@ export const setToCollection = async (id) => {
         {
           definition: bodyData[index].definition,
           term: bodyData[index].term,
+          timestamp: serverTimestamp(),
         },
         { merge: true }
       );
     });
     await updateDoc(studyDocSnap, { body: deleteField() });
+    return "success";
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const addTimestamp = async (id) => {
+  const batch = writeBatch(firestore);
+  const collectionRef = collection(firestore, `studySets/${id}/body`);
+  try {
+    const arr = [];
+    const docsSnap = await getDocs(collectionRef);
+    docsSnap.forEach(async (doc) => {
+      arr.push(doc.id);
+    });
+    arr.forEach((key) => {
+      const docRef = doc(firestore, `studySets/${id}/body/${key}`);
+      console.log(docRef);
+      batch.set(docRef, { timestamp: serverTimestamp() }, { merge: true });
+    });
+
+    await batch.commit();
     return "success";
   } catch (error) {
     return error.message;
