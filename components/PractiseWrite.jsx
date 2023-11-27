@@ -43,7 +43,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
       setCount((prev) => (keys.length - 1 <= prev ? 0 : prev + 1));
       return;
     }
-    if (input === data.body[keys[count]].definition) {
+    if (input === data.body[keys[count]][side === "term" ? "definition" : "term"]) {
       if (keys.length <= 1) return setSuccess(true);
       if (triesCount === 0) {
         setKeys((prev) => {
@@ -70,7 +70,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
       if (triesCount < 3) {
         setFails((prev) => (prev <= count + 1 ? count + 1 : prev));
         setTriesCount((prev) => prev + 1);
-        setInput(data.body[keys[count]].definition.slice(0, triesCount + 1));
+        setInput(data.body[keys[count]][side === "term" ? "definition" : "term"].slice(0, triesCount + 1));
         await animate(
           scope.current,
           {
@@ -89,7 +89,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
           { duration: 0 }
         );
       } else {
-        setInput(data.body[keys[count]].definition);
+        setInput(data.body[keys[count]][side === "term" ? "definition" : "term"]);
         setTriesCount(0);
         setShowCorrect(true);
       }
@@ -126,7 +126,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
           <div className="flex flex-col w-full max-w-3xl gap-14">
             <div className="bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20 px-12 py-16 flex flex-col gap-10">
               <div className="text-4xl font-light">
-                {data.body[keys[count]].term}
+                {data.body[keys[count]][side]}
               </div>
               <div className="bg-white/10 h-0.5" />
               <div className="flex gap-10 items-center">

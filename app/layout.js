@@ -12,12 +12,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="">
       <Providers>
-        <body className={`${ubuntu.className} bg-[#0A092D]`}>
+        <body className={`${ubuntu.className} bg-[#0A092D] text-white`}>
           <div className="bg-[#0A092D] min-h-screen">
-            <div className="">
-              <Navbar />
-              {children}
-            </div>
+            <Navbar />
+            {children}
           </div>
         </body>
       </Providers>

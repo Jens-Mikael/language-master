@@ -19,3 +19,18 @@
     transform: scaleX(-1);
   }
 }
+
+* {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+button,
+button:active,
+button:focus {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
