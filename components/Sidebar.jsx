@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SVG from "react-inlinesvg";
+import LibraryDropdown from "./LibraryDropdown";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const { googleAuth, logout, isLoading, currentUser } = useAuth();
@@ -13,7 +14,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         sidebarOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      {/* close */}
       <div onClick={() => setSidebarOpen(false)} className="flex-1" />
       {/* content */}
       <div className="h-full bg-[#0A092D] w-[250px] shadow-xl flex flex-col gap-5 p-2">

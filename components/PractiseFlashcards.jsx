@@ -23,7 +23,7 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
       setKeys(Object.keys(data.body));
       setCurrentKey(Object.keys(data.body)[0]);
     }
-  }, [data]);
+  }, [data, setKeys]);
 
   useEffect(() => {
     if (keys) {
@@ -36,13 +36,13 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
         console.log("ran");
       }
     }
-  }, [keys]);
+  }, [keys, count]);
 
   useEffect(() => {
     if (success) {
       document.addEventListener("keydown", reset);
     }
-  }, [success]);
+  }, [success, reset]);
 
   const handleClick = () => {
     if (keys.length <= 1) setSuccess(true);

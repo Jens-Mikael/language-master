@@ -5,7 +5,6 @@ import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/firebase/context/AuthContext";
-import AuthPage from "./AuthPage";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
 import { useCallback } from "react";
@@ -23,14 +22,14 @@ const Navbar = () => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [input, setInput] = useState("");
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const router = useRouter();
 
   const { currentUser, isLoading, googleAuth, logout } = useAuth();
 
-  const setSearchParams = useCallback(
-    (queryObj) => editSearchParams(queryObj, searchParams)[searchParams]
-  );
+  // const setSearchParams = useCallback(
+  //   (queryObj) => editSearchParams(queryObj, searchParams)[searchParams]
+  // , []);
   return (
     <>
       <div className="flex border-b border-white/20 px-10 whitespace-nowrap gap-8 h-[60px]">
@@ -167,36 +166,3 @@ const Navbar = () => {
 
 export default Navbar;
 
-{
-  /* <Link
-                    href={`${pathname}?${setSearchParams({
-                      type: "logIn",
-                      auth: "true",
-                    })}`}
-                    className="border border-white/20 px-2 py-1 rounded-lg"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href={`${pathname}?${setSearchParams({
-                      type: "signUp",
-                      auth: "deleteParam",
-                    })}`}
-                    className="bg-cyan-400 hover:bg-opacity-80 rounded-lg px-2 py-1"
-                  >
-                    Sign up
-                  </Link>
-                  <div
-                    className={`absolute inset-0 z-40 bg-black/80 transition duration-500 ${
-                      isAuthOpen
-                        ? " translate-y-0 opacity-100"
-                        : "-translate-y-full opacity-0"
-                    }`}
-                  >
-                    <AuthPage
-                      setIsAuthOpen={setIsAuthOpen}
-                      authType={authType}
-                      setAuthType={setAuthType}
-                    />
-                  </div> */
-}
