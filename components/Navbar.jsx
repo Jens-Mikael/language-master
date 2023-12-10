@@ -167,36 +167,3 @@ const Navbar = () => {
 
 export default Navbar;
 
-{
-  /* <Link
-                    href={`${pathname}?${setSearchParams({
-                      type: "logIn",
-                      auth: "true",
-                    })}`}
-                    className="border border-white/20 px-2 py-1 rounded-lg"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href={`${pathname}?${setSearchParams({
-                      type: "signUp",
-                      auth: "deleteParam",
-                    })}`}
-                    className="bg-cyan-400 hover:bg-opacity-80 rounded-lg px-2 py-1"
-                  >
-                    Sign up
-                  </Link>
-                  <div
-                    className={`absolute inset-0 z-40 bg-black/80 transition duration-500 ${
-                      isAuthOpen
-                        ? " translate-y-0 opacity-100"
-                        : "-translate-y-full opacity-0"
-                    }`}
-                  >
-                    <AuthPage
-                      setIsAuthOpen={setIsAuthOpen}
-                      authType={authType}
-                      setAuthType={setAuthType}
-                    />
-                  </div> */
-}
