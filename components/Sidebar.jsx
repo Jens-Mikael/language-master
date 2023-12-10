@@ -13,7 +13,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         sidebarOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
-      {/* close */}
       <div onClick={() => setSidebarOpen(false)} className="flex-1" />
       {/* content */}
       <div className="h-full bg-[#0A092D] w-[250px] shadow-xl flex flex-col gap-5 p-2">
