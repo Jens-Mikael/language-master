@@ -100,7 +100,7 @@ const SetEditor = ({ uid, type }) => {
         {/* CARDS */}
         <div className="flex flex-col gap-10">
           {Object.keys(data.body).map((cardId, i) => (
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence mode="popLayout" key={i}>
               <motion.div
                 key={i}
                 initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}

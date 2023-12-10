@@ -27,14 +27,14 @@ const PractiseWrite = ({ keys, setKeys }) => {
     if (data) {
       setKeys(Object.keys(data.body));
     }
-  }, [data]);
+  }, [data, setKeys]);
 
   useEffect(() => {
     if (success) {
       document.addEventListener("keydown", reset);
       console.log("add");
     }
-  }, [success]);
+  }, [success, reset]);
 
   const handleEnter = async () => {
     if (showCorrect) {

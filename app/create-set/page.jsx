@@ -12,7 +12,7 @@ const CreateSetPage = () => {
     if (!currentUser) {
       router.push("/");
     }
-  }, []);
+  }, [currentUser, router]);
   if (currentUser)
     return (
       <>

@@ -15,7 +15,7 @@ const EditSetPage = () => {
   });
   useEffect(() => {
     if (!currentUser) router.push("/");
-  }, [currentUser]);
+  }, [currentUser, router]);
 
   if (isLoading) return <div>loading</div>;
   if (currentUser.uid === data.creator)

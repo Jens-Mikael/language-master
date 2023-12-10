@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SVG from "react-inlinesvg";
+import LibraryDropdown from "./LibraryDropdown";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const { googleAuth, logout, isLoading, currentUser } = useAuth();

@@ -5,7 +5,6 @@ import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/firebase/context/AuthContext";
-import AuthPage from "./AuthPage";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
 import { useCallback } from "react";
@@ -23,14 +22,14 @@ const Navbar = () => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [input, setInput] = useState("");
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const router = useRouter();
 
   const { currentUser, isLoading, googleAuth, logout } = useAuth();
 
-  const setSearchParams = useCallback(
-    (queryObj) => editSearchParams(queryObj, searchParams)[searchParams]
-  );
+  // const setSearchParams = useCallback(
+  //   (queryObj) => editSearchParams(queryObj, searchParams)[searchParams]
+  // , []);
   return (
     <>
       <div className="flex border-b border-white/20 px-10 whitespace-nowrap gap-8 h-[60px]">
