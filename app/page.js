@@ -10,7 +10,7 @@ export default function Home() {
         onClick={logout}
         className="w-full max-w-5xl dark:bg-white/10 rounded-3xl p-14 text-6xl"
       >
-        Language Mastery
+        Language
       </div>
     </div>
   );
