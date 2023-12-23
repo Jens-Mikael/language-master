@@ -3,7 +3,7 @@ import { ThemeProvider } from "next-themes";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { AuthProvider } from "@/firebase/context/AuthContext";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+//import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const Providers = ({ children }) => {
   const [mounted, setMounted] = useState(false);
@@ -28,7 +28,6 @@ const Providers = ({ children }) => {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           {children}
-          <ReactQueryDevtools />
         </QueryClientProvider>
       </AuthProvider>
     </>
