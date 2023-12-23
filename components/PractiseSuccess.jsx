@@ -1,5 +1,5 @@
 import { DonutChart } from "react-circle-chart";
-import LineChart from "@/components/LineChart";
+// import LineChart from "@/components/LineChart";
 
 const PractiseSuccess = ({ fails, bodyLength }) => {
   const donutArgs = {
@@ -89,7 +89,7 @@ const PractiseSuccess = ({ fails, bodyLength }) => {
           </div>
         </div>
         <div>
-          <LineChart />
+          {/* <LineChart /> */}
         </div>
       </div>
     </div>

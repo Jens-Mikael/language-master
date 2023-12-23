@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-const plugin = require("tailwindcss/plugin");
+import plugin from "tailwindcss/plugin"
 
 const backfaceVisibility = plugin(function ({ addUtilities }) {
   addUtilities({
