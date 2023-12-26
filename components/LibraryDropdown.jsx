@@ -9,7 +9,7 @@ const LibraryDropdown = ({ setIsLibraryOpen }) => {
     queryKey: ["librarySets"],
     queryFn: () => getLibrarySets(currentUser.uid),
   });
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) return <div>loadin</div>;
   if (error) return console.log(error);
   return (
     <div className="flex gap-2 p-2 z-20 absolute top-full right-0 mt-2 border border-white/20 rounded-xl flex-col overflow-hidden bg-[#0A092D]">

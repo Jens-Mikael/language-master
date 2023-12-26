@@ -1,4 +1,4 @@
-import { DonutChart } from "react-circle-chart";
+//import { DonutChart } from "react-circle-chart";
 // import LineChart from "@/components/LineChart";
 
 const PractiseSuccess = ({ fails, bodyLength }) => {
@@ -64,7 +64,7 @@ const PractiseSuccess = ({ fails, bodyLength }) => {
           <div className="font-bold text-2xl">How you're doing</div>
           <div className="flex gap-14">
             <div>
-              <DonutChart
+              {/* <DonutChart
                 {...donutArgs}
                 items={[
                   {
@@ -73,7 +73,7 @@ const PractiseSuccess = ({ fails, bodyLength }) => {
                     ),
                   },
                 ]}
-              />
+              /> */}
             </div>
             <div className="flex flex-col gap-2">
               <div className="flex justify-between px-4 py-2 rounded-full font-medium w-[300px] bg-green-400/20 text-green-400">
