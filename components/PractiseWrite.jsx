@@ -23,6 +23,18 @@ const PractiseWrite = ({ keys, setKeys }) => {
     queryFn: () => getStudySet(pathParams.id),
   });
 
+  const reset = (e) => {
+    if (e.key === "Enter") {
+      setSuccess(false);
+      setFails(0);
+      setCount(0);
+      setKeys(Object.keys(data.body));
+      setInput("");
+      setTriesCount(0);
+      document.removeEventListener("keydown", reset);
+    }
+  };
+
   useEffect(() => {
     if (data) {
       setKeys(Object.keys(data.body));
@@ -100,17 +112,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
     setKeys((prev) => prev.sort((a, b) => 0.5 - Math.random()));
   };
 
-  const reset = (e) => {
-    if (e.key === "Enter") {
-      setSuccess(false);
-      setFails(0);
-      setCount(0);
-      setKeys(Object.keys(data.body));
-      setInput("");
-      setTriesCount(0);
-      document.removeEventListener("keydown", reset);
-    }
-  };
+
 
   if (isLoading || !keys) return <div>loading</div>;
 

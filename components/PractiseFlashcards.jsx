@@ -18,6 +18,16 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
     queryKey: [pathParams.id],
     queryFn: () => getStudySet(pathParams.id),
   });
+  const reset = (e) => {
+    if (e.key === "Enter") {
+      setSuccess(false);
+      setFails(0);
+      setCount(0);
+      setKeys(Object.keys(data.body));
+      setCurrentKey(Object.keys(data.body)[0]);
+      document.removeEventListener("keydown", reset);
+    }
+  };
   useEffect(() => {
     if (data) {
       setKeys(Object.keys(data.body));
@@ -55,16 +65,7 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
     setKeys((prev) => prev.sort((a, b) => 0.5 - Math.random()));
   };
 
-  const reset = (e) => {
-    if (e.key === "Enter") {
-      setSuccess(false);
-      setFails(0);
-      setCount(0);
-      setKeys(Object.keys(data.body));
-      setCurrentKey(Object.keys(data.body)[0]);
-      document.removeEventListener("keydown", reset);
-    }
-  };
+
 
   const variants = {
     visible: { scale: 1, x: 0, rotateY: side === "definition" ? 180 : 0 },
