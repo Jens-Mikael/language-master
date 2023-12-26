@@ -174,7 +174,7 @@ const AuthPage = ({ setIsAuthOpen, authType, setAuthType }) => {
               {/* PASSWORD */}
               <div className="flex flex-col gap-2">
                 <div className="font-medium text-sm text-black/50 peer-[&:not(:placeholder-shown):not(:focus):invalid]:hidden block">
-                  Password
+                  Passwor
                 </div>
 
                 <input
