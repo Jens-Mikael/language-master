@@ -1,5 +1,5 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { croissantOne } from "@/app/fonts";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
@@ -7,8 +7,8 @@ import { useState } from "react";
 import { useAuth } from "@/firebase/context/AuthContext";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
-import { useCallback } from "react";
-import { editSearchParams } from "@/functions";
+import { isBrowser } from "react-device-detect";
+import MobileTap from "./MobileTap";
 
 const newDropdown = [
   {
@@ -147,16 +147,18 @@ const Navbar = () => {
         </div>
         {/* SIDEBAR */}
         <div className="lg:hidden flex items-center">
-          <button
+          <MobileTap
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-full group cursor-pointer"
           >
             <SVG
-              className="h-7 w-7 fill-white transition group-hover:scale-110 group-hover:fill-indigo-500"
+              className={`h-7 w-7 fill-white transition ${
+                isBrowser && "group-hover:scale-110 group-hover:fill-indigo-500"
+              } `}
               src="/icons/ham-menu.svg"
               loader={<div className="h-7 w-7" />}
             />
-          </button>
+          </MobileTap>
         </div>
       </div>
       <Sidebar setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
@@ -165,4 +167,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

@@ -1,5 +1,6 @@
 "use client";
 
+import MobileTap from "@/components/MobileTap";
 import { useAuth } from "@/firebase/context/AuthContext";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
       >
         Language
       </div>
+      <MobileTap className="text-red-400"></MobileTap>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SVG from "react-inlinesvg";
 import LibraryDropdown from "./LibraryDropdown";
+import MobileTap from "./MobileTap";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const { googleAuth, logout, isLoading, currentUser } = useAuth();
@@ -19,7 +20,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       <div className="h-full bg-[#0A092D] w-[250px] shadow-xl flex flex-col gap-5 p-2">
         <div className="flex justify-between">
           <div className="p-2 text-lg">Menu</div>
-          <button
+          <MobileTap
             onClick={() => setSidebarOpen(false)}
             className="cursor pointer p-2"
           >
@@ -28,7 +29,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               className="h-7 w-7 fill-white"
               loader={<div className="h-7 w-7" />}
             />
-          </button>
+          </MobileTap>
         </div>
 
         {/* items */}
