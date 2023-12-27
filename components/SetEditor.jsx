@@ -48,7 +48,7 @@ const SetEditor = ({ uid, type }) => {
   const max = Math.max(...Object.keys(data.body));
 
   return (
-    <div className="min-h-full flex justify-center px-10 py-14">
+    <div className="min-h-full flex justify-center pt-4">
       <div className="w-full max-w-5xl flex flex-col gap-20">
         {/* HEADER */}
         <div className="flex justify-between items-center">

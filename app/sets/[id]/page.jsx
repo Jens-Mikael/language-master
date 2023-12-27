@@ -17,7 +17,7 @@ const LearnSetPage = () => {
   if (error) return <div>error</div>;
   return (
     <div className="flex justify-center gap-10">
-      <div className="max-w-5xl w-full p-10">
+      <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
           <div className="text-4xl font-bold">{data.head.title}</div>
           <div className="flex gap-5">
