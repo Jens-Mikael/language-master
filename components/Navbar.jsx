@@ -85,10 +85,10 @@ const Navbar = () => {
 
         {isSearchOpen && (
           <div className="lg:hidden fixed z-20 lg:z-0 inset-0  ">
-            <div className="bg-[#0A092D] p-3 gap-3 flex justify-center border-b lg:border-b-0 border-white/20">
+            <div className="bg-[#0A092D] p-2 gap-3 flex justify-center border-b lg:border-b-0 border-white/20">
               <MobileTap
                 onClick={() => setIsSearchOpen(false)}
-                className="cursor pointer p-1 group"
+                className="cursor pointer p-2 group rounded-full"
               >
                 <SVG
                   src="/icons/arrow-down.svg"
@@ -147,7 +147,7 @@ const Navbar = () => {
           {!isSearchOpen && (
             <MobileTap
               onClick={() => setIsSearchOpen(true)}
-              className="justify-end group p-2"
+              className="justify-end group p-2 rounded-full"
             >
               <SVG
                 className={`h-7 w-7 fill-white transition ${
