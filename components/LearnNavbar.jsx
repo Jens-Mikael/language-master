@@ -87,7 +87,7 @@ const LearnNavbar = ({ keys }) => {
             />
           </Link>
         </div>
-        <div className="absolute items-center flex-col flex font-medium">
+        <div className="absolute items-center flex-col flex font-medium sm:top-5 top-full">
           {!isLoading && keys ? (
             <div className="text-xl">{`${
               Object.keys(data.body).length - keys.length

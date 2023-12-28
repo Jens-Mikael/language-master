@@ -98,8 +98,8 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
         </>
       ) : (
         <>
-          <div className="h-full items-center flex justify-center">
-            <div className="flex flex-col gap-5 h-full max-w-5xl w-full py-5">
+          <div className="h-full items-center flex justify-center px-5">
+            <div className="flex flex-col justify-around gap-5 h-full max-w-5xl w-full pb-5 pt-[120px] sm:pt-5">
               <AnimatePresence mode="popLayout">
                 <motion.div
                   key={currentKey}
@@ -109,7 +109,7 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
                   whileTap={{ rotateY: side === "term" ? 180 : 0 }}
                   exit="exitRight"
                   variants={variants}
-                  className="transformStyle-3d relative cursor-pointer flex items-center justify-center text-4xl font-light w-full h-full bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20"
+                  className="transformStyle-3d relative cursor-pointer flex items-center justify-center text-4xl font-light w-full h-3/5 sm:h-full bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20"
                 >
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 `}

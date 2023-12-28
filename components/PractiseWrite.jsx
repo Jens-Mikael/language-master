@@ -124,14 +124,14 @@ const PractiseWrite = ({ keys, setKeys }) => {
           bodyLength={Object.keys(data.body).length}
         />
       ) : (
-        <div className="flex h-full justify-center items-center pb-36 pt-14">
+        <div className="flex h-full justify-center items-center pb-36 pt-14 px-8">
           <div className="flex flex-col w-full max-w-3xl gap-14">
-            <div className="bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20 px-12 py-16 flex flex-col gap-10">
+            <div className="bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20 px-8 sm:px-12 py-10 sm:py-16 flex flex-col gap-10">
               <div className="text-4xl font-light">
                 {data.body[keys[count]][side]}
               </div>
               <div className="bg-white/10 h-0.5" />
-              <div className="flex gap-10 items-center">
+              <div className="flex flex-col sm:flex-row gap-10">
                 <textarea
                   className="max-h-13 p-3 scrollbar-none resize-none bg-transparent flex-1 ring-none focus:outline-white/60 outline-white/30 outline outline-2  rounded-lg font-light text-xl transition-all"
                   rows="1"
@@ -153,7 +153,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
                 />
                 <button
                   onClick={() => setCount((prev) => prev + 1)}
-                  className="px-3 py-3 h-min rounded-lg bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition"
+                  className="px-3 py-3 h-min w-fit rounded-lg bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition"
                 >
                   Don't know.
                 </button>
