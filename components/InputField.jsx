@@ -12,7 +12,7 @@ const InputField = ({ label, placeholder, type, value, cardId, setId }) => {
   const { mutate: mutateStudyDraft } = useMutation({
     mutationFn: (input) => mutateStudySet(type, cardId, input, setId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studyDraft"] });
+      queryClient.invalidateQueries({ queryKey: ["studyDraft"] })
     },
   });
 
