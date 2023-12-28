@@ -3,6 +3,7 @@ import { getLibrarySets } from "@/firebase/hooks";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
+import { isBrowser } from "react-device-detect";
 
 const LibraryDropdown = ({ setIsLibraryOpen, setSidebarOpen }) => {
   const pathname = usePathname();
@@ -18,12 +19,13 @@ const LibraryDropdown = ({ setIsLibraryOpen, setSidebarOpen }) => {
       {data.map((i) => (
         <Link
           onClick={() => {
-            setIsLibraryOpen(false);
-            setSidebarOpen(false);
+            if (setSidebarOpen) {
+              setSidebarOpen(false);
+            } else setIsLibraryOpen(false);
           }}
           key={i.id}
           href={`/sets/${i.id}`}
-          className="group relative pl-4"
+          className={`relative pl-4 ${isBrowser && "group"}`}
         >
           <div
             className={`${
@@ -33,10 +35,13 @@ const LibraryDropdown = ({ setIsLibraryOpen, setSidebarOpen }) => {
           {i.title}
         </Link>
       ))}
-      <div className="py-2 px-4 border-t border-white/20 cursor-pointer hover:text-indigo-500 transition">
+      <div
+        className={`py-2 px-4 border-t border-white/20 cursor-pointer transition ${
+          isBrowser && "hover:text-indigo-500"
+        }`}
+      >
         View all sets
       </div>
-      
     </div>
   );
 };

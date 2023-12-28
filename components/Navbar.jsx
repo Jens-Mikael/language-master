@@ -38,7 +38,9 @@ const Navbar = () => {
           </Link>
           <Link
             href="/home"
-            className="relative h-full items-center sm:flex group hidden"
+            className={`relative h-full items-center sm:flex hidden ${
+              isBrowser && "group"
+            }`}
           >
             Home
             <div
@@ -50,7 +52,7 @@ const Navbar = () => {
 
           <div className="h-full relative sm:block hidden">
             <button
-              className=" h-full items-center flex group"
+              className={` h-full items-center flex ${isBrowser && "group"}`}
               onClick={() => setIsLibraryOpen((prev) => !prev)}
             >
               <div className="flex gap-2">
@@ -93,7 +95,8 @@ const Navbar = () => {
                 <SVG
                   src="/icons/arrow-down.svg"
                   className={`rotate-90 h-7 w-7 fill-white transition ${
-                    isBrowser && " group-hover:scale-125 group-hover:fill-indigo-500"
+                    isBrowser &&
+                    " group-hover:scale-125 group-hover:fill-indigo-500"
                   } `}
                   loader={<div className="h-7 w-7" />}
                 />
@@ -114,7 +117,7 @@ const Navbar = () => {
               <div className="relative h-full flex items-center gap-5">
                 <Link
                   href="/create-set"
-                  className="z-20 bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition-all rounded-full p-1 cursor-pointer"
+                  className={`z-20 bg-blue-600 transition-all rounded-full p-1 cursor-pointer hover:bg-indigo-600 hover:scale-105 `}
                 >
                   <SVG
                     src="/icons/new.svg"
@@ -122,22 +125,24 @@ const Navbar = () => {
                     loader={<div className="h-8 w-8" />}
                   />
                 </Link>
-                <button
+                <MobileTap
                   className="border border-white/20 px-2 py-1 rounded-lg"
                   onClick={logout}
                 >
                   Log Out
-                </button>
+                </MobileTap>
               </div>
             ) : (
               <>
                 <div className="flex gap-3">
-                  <button
-                    className="bg-blue-500 hover:bg-indigo-500 hover:scale-105 transition rounded-lg px-2 py-1"
+                  <MobileTap
+                    className={`bg-blue-500  transition rounded-lg px-2 py-1 ${
+                      isBrowser && "hover:bg-indigo-500 hover:scale-105"
+                    }`}
                     onClick={() => googleAuth()}
                   >
                     Log In
-                  </button>
+                  </MobileTap>
                 </div>
               </>
             ))}
