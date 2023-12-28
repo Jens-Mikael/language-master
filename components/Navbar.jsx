@@ -34,7 +34,7 @@ const Navbar = () => {
             href="/"
             className={`${croissantOne.className} text-3xl py-3 pr-2 flex h-full items-center`}
           >
-            kjnkjnkj
+            Language Mastery
           </Link>
           <Link
             href="/home"
