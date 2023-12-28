@@ -10,7 +10,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const { googleAuth, logout, isLoading, currentUser } = useAuth();
   const pathname = usePathname();
-  console.log(isBrowser)
   return (
     <div
       className={` fixed right-0 inset-0 z-20 flex lg:hidden transition duration-500 ${
@@ -54,7 +53,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               Home
             </Link>
 
-            <button
+            <div
               className={`relative flex pl-4 ${isBrowser && "group"}`}
               onClick={() => setIsLibraryOpen((prev) => !prev)}
             >
@@ -73,13 +72,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   pathname === "/library" ? "w-1" : "group-hover:w-1 w-0"
                 } absolute left-0 h-full bg-blue-500 rounded transition-all`}
               />
-            </button>
+            </div>
             {isLibraryOpen && (
               <div className="pl-5">
                 <LibraryDropdown
                   setIsLibraryOpen={setIsLibraryOpen}
                   setSidebarOpen={setSidebarOpen}
-                  
                 />
               </div>
             )}

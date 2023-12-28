@@ -51,10 +51,9 @@ const SetEditor = ({ uid, type }) => {
     <div className="min-h-full flex justify-center pt-4">
       <div className="w-full max-w-5xl flex flex-col gap-20">
         {/* HEADER */}
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-2">
           <div className="flex flex-col gap-2">
             <div className="text-2xl font-bold">Create a new study set</div>
-            <div className="text-sm">Saving...</div>
           </div>
           <button
             onClick={() => {
@@ -67,7 +66,7 @@ const SetEditor = ({ uid, type }) => {
                 }
               }
             }}
-            className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-6 py-4 rounded-lg text-lg font-medium"
+            className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-4 sm:px-6 py-3 sm:py-4 rounded-lg text-md sm:text-lg font-medium"
           >
             {type === "studyDraft" ? "Create" : "Save"}
           </button>
@@ -122,13 +121,14 @@ const SetEditor = ({ uid, type }) => {
             onClick={() => addStudyCard()}
             className="group w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
           >
-            <div className="border-b-4 border-blue-500 pb-2 font-bold text-xl group-hover:border-indigo-600 transition">
+            <div className="border-b-4 border-blue-500 pb-2 font-bold text-xl group-hover:border-indigo-600 transition w-fit">
               + New Card
             </div>
             <div className="absolute left-10 font-bold text-xl">
               {Object.keys(data.body).length + 1}
             </div>
           </button>
+
           {type != "studyDraft" && (
             <div className="flex justify-end">
               <Link

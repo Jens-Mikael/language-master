@@ -19,8 +19,8 @@ const LearnSetPage = () => {
     <div className="flex justify-center gap-10">
       <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
-          <div className="text-4xl font-bold">{data.head.title}</div>
-          <div className="flex gap-5">
+          <div className="text-3xl sm:text-4xl font-bold">{data.head.title}</div>
+          <div className="flex gap-5 flex-col md:flex-row">
             <Link
               href={`${pathname.id}/flashcards`}
               className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
@@ -34,7 +34,7 @@ const LearnSetPage = () => {
             </Link>
             <Link
               href={`${pathname.id}/write`}
-              className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+              className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-1 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
             >
               <SVG
                 src="/icons/write.svg"
@@ -46,20 +46,6 @@ const LearnSetPage = () => {
           </div>
           <div>
             <div>Your Learnings statistics</div>
-            {/* <div
-              onClick={async () => {
-                console.log(await setToCollection(pathname.id));
-              }}
-            >
-              Write to collection doc
-            </div>
-            <div
-              onClick={async () => {
-                console.log(await addTimestamp(pathname.id));
-              }}
-            >
-              Add time stamp
-            </div> */}
           </div>
           <div>Created by</div>
           {/* EDIT SET */}
@@ -71,11 +57,13 @@ const LearnSetPage = () => {
                   key={key}
                   className="flex bg-white/[0.15] rounded-lg text-lg "
                 >
-                  <div className="py-5 px-8">{i + 1}</div>
-                  <div className="w-0.5 bg-black/40" />
-                  <div className="font-medium flex flex-1 gap-3 p-5">
+                  <div className="py-5 px-8 flex justify-center items-center min-w-[84px]">
+                    {i + 1}
+                  </div>
+                  <div className="border-r-2 border-black/40" />
+                  <div className="font-medium flex flex-col sm:flex-row flex-1 gap-3 p-5">
                     <div className="flex-1">{data.body[key].term}</div>
-                    <div className="w-0.5 bg-black/40" />
+                    <div className="sm:w-0.5 w-full h-0.5 sm:h-full bg-black/40" />
                     <div className="flex-1">{data.body[key].definition}</div>
                   </div>
                 </div>
