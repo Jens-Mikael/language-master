@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useAuth } from "@/firebase/context/AuthContext";
+import MobileTap from "@/components/MobileTap";
 
 const LearnSetPage = () => {
   const pathname = useParams();
@@ -23,28 +24,32 @@ const LearnSetPage = () => {
             {data.head.title}
           </div>
           <div className="flex gap-5 flex-col md:flex-row">
-            <Link
-              href={`${pathname.id}/flashcards`}
-              className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
-            >
-              <SVG
-                src="/icons/flashcards.svg"
-                className="fill-blue-500 h-12 w-12 betterhover:group-hover:fill-indigo-500 transition"
-                loader={<div className="h-12 w-12" />}
-              />
-              <div className="text-2xl font-bold">FlashCards</div>
-            </Link>
-            <Link
-              href={`${pathname.id}/write`}
-              className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-1 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
-            >
-              <SVG
-                src="/icons/write.svg"
-                className="fill-blue-500 h-14 w-14 betterhover:group-hover:fill-indigo-500 transition"
-                loader={<div className="h-14 w-14" />}
-              />
-              <div className="text-2xl font-bold">Write</div>
-            </Link>
+            <MobileTap>
+              <Link
+                href={`${pathname.id}/flashcards`}
+                className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+              >
+                <SVG
+                  src="/icons/flashcards.svg"
+                  className="fill-blue-500 h-12 w-12 betterhover:group-hover:fill-indigo-500 transition"
+                  loader={<div className="h-12 w-12" />}
+                />
+                <div className="text-2xl font-bold">FlashCards</div>
+              </Link>
+            </MobileTap>
+            <MobileTap>
+              <Link
+                href={`${pathname.id}/write`}
+                className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-1 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+              >
+                <SVG
+                  src="/icons/write.svg"
+                  className="fill-blue-500 h-14 w-14 betterhover:group-hover:fill-indigo-500 transition"
+                  loader={<div className="h-14 w-14" />}
+                />
+                <div className="text-2xl font-bold">Write</div>
+              </Link>
+            </MobileTap>
           </div>
           <div>
             <div>Your Learnings statistics</div>
