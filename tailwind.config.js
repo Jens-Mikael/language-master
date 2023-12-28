@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-import plugin from "tailwindcss/plugin"
+import plugin from "tailwindcss/plugin";
 
 const backfaceVisibility = plugin(function ({ addUtilities }) {
   addUtilities({
@@ -51,6 +51,9 @@ module.exports = {
         ubuntu: ["var(--font-ubuntu)"],
       },
     },
+  },
+  future: {
+    hoverOnlyWhenSupported: true,
   },
   plugins: [backfaceVisibility, transformStyle, transform],
 };

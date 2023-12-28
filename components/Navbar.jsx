@@ -38,9 +38,7 @@ const Navbar = () => {
           </Link>
           <Link
             href="/home"
-            className={`relative h-full items-center sm:flex hidden ${
-              isBrowser && "group"
-            }`}
+            className={`relative h-full items-center sm:flex hidden group`}
           >
             Home
             <div
@@ -52,7 +50,7 @@ const Navbar = () => {
 
           <div className="h-full relative sm:block hidden">
             <button
-              className={` h-full items-center flex ${isBrowser && "group"}`}
+              className={` h-full items-center flex group`}
               onClick={() => setIsLibraryOpen((prev) => !prev)}
             >
               <div className="flex gap-2">
@@ -94,10 +92,7 @@ const Navbar = () => {
               >
                 <SVG
                   src="/icons/arrow-down.svg"
-                  className={`rotate-90 h-7 w-7 fill-white transition ${
-                    isBrowser &&
-                    " group-hover:scale-125 group-hover:fill-indigo-500"
-                  } `}
+                  className={`rotate-90 h-7 w-7 fill-white transition group-hover:scale-125 group-hover:fill-indigo-500 `}
                   loader={<div className="h-7 w-7" />}
                 />
               </MobileTap>
@@ -136,9 +131,7 @@ const Navbar = () => {
               <>
                 <div className="flex gap-3">
                   <MobileTap
-                    className={`bg-blue-500  transition rounded-lg px-2 py-1 ${
-                      isBrowser && "hover:bg-indigo-500 hover:scale-105"
-                    }`}
+                    className={`bg-blue-500  transition rounded-lg px-2 py-1 hover:bg-indigo-500 hover:scale-105`}
                     onClick={() => googleAuth()}
                   >
                     Log In
@@ -155,10 +148,7 @@ const Navbar = () => {
               className="justify-end group p-2 rounded-full"
             >
               <SVG
-                className={`h-7 w-7 fill-white transition ${
-                  isBrowser &&
-                  "group-hover:scale-110 group-hover:fill-indigo-500"
-                } `}
+                className={`h-7 w-7 fill-white transition hover:bg-indigo-500 hover:scale-105 `}
                 loader={<div className="h-6 w-6" />}
                 src="/icons/search.svg"
               />
@@ -169,9 +159,7 @@ const Navbar = () => {
             className="p-2 rounded-full group cursor-pointer"
           >
             <SVG
-              className={`h-7 w-7 fill-white transition ${
-                isBrowser && "group-hover:scale-110 group-hover:fill-indigo-500"
-              } `}
+              className={`h-7 w-7 fill-white transition hover:bg-indigo-500 hover:scale-105`}
               src="/icons/ham-menu.svg"
               loader={<div className="h-7 w-7" />}
             />

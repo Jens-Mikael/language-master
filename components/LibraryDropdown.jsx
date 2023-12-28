@@ -25,7 +25,7 @@ const LibraryDropdown = ({ setIsLibraryOpen, setSidebarOpen }) => {
           }}
           key={i.id}
           href={`/sets/${i.id}`}
-          className={`relative pl-4 ${isBrowser && "group"}`}
+          className={`relative pl-4 group`}
         >
           <div
             className={`${
@@ -36,9 +36,7 @@ const LibraryDropdown = ({ setIsLibraryOpen, setSidebarOpen }) => {
         </Link>
       ))}
       <div
-        className={`py-2 px-4 border-t border-white/20 cursor-pointer transition ${
-          isBrowser && "hover:text-indigo-500"
-        }`}
+        className={`py-2 px-4 border-t border-white/20 cursor-pointer transition hover:text-indigo-500`}
       >
         View all sets
       </div>

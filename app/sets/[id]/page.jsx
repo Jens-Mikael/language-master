@@ -19,7 +19,9 @@ const LearnSetPage = () => {
     <div className="flex justify-center gap-10">
       <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
-          <div className="text-3xl sm:text-4xl font-bold">{data.head.title}</div>
+          <div className="text-3xl sm:text-4xl font-bold">
+            {data.head.title}
+          </div>
           <div className="flex gap-5 flex-col md:flex-row">
             <Link
               href={`${pathname.id}/flashcards`}
@@ -27,7 +29,7 @@ const LearnSetPage = () => {
             >
               <SVG
                 src="/icons/flashcards.svg"
-                className="fill-blue-500 h-12 w-12 group-hover:fill-indigo-500 transition"
+                className="fill-blue-500 h-12 w-12 betterhover:group-hover:fill-indigo-500 transition"
                 loader={<div className="h-12 w-12" />}
               />
               <div className="text-2xl font-bold">FlashCards</div>
@@ -38,7 +40,7 @@ const LearnSetPage = () => {
             >
               <SVG
                 src="/icons/write.svg"
-                className="fill-blue-500 h-14 w-14 group-hover:fill-indigo-500 transition"
+                className="fill-blue-500 h-14 w-14 betterhover:group-hover:fill-indigo-500 transition"
                 loader={<div className="h-14 w-14" />}
               />
               <div className="text-2xl font-bold">Write</div>

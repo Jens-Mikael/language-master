@@ -43,7 +43,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             <Link
               href="/home"
               onClick={() => setSidebarOpen(false)}
-              className={`relative w-full pl-4 ${isBrowser && "group"}`}
+              className={`relative w-full pl-4 group`}
             >
               <div
                 className={`${
@@ -54,7 +54,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </Link>
 
             <div
-              className={`relative flex pl-4 ${isBrowser && "group"}`}
+              className={`relative flex pl-4 group`}
               onClick={() => setIsLibraryOpen((prev) => !prev)}
             >
               <div className="flex gap-2">
@@ -90,9 +90,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 <>
                   <Link
                     href="/create-set"
-                    className={`z-20 bg-blue-600 transition-all rounded-full pl-2 pr-3 py-1 cursor-pointer w-fit flex gap-1 items-center ${
-                      isBrowser && "hover:bg-indigo-600 hover:scale-105"
-                    }`}
+                    className={`z-20 bg-blue-600 transition-all rounded-full pl-2 pr-3 py-1 cursor-pointer w-fit flex gap-1 items-center hover:bg-indigo-600 hover:scale-105`}
                     onClick={() => setIsNewOpen((prev) => !prev)}
                   >
                     <SVG
