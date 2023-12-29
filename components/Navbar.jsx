@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="flex gap-5 items-center ">
           <Link
             href="/"
-            className={`${croissantOne.className} text-2xl py-3 pr-2 flex h-full items-center`}
+            className={`${croissantOne.className} sm:text-2xl text-3xl py-3 pr-2 flex h-full items-center`}
           >
             Language Mastery
           </Link>
