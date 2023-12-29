@@ -78,12 +78,14 @@ const LearnSetPage = () => {
             </div>
             {data.creator === currentUser.uid && (
               <div className="flex justify-center">
-                <Link
-                  href={`/edit-set/${pathname.id}`}
-                  className="rounded-xl sm:text-lg font-medium px-7 sm:px-10 py-3 sm:py-5 bg-blue-600 hover:bg-indigo-700 hover:scale-105 transition"
-                >
-                  Edit set
-                </Link>
+                <MobileTap>
+                  <Link
+                    href={`/edit-set/${pathname.id}`}
+                    className="rounded-xl sm:text-lg font-medium px-7 sm:px-10 py-3 sm:py-5 bg-blue-600 hover:bg-indigo-700 hover:scale-105 transition"
+                  >
+                    Edit set
+                  </Link>
+                </MobileTap>
               </div>
             )}
           </div>

@@ -148,7 +148,7 @@ const Navbar = () => {
               className="justify-end group p-2 rounded-full"
             >
               <SVG
-                className={`h-7 w-7 fill-white transition hover:bg-indigo-500 hover:scale-105 `}
+                className={`h-7 w-7 fill-white transition hover:fill-indigo-500 hover:scale-105 `}
                 loader={<div className="h-6 w-6" />}
                 src="/icons/search.svg"
               />
@@ -159,7 +159,7 @@ const Navbar = () => {
             className="p-2 rounded-full group cursor-pointer"
           >
             <SVG
-              className={`h-7 w-7 fill-white transition hover:bg-indigo-500 hover:scale-105`}
+              className={`h-7 w-7 fill-white transition hover:fill-indigo-500 hover:scale-105`}
               src="/icons/ham-menu.svg"
               loader={<div className="h-7 w-7" />}
             />

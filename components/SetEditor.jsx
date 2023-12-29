@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect } from "react";
+import MobileTap from "./MobileTap";
 
 const SetEditor = ({ uid, type }) => {
   const router = useRouter();
@@ -55,7 +56,7 @@ const SetEditor = ({ uid, type }) => {
           <div className="flex flex-col gap-2">
             <div className="text-2xl font-bold">Create a new study set</div>
           </div>
-          <button
+          <MobileTap
             onClick={() => {
               if (data.head.title !== "") {
                 if (type === "studyDraft") {
@@ -69,7 +70,7 @@ const SetEditor = ({ uid, type }) => {
             className="bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition px-4 sm:px-6 py-3 sm:py-4 rounded-lg text-md sm:text-lg font-medium"
           >
             {type === "studyDraft" ? "Create" : "Save"}
-          </button>
+          </MobileTap>
         </div>
 
         {/* SET DETAILS */}
@@ -117,7 +118,7 @@ const SetEditor = ({ uid, type }) => {
               </motion.div>
             </AnimatePresence>
           ))}
-          <button
+          <MobileTap
             onClick={() => addStudyCard()}
             className="group w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
           >
@@ -127,17 +128,19 @@ const SetEditor = ({ uid, type }) => {
             <div className="absolute left-10 font-bold text-xl">
               {Object.keys(data.body).length + 1}
             </div>
-          </button>
+          </MobileTap>
 
           {type != "studyDraft" && (
             <div className="flex justify-end">
-              <Link
-                href="/"
-                onClick={deleteSet}
-                className="py-3 px-5 rounded-lg border border-white/40 bg-white/5 hover:bg-white/10 hover:scale-105 transition"
-              >
-                Delete Set
-              </Link>
+              <MobileTap>
+                <Link
+                  href="/"
+                  onClick={deleteSet}
+                  className="py-3 px-5 rounded-lg border border-white/40 bg-white/5 hover:bg-white/10 hover:scale-105 transition"
+                >
+                  Delete Set
+                </Link>
+              </MobileTap>
             </div>
           )}
         </div>
