@@ -28,6 +28,9 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
+div,
+div:active,
+div:focus,
 button,
 button:active,
 button:focus {

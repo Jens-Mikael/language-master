@@ -1,5 +1,3 @@
-"use client";
-import { useState } from "react";
 import InputField from "./InputField";
 import SVG from "react-inlinesvg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -33,7 +31,7 @@ const NewStudySetCard = ({ obj, cardId, index, setId, type }) => {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="flex gap-10 p-5 pt-10">
+      <div className="flex flex-col sm:flex-row gap-5 sm:gap-10 p-5 pt-10">
         {/* TERM */}
         <div className="grow">
           <InputField

@@ -15,7 +15,9 @@ export default function RootLayout({ children }) {
         <body className={`${ubuntu.className} bg-[#0A092D] text-white`}>
           <div className="bg-[#0A092D] min-h-screen">
             <Navbar />
+            <div className="px-7 py-10 sm:p-10">
             {children}
+            </div>
           </div>
         </body>
       </Providers>

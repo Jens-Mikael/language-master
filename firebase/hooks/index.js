@@ -16,6 +16,7 @@ import {
   serverTimestamp,
   query,
   where,
+  limit,
 } from "firebase/firestore";
 
 export const isUsernameAvailable = async (username) => {
@@ -133,10 +134,12 @@ export const getLibrarySets = async (uid) => {
     const createdSets = userDocSnap.data().studySets.created;
     const setsQuery = query(
       collection(firestore, `studySets`),
-      where("__name__", "in", createdSets)
+      where("__name__", "in", createdSets),
+      limit(5)
     );
     const arr = [];
     const docsSnap = await getDocs(setsQuery);
+    console.log(docsSnap);
     docsSnap.forEach((doc) => {
       const data = doc.data();
       arr.push({

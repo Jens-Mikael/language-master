@@ -9,17 +9,12 @@ import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
 import { isBrowser } from "react-device-detect";
 import MobileTap from "./MobileTap";
-
-const newDropdown = [
-  {
-    title: "Study set",
-    link: "/create-set",
-  },
-];
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [input, setInput] = useState("");
   const pathname = usePathname();
   // const searchParams = useSearchParams();
@@ -32,18 +27,18 @@ const Navbar = () => {
   // , []);
   return (
     <>
-      <div className="flex border-b border-white/20 px-10 whitespace-nowrap gap-8 h-[60px]">
+      <div className="flex border-b border-white/20 px-3 sm:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
         {/* FIRST SECTION */}
         <div className="flex gap-5 items-center ">
           <Link
             href="/"
-            className={`${croissantOne.className} text-3xl py-3 pr-2 flex h-full items-center`}
+            className={`${croissantOne.className} text-2xl sm:text-3xl py-3 pr-2 flex h-full items-center`}
           >
             Language Mastery
           </Link>
           <Link
             href="/home"
-            className="relative h-full items-center lg:flex group hidden"
+            className={`relative h-full items-center sm:flex hidden group`}
           >
             Home
             <div
@@ -53,9 +48,9 @@ const Navbar = () => {
             />
           </Link>
 
-          <div className="h-full relative lg:block hidden">
+          <div className="h-full relative sm:block hidden">
             <button
-              className=" h-full items-center flex group"
+              className={` h-full items-center flex group`}
               onClick={() => setIsLibraryOpen((prev) => !prev)}
             >
               <div className="flex gap-2">
@@ -85,31 +80,31 @@ const Navbar = () => {
             )}
           </div>
         </div>
+
         {/* SEARCH BAR */}
-        <div className="grow min-w-[200px] items-center justify-center flex text-sm relative">
-          <SVG
-            src="/icons/search.svg"
-            className="h-6 w-6 fill-white absolute left-3"
-            loader={<div className="h-6 w-6 absolute left-3" />}
-          />
-          <input
-            type="text"
-            placeholder="Search for anything..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className={`w-full bg-white/20 focus:ring-none focus:outline outline-white rounded-full py-2 transition ${
-              input ? "px-11" : "pr-2 pl-11"
-            }`}
-          />
-          <SVG
-            src="/icons/remove.svg"
-            className={`h-6 w-6 fill-white absolute right-3 cursor-pointer ${
-              !input && "hidden"
-            }`}
-            onClick={() => setInput("")}
-            loader={<div className="h-6 w-6 absolute right-3" />}
-          />
+
+        {isSearchOpen && (
+          <div className="lg:hidden fixed z-20 lg:z-0 inset-0  ">
+            <div className="bg-[#0A092D] p-2 gap-3 flex justify-center border-b lg:border-b-0 border-white/20">
+              <MobileTap
+                onClick={() => setIsSearchOpen(false)}
+                className="cursor pointer p-2 group rounded-full"
+              >
+                <SVG
+                  src="/icons/arrow-down.svg"
+                  className={`rotate-90 h-7 w-7 fill-white transition group-hover:scale-125 group-hover:fill-indigo-500 `}
+                  loader={<div className="h-7 w-7" />}
+                />
+              </MobileTap>
+              <SearchBar input={input} setInput={setInput} />
+            </div>
+            <div onClick={() => setIsSearchOpen(false)} className="h-full" />
+          </div>
+        )}
+        <div className="lg:flex hidden w-full items-center">
+          <SearchBar input={input} setInput={setInput} />
         </div>
+
         {/* LAST SECTION */}
         <div className="lg:flex hidden gap-8 items-center">
           {!isLoading &&
@@ -117,7 +112,7 @@ const Navbar = () => {
               <div className="relative h-full flex items-center gap-5">
                 <Link
                   href="/create-set"
-                  className="z-20 bg-blue-600 hover:bg-indigo-600 hover:scale-105 transition-all rounded-full p-1 cursor-pointer"
+                  className={`z-20 bg-blue-600 transition-all rounded-full p-1 cursor-pointer hover:bg-indigo-600 hover:scale-105 `}
                 >
                   <SVG
                     src="/icons/new.svg"
@@ -125,36 +120,46 @@ const Navbar = () => {
                     loader={<div className="h-8 w-8" />}
                   />
                 </Link>
-                <button
+                <MobileTap
                   className="border border-white/20 px-2 py-1 rounded-lg"
                   onClick={logout}
                 >
                   Log Out
-                </button>
+                </MobileTap>
               </div>
             ) : (
               <>
                 <div className="flex gap-3">
-                  <button
-                    className="bg-blue-500 hover:bg-indigo-500 hover:scale-105 transition rounded-lg px-2 py-1"
+                  <MobileTap
+                    className={`bg-blue-500  transition rounded-lg px-2 py-1 hover:bg-indigo-500 hover:scale-105`}
                     onClick={() => googleAuth()}
                   >
                     Log In
-                  </button>
+                  </MobileTap>
                 </div>
               </>
             ))}
         </div>
         {/* SIDEBAR */}
-        <div className="lg:hidden flex items-center">
+        <div className="lg:hidden flex items-center gap-3">
+          {!isSearchOpen && (
+            <MobileTap
+              onClick={() => setIsSearchOpen(true)}
+              className="justify-end group p-2 rounded-full"
+            >
+              <SVG
+                className={`h-7 w-7 fill-white transition hover:fill-indigo-500 hover:scale-105 `}
+                loader={<div className="h-6 w-6" />}
+                src="/icons/search.svg"
+              />
+            </MobileTap>
+          )}
           <MobileTap
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-full group cursor-pointer"
           >
             <SVG
-              className={`h-7 w-7 fill-white transition ${
-                isBrowser && "group-hover:scale-110 group-hover:fill-indigo-500"
-              } `}
+              className={`h-7 w-7 fill-white transition hover:fill-indigo-500 hover:scale-105`}
               src="/icons/ham-menu.svg"
               loader={<div className="h-7 w-7" />}
             />

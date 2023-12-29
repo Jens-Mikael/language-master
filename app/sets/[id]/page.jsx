@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useAuth } from "@/firebase/context/AuthContext";
+import MobileTap from "@/components/MobileTap";
 
 const LearnSetPage = () => {
   const pathname = useParams();
@@ -17,49 +18,41 @@ const LearnSetPage = () => {
   if (error) return <div>error</div>;
   return (
     <div className="flex justify-center gap-10">
-      <div className="max-w-5xl w-full p-10">
+      <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
-          <div className="text-4xl font-bold">{data.head.title}</div>
-          <div className="flex gap-5">
-            <Link
-              href={`${pathname.id}/flashcards`}
-              className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
-            >
-              <SVG
-                src="/icons/flashcards.svg"
-                className="fill-blue-500 h-12 w-12 group-hover:fill-indigo-500 transition"
-                loader={<div className="h-12 w-12" />}
-              />
-              <div className="text-2xl font-bold">FlashCards</div>
-            </Link>
-            <Link
-              href={`${pathname.id}/write`}
-              className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
-            >
-              <SVG
-                src="/icons/write.svg"
-                className="fill-blue-500 h-14 w-14 group-hover:fill-indigo-500 transition"
-                loader={<div className="h-14 w-14" />}
-              />
-              <div className="text-2xl font-bold">Write</div>
-            </Link>
+          <div className="text-3xl sm:text-4xl font-bold">
+            {data.head.title}
+          </div>
+          <div className="flex gap-5 flex-col md:flex-row">
+            <MobileTap>
+              <Link
+                href={`${pathname.id}/flashcards`}
+                className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+              >
+                <SVG
+                  src="/icons/flashcards.svg"
+                  className="fill-blue-500 h-12 w-12 betterhover:group-hover:fill-indigo-500 transition"
+                  loader={<div className="h-12 w-12" />}
+                />
+                <div className="text-2xl font-bold">FlashCards</div>
+              </Link>
+            </MobileTap>
+            <MobileTap>
+              <Link
+                href={`${pathname.id}/write`}
+                className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-1 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+              >
+                <SVG
+                  src="/icons/write.svg"
+                  className="fill-blue-500 h-14 w-14 betterhover:group-hover:fill-indigo-500 transition"
+                  loader={<div className="h-14 w-14" />}
+                />
+                <div className="text-2xl font-bold">Write</div>
+              </Link>
+            </MobileTap>
           </div>
           <div>
             <div>Your Learnings statistics</div>
-            {/* <div
-              onClick={async () => {
-                console.log(await setToCollection(pathname.id));
-              }}
-            >
-              Write to collection doc
-            </div>
-            <div
-              onClick={async () => {
-                console.log(await addTimestamp(pathname.id));
-              }}
-            >
-              Add time stamp
-            </div> */}
           </div>
           <div>Created by</div>
           {/* EDIT SET */}
@@ -71,11 +64,13 @@ const LearnSetPage = () => {
                   key={key}
                   className="flex bg-white/[0.15] rounded-lg text-lg "
                 >
-                  <div className="py-5 px-8">{i + 1}</div>
-                  <div className="w-0.5 bg-black/40" />
-                  <div className="font-medium flex flex-1 gap-3 p-5">
+                  <div className="py-5 px-8 flex justify-center items-center min-w-[84px]">
+                    {i + 1}
+                  </div>
+                  <div className="border-r-2 border-black/40" />
+                  <div className="font-medium flex flex-col sm:flex-row flex-1 gap-3 p-5">
                     <div className="flex-1">{data.body[key].term}</div>
-                    <div className="w-0.5 bg-black/40" />
+                    <div className="sm:w-0.5 w-full h-0.5 sm:h-full bg-black/40" />
                     <div className="flex-1">{data.body[key].definition}</div>
                   </div>
                 </div>
@@ -83,12 +78,14 @@ const LearnSetPage = () => {
             </div>
             {data.creator === currentUser.uid && (
               <div className="flex justify-center">
-                <Link
-                  href={`/edit-set/${pathname.id}`}
-                  className="rounded-xl text-lg font-medium px-10 py-5 bg-blue-600 hover:bg-indigo-700 hover:scale-105 transition"
-                >
-                  Edit set
-                </Link>
+                <MobileTap>
+                  <Link
+                    href={`/edit-set/${pathname.id}`}
+                    className="rounded-xl sm:text-lg font-medium px-7 sm:px-10 py-3 sm:py-5 bg-blue-600 hover:bg-indigo-700 hover:scale-105 transition"
+                  >
+                    Edit set
+                  </Link>
+                </MobileTap>
               </div>
             )}
           </div>
