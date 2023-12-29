@@ -27,12 +27,12 @@ const Navbar = () => {
   // , []);
   return (
     <>
-      <div className="flex border-b border-white/20 px-7 sm:px-10 whitespace-nowrap gap-8 h-[60px] justify-between">
+      <div className="flex border-b border-white/20 px-3 sm:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
         {/* FIRST SECTION */}
         <div className="flex gap-5 items-center ">
           <Link
             href="/"
-            className={`${croissantOne.className} text-3xl py-3 pr-2 flex h-full items-center`}
+            className={`${croissantOne.className} text-2xl py-3 pr-2 flex h-full items-center`}
           >
             Language Mastery
           </Link>
