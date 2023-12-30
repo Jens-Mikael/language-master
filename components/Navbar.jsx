@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useAuth } from "@/firebase/context/AuthContext";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
-import { isBrowser } from "react-device-detect";
 import MobileTap from "./MobileTap";
 import SearchBar from "./SearchBar";
 
@@ -17,14 +16,9 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [input, setInput] = useState("");
   const pathname = usePathname();
-  // const searchParams = useSearchParams();
-  // const router = useRouter();
 
   const { currentUser, isLoading, googleAuth, logout } = useAuth();
 
-  // const setSearchParams = useCallback(
-  //   (queryObj) => editSearchParams(queryObj, searchParams)[searchParams]
-  // , []);
   return (
     <>
       <div className="flex border-b border-white/20 px-3 sm:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">

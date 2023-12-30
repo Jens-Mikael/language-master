@@ -1,7 +1,12 @@
 "use client";
-import { addTimestamp, getStudySet, setToCollection } from "@/firebase/hooks";
+import {
+  addTimestamp,
+  editPublicity,
+  getStudySet,
+  setToCollection,
+} from "@/firebase/hooks";
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useAuth } from "@/firebase/context/AuthContext";
@@ -9,10 +14,18 @@ import MobileTap from "@/components/MobileTap";
 
 const LearnSetPage = () => {
   const pathname = useParams();
+  const queryClient = useQueryClient();
   const { currentUser } = useAuth();
   const { data, isLoading, error } = useQuery({
     queryKey: [pathname.id],
     queryFn: () => getStudySet(pathname.id),
+  });
+
+  const { mutateAsync: mutatePublicity } = useMutation({
+    mutationFn: (isPublic) => editPublicity(pathname.id, isPublic),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [pathname.id] });
+    },
   });
   if (isLoading) return <div>loading...</div>;
   if (error) return <div>error</div>;
@@ -57,7 +70,34 @@ const LearnSetPage = () => {
           <div>Created by</div>
           {/* EDIT SET */}
           <div className="flex flex-col gap-8">
-            <div>Set content (32)</div>
+            <div className="flex justify-between">
+              <div>Set content (32)</div>
+              {data.creator === currentUser.uid && (
+                <div>
+                  <label className=" relative inline-flex cursor-pointer select-none items-center">
+                    <input
+                      type="checkbox"
+                      name="autoSaver"
+                      className="sr-only peer"
+                      defaultChecked={data.isPublic}
+                      onChange={(e) => mutatePublicity(e.target.checked)}
+                    />
+                    <div
+                      className={`h-7 w-14 items-center rounded-full duration-200 peer-checked:bg-indigo-600 bg-red-600`}
+                    />
+                    <div
+                      className={`absolute left-1.5 h-5 w-5 rounded-full bg-white duration-200 peer-checked:translate-x-6 `}
+                    />
+                    <div className="pointer-events-none absolute peer-checked:hidden bottom-full mb-2">
+                      Private
+                    </div>
+                    <div className="pointer-events-none absolute peer-checked:block hidden bottom-full mb-2">
+                      Public
+                    </div>
+                  </label>
+                </div>
+              )}
+            </div>
             <div className="flex flex-col gap-3">
               {Object.keys(data.body).map((key, i) => (
                 <div

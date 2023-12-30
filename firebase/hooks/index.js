@@ -134,8 +134,7 @@ export const getLibrarySets = async (uid) => {
     const createdSets = userDocSnap.data().studySets.created;
     const setsQuery = query(
       collection(firestore, `studySets`),
-      where("__name__", "in", createdSets),
-      limit(5)
+      where("__name__", "in", createdSets)
     );
     const arr = [];
     const docsSnap = await getDocs(setsQuery);
@@ -166,7 +165,13 @@ export const getStudySet = async (id) => {
     docsSnap.forEach((doc) => {
       body[doc.id] = doc.data();
     });
-    return { body, head: data.head, creator: data.creator, id };
+    return {
+      body,
+      head: data.head,
+      creator: data.creator,
+      id,
+      isPublic: data.isPublic,
+    };
   } catch (error) {
     console.log(error.message);
     return error;
@@ -302,5 +307,38 @@ export const addTimestamp = async (id) => {
     return "success";
   } catch (error) {
     return error.message;
+  }
+};
+
+export const editPublicity = async (id, isPublic) => {
+  const docRef = doc(firestore, `studySets/${id}`);
+  console.log(isPublic);
+  try {
+    return updateDoc(docRef, { isPublic: isPublic });
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getPublicSets = async () => {
+  const docsQuery = query(
+    collection(firestore, "studySets"),
+    where("isPublic", "==", true)
+  );
+  const arr = [];
+  try {
+    const docsSnap = await getDocs(docsQuery);
+    docsSnap.forEach((doc) => {
+      const data = doc.data();
+      arr.push({
+        title: data.head.title,
+        description: data.head.description,
+        id: doc.id,
+        creator: data.creator,
+      });
+    });
+    return arr;
+  } catch (error) {
+    return error;
   }
 };

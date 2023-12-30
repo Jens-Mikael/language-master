@@ -2,7 +2,6 @@ import { useAuth } from "@/firebase/context/AuthContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { isBrowser } from "react-device-detect";
 import SVG from "react-inlinesvg";
 import LibraryDropdown from "./LibraryDropdown";
 import MobileTap from "./MobileTap";
