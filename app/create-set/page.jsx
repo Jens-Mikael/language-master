@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const CreateSetPage = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!currentUser) {
+    if (!currentUser && !isLoading) {
       router.push("/");
     }
-  }, [currentUser, router]);
+  }, [currentUser, router, isLoading]);
   if (currentUser)
     return (
       <>

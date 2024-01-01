@@ -50,6 +50,7 @@ const SearchBar = () => {
         }}
         onClick={() => setShowSugg(true)}
         onFocus={() => setShowSugg(true)}
+        
         onBlur={(e) => {
           if (e?.relatedTarget?.name !== "link") {
             setShowSugg(false);

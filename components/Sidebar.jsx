@@ -90,7 +90,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   <Link
                     href="/create-set"
                     className={`z-20 bg-blue-600 transition-all rounded-full pl-2 pr-3 py-1 cursor-pointer w-fit flex gap-1 items-center hover:bg-indigo-600 hover:scale-105`}
-                    onClick={() => setIsNewOpen((prev) => !prev)}
+                    onClick={() => setSidebarOpen(false)}
                   >
                     <SVG
                       src="/icons/new.svg"
@@ -101,7 +101,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   </Link>
                   <button
                     className="border border-white/20 px-2 py-1 rounded-lg  w-fit"
-                    onClick={logout}
+                    onClick={() => {
+                      setSidebarOpen(false);
+                      logout();
+                    }}
                   >
                     Log Out
                   </button>
@@ -109,8 +112,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               ) : (
                 <>
                   <button
-                    className="bg-blue-500 hover:bg-indigo-500 hover:scale-105 transition rounded-lg px-2 py-1"
-                    onClick={() => googleAuth()}
+                    className="bg-blue-500 hover:bg-indigo-500 hover:scale-105 transition rounded-lg px-3 py-1 w-fit"
+                    onClick={() => {
+                      setSidebarOpen(false);
+                      googleAuth();
+                    }}
                   >
                     Log In
                   </button>
