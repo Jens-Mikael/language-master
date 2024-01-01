@@ -17,7 +17,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     >
       <div onClick={() => setSidebarOpen(false)} className="flex-1" />
       {/* content */}
-      <div className="h-full bg-[#0A092D] w-[250px] shadow-xl flex flex-col gap-5 p-2 border-l border-white/20">
+      <div className="h-full bg-[#0A092D] overflow-y-scroll w-[250px] shadow-xl flex flex-col gap-5 p-2 border-l border-white/20">
         <div className="flex flex-col gap-[7px]">
           <div className="flex justify-between">
             <div className="p-2 text-lg">Menu</div>

@@ -13,7 +13,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="">
       <Providers>
-        <body className={`${ubuntu.className} bg-[#0A092D] text-white`}>
+        <body
+          className={`${ubuntu.className} bg-[#0A092D] text-white overflow-x-hidden`}
+        >
           <div className="bg-[#0A092D] min-h-screen flex flex-col">
             <Navbar />
             <div className="px-7 py-10 sm:p-10 flex-1">{children}</div>
