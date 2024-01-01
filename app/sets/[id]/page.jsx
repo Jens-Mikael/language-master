@@ -27,6 +27,7 @@ const LearnSetPage = () => {
       queryClient.invalidateQueries({ queryKey: [pathname.id] });
     },
   });
+
   if (isLoading) return <div>loading...</div>;
   if (error) return <div>error</div>;
   return (
@@ -37,10 +38,10 @@ const LearnSetPage = () => {
             {data.head.title}
           </div>
           <div className="flex gap-5 flex-col md:flex-row">
-            <MobileTap>
+            <MobileTap className="flex-1">
               <Link
                 href={`${pathname.id}/flashcards`}
-                className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+                className="w-full flex gap-3 items-center rounded-xl bg-white/10 px-4 py-2 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
               >
                 <SVG
                   src="/icons/flashcards.svg"
@@ -50,10 +51,10 @@ const LearnSetPage = () => {
                 <div className="text-2xl font-bold">FlashCards</div>
               </Link>
             </MobileTap>
-            <MobileTap>
+            <MobileTap className="flex-1">
               <Link
                 href={`${pathname.id}/write`}
-                className="flex-1 flex gap-3 items-center rounded-xl bg-white/10 px-4 py-1 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
+                className="w-full flex gap-3 items-center rounded-xl bg-white/10 px-4 py-1 hover:scale-105 hover:bg-indigo-500/20 group transition cursor-pointer"
               >
                 <SVG
                   src="/icons/write.svg"

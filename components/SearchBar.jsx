@@ -1,4 +1,4 @@
-import { editSearchParams } from "@/functions";
+import { editSearchParams } from "@/utils/functions";
 import provideSets, { miniSearchOptions } from "@/utils/provideSets";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -30,8 +30,6 @@ const SearchBar = () => {
   const { autoSuggest, suggestions, clearSuggestions, addAllAsync } =
     useMiniSearch([], miniSearchOptions);
 
-  console.log(suggestions);
-
   return (
     <div
       className={`grow min-w-[200px] max-w-3xl items-center justify-center text-sm relative flex`}
@@ -50,13 +48,18 @@ const SearchBar = () => {
           setInput(e.target.value);
           autoSuggest(input);
         }}
+        onClick={() => setShowSugg(true)}
         onFocus={() => setShowSugg(true)}
         onBlur={(e) => {
-          if (e.relatedTarget.name !== "link") setShowSugg(false);
+          if (e?.relatedTarget?.name !== "link") {
+            setShowSugg(false);
+          }
         }}
         onKeyUp={(e) => {
-          if (e.key === "Enter")
+          if (e.key === "Enter") {
+            setShowSugg(false);
             router.push(`/search?${setSearchParams({ query: input })}`);
+          }
         }}
         className={`peer w-full bg-white/20 focus:ring-none focus:outline outline-white rounded-full py-2 transition ${
           input ? "px-11" : "pr-2 pl-11"
@@ -72,13 +75,14 @@ const SearchBar = () => {
       />
       {/* SEARCH SUGGESTIONS */}
       {showSugg && suggestions && suggestions.length >= 1 && (
-        <div className=" absolute top-full flex flex-col py-2 mt-2 bg-[#0A092D] border border-white/20 left-0 w-full rounded-xl overflow-hidden">
+        <div className="z-20 absolute top-full flex flex-col py-2 mt-2 bg-[#0A092D] border border-white/20 left-0 w-full rounded-xl overflow-hidden">
           {suggestions.map((obj) => (
             <Link
               className="hover:bg-white/5 py-1 px-3 flex gap-2"
               name="link"
-              href={`/search?${setSearchParams({ query: obj.suggestion })}`}
+              key={obj.suggestion}
               onClick={() => setShowSugg(false)}
+              href={`/search?${setSearchParams({ query: obj.suggestion })}`}
             >
               <SVG
                 src="/icons/search.svg"

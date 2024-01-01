@@ -2,6 +2,7 @@ import Providers from "@/components/Providers";
 import "./globals.css";
 import { ubuntu } from "./fonts";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Create Next App",
@@ -13,15 +14,13 @@ export default function RootLayout({ children }) {
     <html lang="en" className="">
       <Providers>
         <body className={`${ubuntu.className} bg-[#0A092D] text-white`}>
-          <div className="bg-[#0A092D] min-h-screen">
+          <div className="bg-[#0A092D] min-h-screen flex flex-col">
             <Navbar />
-            <div className="px-7 py-10 sm:p-10">
-            {children}
-            </div>
+            <div className="px-7 py-10 sm:p-10 flex-1">{children}</div>
+            <Footer />
           </div>
         </body>
       </Providers>
     </html>
   );
 }
-//
