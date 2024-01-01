@@ -54,7 +54,7 @@ const SetEditor = ({ uid, type }) => {
         {/* HEADER */}
         <div className="flex justify-between items-center gap-2">
           <div className="flex flex-col gap-2">
-            <div className="text-2xl font-bold">Create a new study set</div>
+            <div className="text-2xl font-bold">{type === "studyDraft" ? "Create a new study set" : "Edit set:"}</div>
           </div>
           <MobileTap
             onClick={() => {
