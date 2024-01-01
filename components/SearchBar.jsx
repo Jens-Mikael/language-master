@@ -62,7 +62,7 @@ const SearchBar = () => {
             router.push(`/search?${setSearchParams({ query: input })}`);
           }
         }}
-        className={`peer w-full bg-white/20 focus:ring-none focus:outline outline-white rounded-full py-2 transition ${
+        className={`peer w-full bg-white/20 outline-none focus:ring-[2px] ring-white rounded-full py-2 transition ${
           input ? "px-11" : "pr-2 pl-11"
         }`}
       />
