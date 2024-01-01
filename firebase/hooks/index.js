@@ -138,7 +138,6 @@ export const getLibrarySets = async (uid) => {
     );
     const arr = [];
     const docsSnap = await getDocs(setsQuery);
-    console.log(docsSnap);
     docsSnap.forEach((doc) => {
       const data = doc.data();
       arr.push({
@@ -338,6 +337,27 @@ export const getPublicSets = async () => {
       });
     });
     return arr;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getStudySetsCreators = async (uids) => {
+  const setsQuery = query(
+    collection(firestore, `users`),
+    where("__name__", "in", uids)
+  );
+  const obj = {};
+  try {
+    const docs = await getDocs(setsQuery);
+    docs.forEach((doc) => {
+      const userInfo = doc.data().userInfo;
+      obj[doc.id] = {
+        displayName: userInfo.displayName,
+        photoURL: userInfo.photoURL,
+      };
+    });
+    return obj;
   } catch (error) {
     return error;
   }
