@@ -73,7 +73,7 @@ const LearnSetPage = () => {
           <div className="flex flex-col gap-8">
             <div className="flex justify-between">
               <div>Set content (32)</div>
-              {data.creator === currentUser.uid && (
+              {data.creator === currentUser?.uid && (
                 <div>
                   <label className=" relative inline-flex cursor-pointer select-none items-center">
                     <input
@@ -117,7 +117,7 @@ const LearnSetPage = () => {
                 </div>
               ))}
             </div>
-            {data.creator === currentUser.uid && (
+            {data.creator === currentUser?.uid && (
               <div className="flex justify-center">
                 <MobileTap>
                   <Link

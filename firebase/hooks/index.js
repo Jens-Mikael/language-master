@@ -44,7 +44,6 @@ const createStudyDraft = async (uid) => {
     const docRef = await addDoc(collection(firestore, "studySets"), {
       creator: uid,
       head: { title: "", description: "" },
-      timestamp: serverTimestamp(),
     });
     const draftId = docRef.id;
     const draftbodyCollection = collection(
@@ -126,7 +125,7 @@ export const getStudyDraft = async (uid) => {
   }
 };
 
-export const getLibrarySets = async (uid) => {
+export const getUserLibrary = async (uid) => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
   try {
@@ -142,10 +141,12 @@ export const getLibrarySets = async (uid) => {
       const data = doc.data();
       arr.push({
         title: data.head.title,
+        description: data.head.description,
         id: doc.id,
         creator: data.creator,
       });
     });
+    console.log(arr);
     return arr;
   } catch (err) {
     return err;
@@ -228,16 +229,27 @@ export const mutateStudyCardAmount = async (type, cardId, setId) => {
 
 export const submitStudySet = (id, uid) => {
   const userDocRef = doc(firestore, `users/${uid}`);
-  return setDoc(
-    userDocRef,
-    {
-      studySets: {
-        draft: "",
-        created: arrayUnion(id),
+  const setRef = doc(firestore, `studySets/${id}`);
+  const batch = writeBatch();
+  try {
+    batch.update(
+      userDocRef,
+      {
+        studySets: {
+          draft: "",
+          created: arrayUnion(id),
+        },
       },
-    },
-    { merge: true }
-  );
+      { merge: true }
+    );
+    batch.update(setRef, {
+      timestamp: serverTimestamp(),
+    });
+
+    return batch.commit();
+  } catch (error) {
+    return error;
+  }
 };
 
 export const deleteStudySet = async (id, uid) => {

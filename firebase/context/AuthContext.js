@@ -10,6 +10,7 @@ import {
   GithubAuthProvider,
   createUserWithEmailAndPassword,
   updateProfile,
+  deleteUser,
 } from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -83,6 +84,10 @@ export const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const deleteAccount = async () => {
+    return deleteUser(currentUser);
+  };
+
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
@@ -101,6 +106,7 @@ export const AuthProvider = ({ children }) => {
     signUp,
     logIn,
     logout,
+    deleteAccount,
     isLoading,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
