@@ -87,19 +87,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             {!isLoading &&
               (currentUser ? (
                 <>
-                  <Link
-                    href="/create-set"
-                    className={`z-20 bg-blue-600 transition-all rounded-full pl-2 pr-3 py-1 cursor-pointer w-fit flex gap-1 items-center hover:bg-indigo-600 hover:scale-105`}
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <SVG
-                      src="/icons/new.svg"
-                      className="h-8 w-8 fill-white"
-                      loader={<div className="h-8 w-8" />}
-                    />
-                    Create Set
-                  </Link>
-                  <button
+                  <MobileTap>
+                    <Link
+                      href="/create-set"
+                      className={`z-20 bg-blue-600 transition-all rounded-full pl-2 pr-3 py-1 cursor-pointer w-fit flex gap-1 items-center hover:bg-indigo-600 hover:scale-105`}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <SVG
+                        src="/icons/new.svg"
+                        className="h-8 w-8 fill-white"
+                        loader={<div className="h-8 w-8" />}
+                      />
+                      Create Set
+                    </Link>
+                  </MobileTap>
+                  <MobileTap
                     className="border border-white/20 px-2 py-1 rounded-lg  w-fit"
                     onClick={() => {
                       setSidebarOpen(false);
@@ -107,11 +109,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     }}
                   >
                     Log Out
-                  </button>
+                  </MobileTap>
                 </>
               ) : (
                 <>
-                  <button
+                  <MobileTap
                     className="bg-blue-500 hover:bg-indigo-500 hover:scale-105 transition rounded-lg px-3 py-1 w-fit"
                     onClick={() => {
                       setSidebarOpen(false);
@@ -119,7 +121,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     }}
                   >
                     Log In
-                  </button>
+                  </MobileTap>
                 </>
               ))}
           </div>

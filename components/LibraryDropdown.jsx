@@ -1,19 +1,18 @@
 import { useAuth } from "@/firebase/context/AuthContext";
-import { getLibrarySets } from "@/firebase/hooks";
+import { getUserLibrary } from "@/firebase/hooks";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
-import { isBrowser } from "react-device-detect";
 
 const LibraryDropdown = ({ setIsLibraryOpen, setSidebarOpen }) => {
   const pathname = usePathname();
   const { currentUser } = useAuth();
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["librarySets"],
-    queryFn: () => getLibrarySets(currentUser.uid),
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["userSets", { user: currentUser.uid }],
+    queryFn: () => getUserLibrary(currentUser.uid),
   });
   if (isLoading) return <div>loadin</div>;
-  if (error) return console.log(error);
+  if (isError) return console.log(error);
   return (
     <div className="flex sm:z-20 gap-3 pt-2 sm:absolute sm:top-full sm:right-0 sm:mt-2 sm:border border-white/20 sm:rounded-xl flex-col overflow-hidden bg-[#0A092D]">
       {data.map((i) => (

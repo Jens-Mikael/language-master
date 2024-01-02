@@ -9,6 +9,7 @@ import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
 import MobileTap from "./MobileTap";
 import SearchBar from "./SearchBar";
+import Image from "next/image";
 
 const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,9 +22,9 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex border-b border-white/20 px-3 sm:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
+      <div className="flex border-b border-white/20 px-5 md:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
         {/* FIRST SECTION */}
-        <div className="flex gap-5 items-center ">
+        <div className="flex gap-3 sm:gap-4 md:gap-5 items-center">
           <Link
             href="/"
             className={`${croissantOne.className} text-2xl sm:text-3xl py-3 pr-2 flex h-full items-center`}
@@ -95,7 +96,7 @@ const Navbar = () => {
             <div onClick={() => setIsSearchOpen(false)} className="h-full" />
           </div>
         )}
-        <div className="lg:flex hidden w-full items-center">
+        <div className="lg:flex hidden flex-1 items-center">
           <SearchBar input={input} setInput={setInput} />
         </div>
 
@@ -114,12 +115,17 @@ const Navbar = () => {
                     loader={<div className="h-8 w-8" />}
                   />
                 </Link>
-                <MobileTap
-                  className="border border-white/20 px-2 py-1 rounded-lg"
-                  onClick={logout}
+                <Link
+                  className="rounded-full hover:scale-105 transition overflow-hidden"
+                  href={`/users/${currentUser.uid}`}
                 >
-                  Log Out
-                </MobileTap>
+                  <Image
+                    src={currentUser.photoURL}
+                    alt="pfp"
+                    height={40}
+                    width={40}
+                  />
+                </Link>
               </div>
             ) : (
               <>
@@ -135,7 +141,7 @@ const Navbar = () => {
             ))}
         </div>
         {/* SIDEBAR */}
-        <div className="lg:hidden flex items-center gap-3">
+        <div className="lg:hidden flex items-center gap-2 sm:gap-3">
           {!isSearchOpen && (
             <MobileTap
               onClick={() => setIsSearchOpen(true)}

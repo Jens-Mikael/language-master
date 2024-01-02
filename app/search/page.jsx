@@ -1,5 +1,6 @@
 "use client";
 import MobileTap from "@/components/MobileTap";
+import { useAuth } from "@/firebase/context/AuthContext";
 import { getStudySetsCreators } from "@/firebase/hooks";
 import provideSets, { miniSearchOptions } from "@/utils/provideSets";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import { useMiniSearch } from "react-minisearch";
 
 const SearchPage = ({ publicSets }) => {
   const [enableFetch, setEnableFetch] = useState(false);
+  const { currentUser } = useAuth();
   const { search, searchResults } = useMiniSearch(
     publicSets,
     miniSearchOptions
@@ -67,7 +69,12 @@ const SearchPage = ({ publicSets }) => {
                       <div className=" italic text-sm">{obj.description}</div>
                     </div>
 
-                    <div className="flex gap-3 items-center">
+                    <Link
+                      href={`/users/${obj.creator}/${
+                        obj.creator === currentUser?.uid ? "" : "studySets"
+                      }`}
+                      className="flex gap-3 items-center hover:scale-105 transition"
+                    >
                       <Image
                         className="rounded-full"
                         width={24}
@@ -84,7 +91,7 @@ const SearchPage = ({ publicSets }) => {
                           creatorsData &&
                           creatorsData[obj.creator].displayName}
                       </div>
-                    </div>
+                    </Link>
                   </div>
                   <div className="group-hover:h-1 h-0 w-full absolute bottom-0 bg-blue-500 transition-all" />
                 </Link>

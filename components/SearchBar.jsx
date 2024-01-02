@@ -32,7 +32,7 @@ const SearchBar = () => {
 
   return (
     <div
-      className={`grow min-w-[200px] max-w-3xl items-center justify-center text-sm relative flex`}
+      className={`grow w-full max-w-3xl items-center justify-center text-sm relative flex`}
     >
       <SVG
         src="/icons/search.svg"
@@ -50,7 +50,6 @@ const SearchBar = () => {
         }}
         onClick={() => setShowSugg(true)}
         onFocus={() => setShowSugg(true)}
-        
         onBlur={(e) => {
           if (e?.relatedTarget?.name !== "link") {
             setShowSugg(false);
@@ -59,6 +58,7 @@ const SearchBar = () => {
         onKeyUp={(e) => {
           if (e.key === "Enter") {
             setShowSugg(false);
+            e.currentTarget.blur()
             router.push(`/search?${setSearchParams({ query: input })}`);
           }
         }}
