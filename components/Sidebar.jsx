@@ -5,6 +5,7 @@ import { useState } from "react";
 import SVG from "react-inlinesvg";
 import LibraryDropdown from "./LibraryDropdown";
 import MobileTap from "./MobileTap";
+import Image from "next/image";
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const { googleAuth, logout, isLoading, currentUser } = useAuth();
@@ -87,6 +88,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             {!isLoading &&
               (currentUser ? (
                 <>
+                  <Link
+                    className="rounded-full hover:scale-105 transition overflow-hidden w-fit"
+                    href={`/users/${currentUser.uid}`}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <Image
+                      src={currentUser.photoURL}
+                      alt="pfp"
+                      height={40}
+                      width={40}
+                    />
+                  </Link>
                   <MobileTap>
                     <Link
                       href="/create-set"
