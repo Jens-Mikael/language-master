@@ -1,6 +1,6 @@
 "use client";
 import MobileTap from "@/components/MobileTap";
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -16,7 +16,9 @@ const DefaultUserPage = () => {
     }
   }, [isLoading, currentUser, pathParams]);
 
-  if (isLoading || !currentUser) return <div>loading</div>;
+  if (isLoading) return <div>loading</div>;
+  if (currentUser?.uid !== pathParams.uid || !currentUser)
+    return <div>loading</div>;
 
   return (
     <div className="flex flex-col gap-5">

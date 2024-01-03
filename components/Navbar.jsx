@@ -4,7 +4,7 @@ import { croissantOne } from "@/app/fonts";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useState } from "react";
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
 import MobileTap from "./MobileTap";
@@ -22,7 +22,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex border-b border-white/20 px-5 md:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
+      <div className="flex border-b border-white/20 px-3 sm:px-5 md:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
         {/* FIRST SECTION */}
         <div className="flex gap-3 sm:gap-4 md:gap-5 items-center">
           <Link
@@ -91,13 +91,13 @@ const Navbar = () => {
                   loader={<div className="h-7 w-7" />}
                 />
               </MobileTap>
-              <SearchBar input={input} setInput={setInput} />
+              <SearchBar setIsSearchOpen={setIsSearchOpen} />
             </div>
             <div onClick={() => setIsSearchOpen(false)} className="h-full" />
           </div>
         )}
         <div className="lg:flex hidden flex-1 items-center">
-          <SearchBar input={input} setInput={setInput} />
+          <SearchBar />
         </div>
 
         {/* LAST SECTION */}
@@ -141,7 +141,7 @@ const Navbar = () => {
             ))}
         </div>
         {/* SIDEBAR */}
-        <div className="lg:hidden flex items-center gap-2 sm:gap-3">
+        <div className="lg:hidden flex items-center gap-1 sm:gap-3">
           {!isSearchOpen && (
             <MobileTap
               onClick={() => setIsSearchOpen(true)}
@@ -149,7 +149,7 @@ const Navbar = () => {
             >
               <SVG
                 className={`h-7 w-7 fill-white transition hover:fill-indigo-500 hover:scale-105 `}
-                loader={<div className="h-6 w-6" />}
+                loader={<div className="h-7 w-7" />}
                 src="/icons/search.svg"
               />
             </MobileTap>

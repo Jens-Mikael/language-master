@@ -1,5 +1,5 @@
 "use client";
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { getUserInfo } from "@/firebase/hooks/read";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";

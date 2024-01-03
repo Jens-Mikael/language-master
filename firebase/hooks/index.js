@@ -44,6 +44,7 @@ const createStudyDraft = async (uid) => {
     const docRef = await addDoc(collection(firestore, "studySets"), {
       creator: uid,
       head: { title: "", description: "" },
+      timestamp: serverTimestamp(),
     });
     const draftId = docRef.id;
     const draftbodyCollection = collection(
@@ -229,10 +230,8 @@ export const mutateStudyCardAmount = async (type, cardId, setId) => {
 
 export const submitStudySet = (id, uid) => {
   const userDocRef = doc(firestore, `users/${uid}`);
-  const setRef = doc(firestore, `studySets/${id}`);
-  const batch = writeBatch();
   try {
-    batch.update(
+    return setDoc(
       userDocRef,
       {
         studySets: {
@@ -242,11 +241,6 @@ export const submitStudySet = (id, uid) => {
       },
       { merge: true }
     );
-    batch.update(setRef, {
-      timestamp: serverTimestamp(),
-    });
-
-    return batch.commit();
   } catch (error) {
     return error;
   }

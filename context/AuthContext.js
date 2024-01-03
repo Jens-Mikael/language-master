@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "../firebase-init";
+import { auth } from "../firebase/firebase-init";
 import {
   signInWithPopup,
   signOut,
