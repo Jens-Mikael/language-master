@@ -11,7 +11,7 @@ exports.userCreated = functions.auth.user().onCreate((user) => {
     .set({
       userInfo: {
         email: user.email,
-        name: user.displayName,
+        displayName: user.displayName,
         photoURL: user.photoURL,
       },
     });

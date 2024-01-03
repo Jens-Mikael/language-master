@@ -19,33 +19,30 @@ const SearchUsersPage = () => {
           <div className="font-medium text-2xl">Users</div>
           <div className="grid grid-cols-1 gap-5 sm:gap-5 md:grid-cols-2 w-full">
             {/* FILTER SEARCH RESULTS INTO SEPARATE ARRAYS  */}
-            {users.map((obj, i) => {
-              if (i >= 2) return;
-              return (
-                <MobileTap className="group hover:scale-105 transition w-full bg-indigo-600/20 rounded-xl truncate relative">
-                  <Link
-                    href={`/users/${obj.id}/${
-                      obj.id !== currentUser?.uid ? "studySets" : ""
-                    }`}
-                    className="flex items-center w-fit py-5 px-5 sm:px-10 gap-5"
-                  >
-                    <>
-                      <Image
-                        className="rounded-full"
-                        width={52}
-                        height={52}
-                        src={obj.photoURL}
-                        alt="usr photoURL"
-                      />
-                      <div className="font-medium text-lg sm:text-xl">
-                        {obj.displayName}
-                      </div>
-                    </>
-                  </Link>
-                  <div className="group-hover:h-1 h-0 w-full absolute bottom-0 bg-indigo-500 transition-all" />
-                </MobileTap>
-              );
-            })}
+            {users.map((obj, i) => (
+              <MobileTap className="group hover:scale-105 transition w-full bg-indigo-600/20 rounded-xl truncate relative">
+                <Link
+                  href={`/users/${obj.id}/${
+                    obj.id !== currentUser?.uid ? "studySets" : ""
+                  }`}
+                  className="flex items-center w-fit py-5 px-5 sm:px-10 gap-5"
+                >
+                  <>
+                    <Image
+                      className="rounded-full"
+                      width={52}
+                      height={52}
+                      src={obj.photoURL}
+                      alt="usr photoURL"
+                    />
+                    <div className="font-medium text-lg sm:text-xl">
+                      {obj.displayName}
+                    </div>
+                  </>
+                </Link>
+                <div className="group-hover:h-1 h-0 w-full absolute bottom-0 bg-indigo-500 transition-all" />
+              </MobileTap>
+            ))}
           </div>
         </div>
       ) : (

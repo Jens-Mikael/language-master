@@ -24,6 +24,7 @@ export const getEveryUser = async () => {
         id: doc.id,
       });
     });
+    console.log(arr);
     return arr;
   } catch (error) {
     return error.message;
