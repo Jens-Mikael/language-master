@@ -1,6 +1,6 @@
 "use client";
 import SetEditor from "@/components/SetEditor";
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";

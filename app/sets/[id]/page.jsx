@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import MobileTap from "@/components/MobileTap";
 
 const LearnSetPage = () => {

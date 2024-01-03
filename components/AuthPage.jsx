@@ -1,7 +1,7 @@
 "use client";
 import SVG from "react-inlinesvg";
 import { croissantOne } from "@/app/fonts";
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { isUsernameAvailable } from "@/firebase/hooks";
 

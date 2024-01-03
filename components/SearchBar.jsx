@@ -7,8 +7,9 @@ import SVG from "react-inlinesvg";
 import { getPublicSets } from "@/firebase/hooks";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useSearch } from "@/context/SearchContext";
 
-const SearchBar = () => {
+const SearchBar = ({ setIsSearchOpen }) => {
   const [input, setInput] = useState("");
   const [showSugg, setShowSugg] = useState(false);
   const searchParams = useSearchParams();
@@ -18,17 +19,7 @@ const SearchBar = () => {
     []
   );
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["publicSets"],
-    queryFn: async () => {
-      const data = await getPublicSets();
-      addAllAsync(data);
-      return data;
-    },
-  });
-
-  const { autoSuggest, suggestions, clearSuggestions, addAllAsync } =
-    useMiniSearch([], miniSearchOptions);
+  const { suggestions, autoSuggest } = useSearch();
 
   return (
     <div
@@ -58,7 +49,8 @@ const SearchBar = () => {
         onKeyUp={(e) => {
           if (e.key === "Enter") {
             setShowSugg(false);
-            e.currentTarget.blur()
+            //setIsSearchOpen(false);
+            e.currentTarget.blur();
             router.push(`/search?${setSearchParams({ query: input })}`);
           }
         }}

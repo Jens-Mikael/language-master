@@ -1,4 +1,4 @@
-import { useAuth } from "@/firebase/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { getUserLibrary } from "@/firebase/hooks";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";

@@ -1,107 +1,131 @@
 "use client";
+
 import MobileTap from "@/components/MobileTap";
-import { useAuth } from "@/firebase/context/AuthContext";
-import { getStudySetsCreators } from "@/firebase/hooks";
-import provideSets, { miniSearchOptions } from "@/utils/provideSets";
-import { useQuery } from "@tanstack/react-query";
-import { enableMultiTabIndexedDbPersistence } from "firebase/firestore";
+import { useAuth } from "@/context/AuthContext";
+import { useSearch } from "@/context/SearchContext";
+import { editSearchParams } from "@/utils/functions";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useMiniSearch } from "react-minisearch";
+import { useCallback } from "react";
 
-const SearchPage = ({ publicSets }) => {
-  const [enableFetch, setEnableFetch] = useState(false);
-  const { currentUser } = useAuth();
-  const { search, searchResults } = useMiniSearch(
-    publicSets,
-    miniSearchOptions
-  );
+const AllSearchResultsPage = () => {
   const searchParams = useSearchParams();
-  useEffect(() => {
-    search(searchParams.get("query"));
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (searchResults) setEnableFetch(true);
-  }, [searchResults]);
-
-  const Uidize = () => {
-    const arr = [];
-    Object.keys(searchResults).forEach((key) => {
-      if (!arr.includes(searchResults[key].creator))
-        arr.push(searchResults[key].creator);
-    });
-    return arr;
-  };
-
+  const { currentUser } = useAuth();
   const {
-    data: creatorsData,
-    isLoading,
-    isError,
-    error,
-  } = useQuery({
-    queryFn: () => getStudySetsCreators(Uidize()),
-    queryKey: ["creatorsData", { searchQuery: searchParams.get("query") }],
-    enabled: enableFetch,
-  });
+    users,
+    studySets,
+    isSearchLoading,
+    creatorsData,
+    creatorsIsError,
+    creatorsError,
+    creatorsIsLoading,
+  } = useSearch();
+  const editParams = useCallback(
+    (obj) => editSearchParams(obj, searchParams),
+    []
+  );
 
-  if (!searchResults || isLoading) return <div>loading</div>;
-  if (isError) return <div>{error.message}</div>;
-
+  if (isSearchLoading) return <div>loading</div>;
+  if (creatorsIsError) return <div>{creatorsError.message}</div>;
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col max-w-5xl gap-10 w-full">
-        {/* HEADER */}
-        <div className="text-xl font-bold">{`Results for "${searchParams.get(
-          "query"
-        )}"`}</div>
-        {/* RESULTS */}
-        <div>
-          <div className="grid grid-cols-1 gap-5 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3 w-full">
-            {searchResults.map((obj) => (
-              <MobileTap className="group hover:scale-105 transition w-full h-[160px] bg-white/20 rounded-xl text-start truncate relative">
-                <Link href={`/sets/${obj.id}`}>
-                  <div className="gap-10 flex flex-col justify-between p-5 h-full">
-                    <div className="flex flex-col gap-2">
-                      <div className="font-medium text-lg">{obj.title}</div>
-                      <div className=" italic text-sm">{obj.description}</div>
-                    </div>
-
-                    <Link
-                      href={`/users/${obj.creator}/${
-                        obj.creator === currentUser?.uid ? "" : "studySets"
-                      }`}
-                      className="flex gap-3 items-center hover:scale-105 transition"
-                    >
+    <div className=" flex flex-col gap-10">
+      {(!users || users?.length === 0) &&
+        (!studySets || studySets.length === 0) && (
+          <div className="text-lg flex">
+            No results for "
+            <div className="italic">{searchParams.get("query")}</div>"
+          </div>
+        )}
+      {users && users.length >= 1 && (
+        <div className="flex flex-col gap-5">
+          <div className="font-medium text-2xl">Users</div>
+          <div className="grid grid-cols-1 gap-5 sm:gap-5 md:grid-cols-2 w-full">
+            {users.map((obj, i) => {
+              if (i >= 2) return;
+              return (
+                <MobileTap
+                  key={obj.id}
+                  className="group hover:scale-105 transition w-full bg-indigo-600/20 rounded-xl relative"
+                >
+                  <Link
+                    href={`/users/${obj.id}/${
+                      obj.id !== currentUser?.uid ? "studySets" : ""
+                    }`}
+                    className="flex items-center py-5 px-5 sm:px-10 gap-5"
+                  >
+                    <>
                       <Image
                         className="rounded-full"
-                        width={24}
-                        height={24}
-                        src={
-                          !isLoading &&
-                          creatorsData &&
-                          creatorsData[obj.creator].photoURL
-                        }
+                        width={52}
+                        height={52}
+                        src={obj.photoURL}
                         alt="usr photoURL"
                       />
-                      <div className="font-medium text-sm">
-                        {!isLoading &&
-                          creatorsData &&
-                          creatorsData[obj.creator].displayName}
+                      <div className="font-medium text-lg sm:text-xl">
+                        {obj.displayName}
                       </div>
-                    </Link>
-                  </div>
-                  <div className="group-hover:h-1 h-0 w-full absolute bottom-0 bg-blue-500 transition-all" />
-                </Link>
-              </MobileTap>
-            ))}
+                    </>
+                  </Link>
+                  <div className="group-hover:h-1 h-0 w-full absolute bottom-0 bg-indigo-500 transition-all" />
+                </MobileTap>
+              );
+            })}
           </div>
+          <Link className="self-end font-bold text-blue-600 hover:text-indigo-600/90 transition" href={`/search/users?${editParams({})}`}> View All</Link>
         </div>
-      </div>
+      )}
+      {studySets && studySets.length >= 1 && (
+        <div className="flex flex-col gap-5">
+          <div className="font-medium text-2xl">Study Sets</div>
+          <div className="grid grid-cols-1 gap-5 sm:gap-5 md:grid-cols-2 w-full">
+            {studySets.map((obj, i) => {
+              if (i >= 2) return;
+              return (
+                <MobileTap
+                  key={obj.id}
+                  className="group hover:scale-105 transition w-full h-[160px] bg-white/20 rounded-xl text-start truncate relative"
+                >
+                  <Link href={`/sets/${obj.id}`}>
+                    <div className="gap-10 flex flex-col justify-between p-5 h-full">
+                      <div className="flex flex-col gap-2">
+                        <div className="font-medium text-xl">{obj.title}</div>
+                        <div className="italic text-sm">{obj.description}</div>
+                      </div>
+
+                      <Link
+                        href={`/users/${obj.creator}/${
+                          obj.creator === currentUser?.uid ? "" : "studySets"
+                        }`}
+                        className="flex gap-3 items-center hover:scale-105 transition w-fit"
+                      >
+                        {!creatorsIsLoading && creatorsData && (
+                          <>
+                            <Image
+                              className="rounded-full"
+                              width={24}
+                              height={24}
+                              src={creatorsData[obj.creator].photoURL}
+                              alt="usr photoURL"
+                            />
+                            <div className="font-medium text-sm">
+                              {creatorsData[obj.creator].displayName}
+                            </div>
+                          </>
+                        )}
+                      </Link>
+                    </div>
+                    <div className="group-hover:h-1 h-0 w-full absolute bottom-0 bg-blue-500 transition-all" />
+                  </Link>
+                </MobileTap>
+              );
+            })}
+          </div>
+          <Link className="self-end font-bold text-blue-600 hover:text-indigo-600/90 transition" href={`/search/studySets?${editParams({})}`}> View All</Link>
+        </div>
+      )}
     </div>
   );
 };
 
-export default provideSets(SearchPage);
+export default AllSearchResultsPage;

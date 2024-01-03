@@ -17,12 +17,3 @@ const provideSets = (Component) => {
 
 export default provideSets;
 
-export const miniSearchOptions = {
-  fields: ["title", "description"],
-  storeFields: ["title", "description", "id"],
-  searchOptions: {
-    boost: { title: 2, description: 1 },
-    prefix: true,
-    fuzzy: 0.25,
-  },
-};
