@@ -46,7 +46,7 @@ const AllSearchResultsPage = () => {
               return (
                 <MobileTap
                   key={obj.id}
-                  className="group hover:scale-105 transition w-full bg-indigo-600/20 rounded-xl relative"
+                  className="group hover:scale-105 transition w-full bg-indigo-600/20 rounded-xl relative overflow-hidden"
                 >
                   <Link
                     href={`/users/${obj.id}/${
