@@ -12,8 +12,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useMiniSearch,  } from "react-minisearch";
+import { useMiniSearch } from "react-minisearch";
 import { ILibraryCard, IUserDisplayInfo } from "../declarations";
+import { Query, SearchOptions } from "minisearch";
 
 const SearchContext = createContext({});
 
@@ -22,27 +23,20 @@ export const useSearch = () => {
 };
 
 interface IProps {
-  children?: ReactNode;
+  children: ReactNode;
 }
 
 export const SearchProvider = ({ children }: IProps) => {
   const [enableFetch, setEnableFetch] = useState(false);
-  const [users, setUsers] = useState<any[] | object[]>([]);
-  const [studySets, setStudySets] = useState<any[] | object[]>([]);
+  const [users, setUsers] = useState<IUserDisplayInfo[]>([]);
+  const [studySets, setStudySets] = useState<any[] | ILibraryCard[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(true);
   const [initial, setInitial] = useState(true);
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const {
-    autoSuggest,
-    suggestions,
-    addAllAsync,
-    addAll,
-    search,
-    searchResults,
-    isIndexing,
-  } = useMiniSearch([], miniSearchOptions);
+  const { autoSuggest, suggestions, addAllAsync, search, searchResults } =
+    useMiniSearch<ILibraryCard | IUserDisplayInfo>([], miniSearchOptions);
 
   //fetch public sets
   const { data: setsData } = useQuery<ILibraryCard[]>({
@@ -56,17 +50,15 @@ export const SearchProvider = ({ children }: IProps) => {
   });
 
   //fetch every user
-  const { data: everyUserData } = useQuery({
+  const { data: everyUserData } = useQuery<IUserDisplayInfo[]>({
     queryKey: ["everyUser"],
     queryFn: async () => {
-      const data = await getEveryUser();
+      const data: IUserDisplayInfo[] = await getEveryUser();
       await addAllAsync(data);
       return data;
     },
     refetchOnWindowFocus: false,
   });
-
-
 
   const {
     data: creatorsData,
@@ -80,28 +72,25 @@ export const SearchProvider = ({ children }: IProps) => {
   });
 
   const Uidize = useCallback(
-    (searchResults: string[]) => {
-      const arr: string[] = [];
-      searchResults.map((obj: Object)=> {
-        if (
-        !arr.includes(obj.creator) &&
-        !searchResults[i as keyof object].hasOwnProperty("displayName")
-      )
-        arr.push(searchResults[i as keyof object].i);
-      })
-
-      return arr;
+    (searchResults: (IUserDisplayInfo | ILibraryCard)[] | null) => {
+      const filteredArr = searchResults?.filter((obj): obj is ILibraryCard => {
+        return (obj as ILibraryCard).creator !== undefined;
+      });
+      const noDupli = filteredArr?.filter(
+        (obj, i) => filteredArr.indexOf(obj) === i
+      );
+      return noDupli?.map((obj) => obj.creator);
     },
     [searchResults]
   );
-  console.log(searchResults)
 
   useMemo(() => {
     if (searchResults && searchResults.length !== 0) {
-      const users: object[] = [];
+      const users: IUserDisplayInfo[] = [];
       const studySets: object[] = [];
-      searchResults.forEach((obj: object) => {
-        if (obj.hasOwnProperty("displayName")) users.push(obj);
+      searchResults.forEach((obj: IUserDisplayInfo | ILibraryCard) => {
+        if (obj.hasOwnProperty("displayName"))
+          users.push(obj as IUserDisplayInfo);
         else studySets.push(obj);
       });
       return (
@@ -129,7 +118,7 @@ export const SearchProvider = ({ children }: IProps) => {
       (!isSearchLoading || initial)
     ) {
       setInitial(false);
-      search(searchParams.get("query"));
+      if (searchParams.get("query")) search(searchParams.get("query")!);
       console.log("search ran");
       setIsSearchLoading(true);
     }
@@ -146,7 +135,10 @@ export const SearchProvider = ({ children }: IProps) => {
     creatorsIsError,
     creatorsError,
   };
-  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+
+  return (
+    <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
+  );
 };
 
 export const miniSearchOptions = {

@@ -339,7 +339,7 @@ export const getPublicSets = async (): Promise<ILibraryCard[]> => {
   return arr;
 };
 
-export const getStudySetsCreators = async (uids: string[]) => {
+export const getStudySetsCreators = async (uids: string[] | undefined) => {
   const setsQuery = query(
     collection(firestore, `users`),
     where("__name__", "in", uids)

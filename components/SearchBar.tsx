@@ -1,27 +1,32 @@
 import { editSearchParams } from "@utils/functions";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useSearch } from "@context/SearchContext";
-// import { Suggestion } from "minisearch";
+import { SearchOptions, Suggestion } from "minisearch";
 
-// interface IProps {
-//   setIsSearchOpen: (isOpen: boolean) => void;
-// }
+interface IProps {
+  setIsSearchOpen: (isOpen: boolean) => void;
+}
+interface IUseSearch {
+  suggestions?: Suggestion[];
+  autoSuggest?: (query: string, options?: SearchOptions | undefined) => void;
+}
 
-const SearchBar = ({ setIsSearchOpen }) => {
+const SearchBar = ({ setIsSearchOpen }: IProps) => {
   const [input, setInput] = useState("");
   const [showSugg, setShowSugg] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const setSearchParams = useCallback(
-    (queryObj) => editSearchParams(queryObj, searchParams),
+    (queryObj: object) => editSearchParams(queryObj, searchParams),
     []
   );
 
-  const { suggestions, autoSuggest } = useSearch();
-  console.log(suggestions);
+  const { suggestions, autoSuggest }: IUseSearch = useSearch();
+
+  useEffect(() => autoSuggest(input), [input]);
   return (
     <div
       className={`grow w-full max-w-3xl items-center justify-center text-sm relative flex`}
@@ -38,19 +43,18 @@ const SearchBar = ({ setIsSearchOpen }) => {
         value={input}
         onChange={(e) => {
           setInput(e.target.value);
-          autoSuggest(input);
         }}
         onClick={() => setShowSugg(true)}
         onFocus={() => setShowSugg(true)}
         onBlur={(e) => {
           if (e?.relatedTarget?.hasAttribute("name")) {
-            setShowSugg(false);
+            if (e?.relatedTarget) setShowSugg(false);
           }
         }}
         onKeyUp={(e) => {
           if (e.key === "Enter") {
             setShowSugg(false);
-            //setIsSearchOpen(false);
+            setIsSearchOpen(false);
             e.currentTarget.blur();
             router.push(`/search?${setSearchParams({ query: input })}`);
           }
@@ -70,10 +74,10 @@ const SearchBar = ({ setIsSearchOpen }) => {
       {/* SEARCH SUGGESTIONS */}
       {showSugg && suggestions && suggestions.length >= 1 && (
         <div className="z-20 absolute top-full flex flex-col py-2 mt-2 bg-[#0A092D] border border-white/20 left-0 w-full rounded-xl overflow-hidden">
-          {suggestions.map((obj) => (
+          {suggestions.map((obj: Suggestion) => (
             <Link
               className="hover:bg-white/5 py-1 px-3 flex gap-2"
-              name="link"
+              link-name="suggestion"
               key={obj.suggestion}
               onClick={() => setShowSugg(false)}
               href={`/search?${setSearchParams({ query: obj.suggestion })}`}

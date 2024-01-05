@@ -118,6 +118,6 @@
     "**/*.ts",
     "**/*.tsx",
     "components/Footer.jsx"
-, "components/LibraryDropdown.tsx", "components/SearchBar.jsx"  ],
+, "components/LibraryDropdown.tsx", "components/SearchBar.tsx"  ],
   "exclude": ["node_modules"]
 }

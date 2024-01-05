@@ -36,7 +36,3 @@ export interface ILibraryCard {
   id: string;
   creator: string;
 }
-
-export interface ISuggestion {
-  
-}
