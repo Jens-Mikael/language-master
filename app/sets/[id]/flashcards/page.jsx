@@ -1,6 +1,6 @@
 "use client";
-import LearnNavbar from "@/components/LearnNavbar";
-import PractiseFlashcards from "@/components/PractiseFlashcards";
+import LearnNavbar from "/components/LearnNavbar";
+import PractiseFlashcards from "/components/PractiseFlashcards";
 import { useState } from "react";
 
 

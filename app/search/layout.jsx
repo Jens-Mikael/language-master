@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { editSearchParams } from "@/utils/functions";
+import { editSearchParams } from "/utils/functions";
 
 import { useCallback } from "react";
 

@@ -1,9 +1,9 @@
 "use client";
 
-import MobileTap from "@/components/MobileTap";
-import { useAuth } from "@/context/AuthContext";
-import { useSearch } from "@/context/SearchContext";
-import { editSearchParams } from "@/utils/functions";
+import MobileTap from "/components/MobileTap";
+import { useAuth } from "/context/AuthContext";
+import { useSearch } from "/context/SearchContext";
+import { editSearchParams } from "/utils/functions";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

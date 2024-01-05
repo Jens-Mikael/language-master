@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import SVG from "react-inlinesvg";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { getStudySet } from "@/firebase/hooks";
+import { getStudySet } from "/firebase/hooks";
 import { useAnimate } from "framer-motion";
 import PractiseSuccess from "./PractiseSuccess";
 

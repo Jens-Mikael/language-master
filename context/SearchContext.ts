@@ -1,9 +1,10 @@
 "use client";
-import { getPublicSets, getStudySetsCreators } from "@/firebase/hooks";
-import { getEveryUser } from "@/firebase/hooks/read";
+import { getPublicSets, getStudySetsCreators } from "@firebase/hooks";
+import { getEveryUser } from "@firebase/hooks/read";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
+  ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -11,31 +12,47 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useMiniSearch } from "react-minisearch";
+import { useMiniSearch,  } from "react-minisearch";
+import { ILibraryCard, IUserDisplayInfo } from "../declarations";
 
-const SearchContext = createContext();
+const SearchContext = createContext({});
 
 export const useSearch = () => {
   return useContext(SearchContext);
 };
 
-export const SearchProvider = ({ children }) => {
+interface IProps {
+  children?: ReactNode;
+}
+
+export const SearchProvider = ({ children }: IProps) => {
   const [enableFetch, setEnableFetch] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [studySets, setStudySets] = useState([]);
+  const [users, setUsers] = useState<any[] | object[]>([]);
+  const [studySets, setStudySets] = useState<any[] | object[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(true);
   const [initial, setInitial] = useState(true);
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  const {
+    autoSuggest,
+    suggestions,
+    addAllAsync,
+    addAll,
+    search,
+    searchResults,
+    isIndexing,
+  } = useMiniSearch([], miniSearchOptions);
+
   //fetch public sets
-  const { data: setsData } = useQuery({
+  const { data: setsData } = useQuery<ILibraryCard[]>({
     queryKey: ["publicSets"],
     queryFn: async () => {
-      const data = await getPublicSets();
+      const data: ILibraryCard[] = await getPublicSets();
       await addAllAsync(data);
       return data;
     },
+    refetchOnWindowFocus: false,
   });
 
   //fetch every user
@@ -46,16 +63,10 @@ export const SearchProvider = ({ children }) => {
       await addAllAsync(data);
       return data;
     },
+    refetchOnWindowFocus: false,
   });
 
-  const {
-    autoSuggest,
-    suggestions,
-    addAllAsync,
-    search,
-    searchResults,
-    isIndexing,
-  } = useMiniSearch([], miniSearchOptions);
+
 
   const {
     data: creatorsData,
@@ -69,25 +80,27 @@ export const SearchProvider = ({ children }) => {
   });
 
   const Uidize = useCallback(
-    (searchResults) => {
-      const arr = [];
-      Object.keys(searchResults).forEach((key) => {
+    (searchResults: string[]) => {
+      const arr: string[] = [];
+      searchResults.map((obj: Object)=> {
         if (
-          !arr.includes(searchResults[key].creator) &&
-          !searchResults[key].hasOwnProperty("displayName")
-        )
-          arr.push(searchResults[key].creator);
-      });
+        !arr.includes(obj.creator) &&
+        !searchResults[i as keyof object].hasOwnProperty("displayName")
+      )
+        arr.push(searchResults[i as keyof object].i);
+      })
+
       return arr;
     },
     [searchResults]
   );
+  console.log(searchResults)
 
   useMemo(() => {
     if (searchResults && searchResults.length !== 0) {
-      const users = [];
-      const studySets = [];
-      searchResults.forEach((obj) => {
+      const users: object[] = [];
+      const studySets: object[] = [];
+      searchResults.forEach((obj: object) => {
         if (obj.hasOwnProperty("displayName")) users.push(obj);
         else studySets.push(obj);
       });
@@ -133,10 +146,7 @@ export const SearchProvider = ({ children }) => {
     creatorsIsError,
     creatorsError,
   };
-
-  return (
-    <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
-  );
+  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>
 };
 
 export const miniSearchOptions = {

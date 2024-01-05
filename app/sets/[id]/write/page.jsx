@@ -1,6 +1,6 @@
 "use client";
-import LearnNavbar from "@/components/LearnNavbar";
-import PractiseWrite from "@/components/PractiseWrite";
+import LearnNavbar from "/components/LearnNavbar";
+import PractiseWrite from "/components/PractiseWrite";
 import { useState } from "react";
 
 const PractiseWritePage = () => {

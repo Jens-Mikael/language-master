@@ -1,13 +1,14 @@
-import { editSearchParams } from "@/utils/functions";
-import provideSets, { miniSearchOptions } from "@/utils/provideSets";
+import { editSearchParams } from "@utils/functions";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
-import { useMiniSearch } from "react-minisearch";
 import SVG from "react-inlinesvg";
-import { getPublicSets } from "@/firebase/hooks";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useSearch } from "@/context/SearchContext";
+import { useSearch } from "@context/SearchContext";
+// import { Suggestion } from "minisearch";
+
+// interface IProps {
+//   setIsSearchOpen: (isOpen: boolean) => void;
+// }
 
 const SearchBar = ({ setIsSearchOpen }) => {
   const [input, setInput] = useState("");
@@ -20,7 +21,7 @@ const SearchBar = ({ setIsSearchOpen }) => {
   );
 
   const { suggestions, autoSuggest } = useSearch();
-
+  console.log(suggestions);
   return (
     <div
       className={`grow w-full max-w-3xl items-center justify-center text-sm relative flex`}
@@ -42,7 +43,7 @@ const SearchBar = ({ setIsSearchOpen }) => {
         onClick={() => setShowSugg(true)}
         onFocus={() => setShowSugg(true)}
         onBlur={(e) => {
-          if (e?.relatedTarget?.name !== "link") {
+          if (e?.relatedTarget?.hasAttribute("name")) {
             setShowSugg(false);
           }
         }}

@@ -1,6 +1,6 @@
 "use client";
-import MobileTap from "@/components/MobileTap";
-import { getUserLibrary } from "@/firebase/hooks";
+import MobileTap from "/components/MobileTap";
+import { getUserLibrary } from "/firebase/hooks";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";

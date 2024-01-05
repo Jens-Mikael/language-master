@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getStudySet } from "@/firebase/hooks";
+import { getStudySet } from "/firebase/hooks";
 import SVG from "react-inlinesvg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";

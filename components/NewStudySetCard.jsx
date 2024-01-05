@@ -1,7 +1,7 @@
 import InputField from "./InputField";
 import SVG from "react-inlinesvg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { mutateStudyCardAmount } from "@/firebase/hooks";
+import { mutateStudyCardAmount } from "/firebase/hooks";
 
 const NewStudySetCard = ({ obj, cardId, index, setId, type }) => {
   const queryClient = useQueryClient();

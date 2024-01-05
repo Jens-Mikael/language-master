@@ -1,6 +1,6 @@
 "use client";
-import MobileTap from "@/components/MobileTap";
-import { useAuth } from "@/context/AuthContext";
+import MobileTap from "@components/MobileTap";
+import { useAuth } from "/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 

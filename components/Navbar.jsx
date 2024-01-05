@@ -1,10 +1,10 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { croissantOne } from "@/app/fonts";
+import { croissantOne } from "@app/fonts";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
 import MobileTap from "./MobileTap";

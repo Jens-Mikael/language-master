@@ -4,13 +4,13 @@ import {
   editPublicity,
   getStudySet,
   setToCollection,
-} from "@/firebase/hooks";
+} from "/firebase/hooks";
 import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
-import MobileTap from "@/components/MobileTap";
+import { useAuth } from "/context/AuthContext";
+import MobileTap from "/components/MobileTap";
 
 const LearnSetPage = () => {
   const pathname = useParams();

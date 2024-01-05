@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.13.4",
+    "@tanstack/react-query": "^5.17.1",
     "@tanstack/react-query-devtools": "^5.13.4",
     "autoprefixer": "10.4.15",
     "eslint": "8.49.0",
@@ -21,6 +21,7 @@
     "net": "^1.0.2",
     "next": "^14.0.0",
     "next-themes": "^0.2.1",
+    "node": "^21.2.0",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-device-detect": "^2.2.3",
@@ -30,7 +31,8 @@
     "tailwindcss": "3.3.3"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^4.34.1",
+    "@tanstack/eslint-plugin-query": "^4.36.1",
+    "@types/react": "18.2.46",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4"
   },

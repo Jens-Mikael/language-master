@@ -1,3 +1,4 @@
+import { IsetCard, ILibraryCard } from "../../declarations";
 import { firestore } from "../firebase-init";
 import {
   getDoc,
@@ -17,21 +18,22 @@ import {
   query,
   where,
   limit,
+  DocumentData,
 } from "firebase/firestore";
 
-export const isUsernameAvailable = async (username) => {
+export const isUsernameAvailable = async (
+  username: string
+): Promise<boolean | unknown> => {
   const docRef = doc(firestore, `usernames/${username}`);
   try {
     const docSnap = await getDoc(docRef);
     return !docSnap.exists();
-  } catch (err) {
-    console.log(err.message);
+  } catch (err: unknown) {
+    return err;
   }
 };
 
-export const addUsername = async (username) => {};
-
-const createStudyDraft = async (uid) => {
+const createStudyDraft = async (uid: string): Promise<string | undefined> => {
   const userDocRef = doc(firestore, `users/${uid}`);
   try {
     const userDocSnap = await getDoc(userDocRef);
@@ -51,33 +53,21 @@ const createStudyDraft = async (uid) => {
       firestore,
       `studySets/${draftId}/body`
     );
-    await addDoc(
-      draftbodyCollection,
-      {
-        term: "",
-        definition: "",
-        timestamp: serverTimestamp(),
-      },
-      { merge: true }
-    );
-    await addDoc(
-      draftbodyCollection,
-      {
-        term: "",
-        definition: "",
-        timestamp: serverTimestamp(),
-      },
-      { merge: true }
-    );
-    await addDoc(
-      draftbodyCollection,
-      {
-        term: "",
-        definition: "",
-        timestamp: serverTimestamp(),
-      },
-      { merge: true }
-    );
+    await addDoc(draftbodyCollection, {
+      term: "",
+      definition: "",
+      timestamp: serverTimestamp(),
+    });
+    await addDoc(draftbodyCollection, {
+      term: "",
+      definition: "",
+      timestamp: serverTimestamp(),
+    });
+    await addDoc(draftbodyCollection, {
+      term: "",
+      definition: "",
+      timestamp: serverTimestamp(),
+    });
 
     //add draft to users studySets
     const res = await setDoc(
@@ -90,12 +80,12 @@ const createStudyDraft = async (uid) => {
       { merge: true }
     );
     return draftId;
-  } catch (error) {
-    console.log(error.message);
+  } catch (error: unknown) {
+    console.log(error);
   }
 };
 
-export const getStudyDraft = async (uid) => {
+export const getStudyDraft = async (uid: string) => {
   //get draft id and if it doesn't exist, create one
   const draftId = await createStudyDraft(uid);
 
@@ -104,7 +94,7 @@ export const getStudyDraft = async (uid) => {
 
   const bodyCollectionRef = collection(firestore, `studySets/${draftId}/body`);
   const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
-  const body = {};
+  const body: { [key: string]: DocumentData } = {};
   try {
     const studyDraftSnap = await getDoc(studyDraftRef);
     const docsSnap = await getDocs(docQuery);
@@ -126,17 +116,17 @@ export const getStudyDraft = async (uid) => {
   }
 };
 
-export const getUserLibrary = async (uid) => {
+export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
   try {
     const userDocSnap = await getDoc(userDocRef);
-    const createdSets = userDocSnap.data().studySets.created;
+    const createdSets = userDocSnap.data()?.studySets.created;
     const setsQuery = query(
       collection(firestore, `studySets`),
       where("__name__", "in", createdSets)
     );
-    const arr = [];
+    const arr: ILibraryCard[] = [];
     const docsSnap = await getDocs(setsQuery);
     docsSnap.forEach((doc) => {
       const data = doc.data();
@@ -147,17 +137,16 @@ export const getUserLibrary = async (uid) => {
         creator: data.creator,
       });
     });
-    console.log(arr);
     return arr;
-  } catch (err) {
+  } catch (err: any) {
     return err;
   }
 };
 
-export const getStudySet = async (id) => {
+export const getStudySet = async (id: string) => {
   const docRef = doc(firestore, `studySets/${id}`);
   const bodyCollectionRef = collection(firestore, `studySets/${id}/body`);
-  const body = {};
+  const body: { [key: string]: DocumentData } = {};
   try {
     const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
     const docSnap = await getDoc(docRef);
@@ -168,46 +157,55 @@ export const getStudySet = async (id) => {
     });
     return {
       body,
-      head: data.head,
-      creator: data.creator,
+      head: data?.head,
+      creator: data?.creator,
       id,
-      isPublic: data.isPublic,
+      isPublic: data?.isPublic,
     };
-  } catch (error) {
-    console.log(error.message);
+  } catch (error: unknown) {
+    console.log(error);
     return error;
   }
 };
 
-export const mutateStudySet = (type, cardId, value, setId) => {
-  console.log(cardId);
+export const mutateStudySet = (
+  type: string,
+  cardId: string,
+  value: string,
+  setId: string
+) => {
   //body
-  if (type === "term" || type === "definition") {
-    const collectionDocRef = doc(
-      firestore,
-      `studySets/${setId}/body/${cardId}`
-    );
-    return setDoc(collectionDocRef, { [type]: value }, { merge: true });
-  } else if (type === "title" || type === "description") {
-    const docRef = doc(firestore, `studySets/${setId}`);
-    return setDoc(
-      docRef,
-      {
-        head: {
-          [type]: value,
+  try {
+    if (type === "term" || type === "definition") {
+      const collectionDocRef = doc(
+        firestore,
+        `studySets/${setId}/body/${cardId}`
+      );
+      return setDoc(collectionDocRef, { [type]: value }, { merge: true });
+    } else if (type === "title" || type === "description") {
+      const docRef = doc(firestore, `studySets/${setId}`);
+      return setDoc(
+        docRef,
+        {
+          head: {
+            [type]: value,
+          },
         },
-      },
-      { merge: true }
-    );
-  } else {
-    console.log("else ran in mutateStudySet");
-  }
-  console.log("mutation ran");
+        { merge: true }
+      );
+    }
 
-  return;
+    return;
+  } catch (error: unknown) {
+    return error;
+  }
 };
 
-export const mutateStudyCardAmount = async (type, cardId, setId) => {
+export const mutateStudyCardAmount = async (
+  type: string,
+  cardId: string,
+  setId: string
+) => {
   const collectionRef = collection(firestore, `studySets/${setId}/body`);
   try {
     if (type === "add") {
@@ -222,13 +220,13 @@ export const mutateStudyCardAmount = async (type, cardId, setId) => {
     } else {
       console.log("else ran in mutateCardAmount");
     }
-  } catch (error) {
-    console.log(error.message);
+  } catch (error: unknown) {
+    console.log(error);
     return error;
   }
 };
 
-export const submitStudySet = (id, uid) => {
+export const submitStudySet = (id: string, uid: string) => {
   const userDocRef = doc(firestore, `users/${uid}`);
   try {
     return setDoc(
@@ -246,7 +244,7 @@ export const submitStudySet = (id, uid) => {
   }
 };
 
-export const deleteStudySet = async (id, uid) => {
+export const deleteStudySet = async (id: string, uid: string) => {
   const studySetRef = doc(firestore, `studySets/${id}`);
   const userRef = doc(firestore, `users/${uid}`);
   try {
@@ -265,39 +263,36 @@ export const deleteStudySet = async (id, uid) => {
   }
 };
 
-export const setToCollection = async (id) => {
+export const setToCollection = async (id: string) => {
   const studyDocSnap = doc(firestore, `studySets/${id}`);
   console.log(id);
 
   try {
     const docSnap = await getDoc(studyDocSnap);
-    const bodyData = docSnap.data().body;
+    const bodyData = docSnap.data()?.body;
 
     Object.keys(bodyData).forEach(async (index) => {
       const collectionRef = collection(firestore, `studySets/${id}/body`);
       console.log(bodyData[index].definition);
-      await addDoc(
-        collectionRef,
-        {
-          definition: bodyData[index].definition,
-          term: bodyData[index].term,
-          timestamp: serverTimestamp(),
-        },
-        { merge: true }
-      );
+      await addDoc(collectionRef, {
+        definition: bodyData[index].definition,
+        term: bodyData[index].term,
+        timestamp: serverTimestamp(),
+      });
     });
     await updateDoc(studyDocSnap, { body: deleteField() });
     return "success";
-  } catch (error) {
-    return error.message;
+  } catch (error: unknown) {
+    console.log(error);
+    return error;
   }
 };
 
-export const addTimestamp = async (id) => {
+export const addTimestamp = async (id: string) => {
   const batch = writeBatch(firestore);
   const collectionRef = collection(firestore, `studySets/${id}/body`);
   try {
-    const arr = [];
+    const arr: string[] = [];
     const docsSnap = await getDocs(collectionRef);
     docsSnap.forEach(async (doc) => {
       arr.push(doc.id);
@@ -308,14 +303,14 @@ export const addTimestamp = async (id) => {
       batch.set(docRef, { timestamp: serverTimestamp() }, { merge: true });
     });
 
-    await batch.commit();
-    return "success";
-  } catch (error) {
-    return error.message;
+    return batch.commit();
+  } catch (error: unknown) {
+    console.log(error);
+    return error;
   }
 };
 
-export const editPublicity = async (id, isPublic) => {
+export const editPublicity = async (id: string, isPublic: boolean) => {
   const docRef = doc(firestore, `studySets/${id}`);
   console.log(isPublic);
   try {
@@ -325,35 +320,32 @@ export const editPublicity = async (id, isPublic) => {
   }
 };
 
-export const getPublicSets = async () => {
+export const getPublicSets = async (): Promise<ILibraryCard[]> => {
   const docsQuery = query(
     collection(firestore, "studySets"),
     where("isPublic", "==", true)
   );
-  const arr = [];
-  try {
-    const docsSnap = await getDocs(docsQuery);
-    docsSnap.forEach((doc) => {
-      const data = doc.data();
-      arr.push({
-        title: data.head.title,
-        description: data.head.description,
-        id: doc.id,
-        creator: data.creator,
-      });
+  const arr: ILibraryCard[] = [];
+  const docsSnap = await getDocs(docsQuery);
+  docsSnap.forEach((doc) => {
+    const data = doc.data();
+    arr.push({
+      title: data.head.title,
+      description: data.head.description,
+      id: doc.id,
+      creator: data.creator,
     });
-    return arr;
-  } catch (error) {
-    return error;
-  }
+  });
+  return arr;
 };
 
-export const getStudySetsCreators = async (uids) => {
+export const getStudySetsCreators = async (uids: string[]) => {
   const setsQuery = query(
     collection(firestore, `users`),
     where("__name__", "in", uids)
   );
-  const obj = {};
+  const obj: { [key: string]: Object } = {};
+
   try {
     const docs = await getDocs(setsQuery);
     docs.forEach((doc) => {
@@ -364,7 +356,7 @@ export const getStudySetsCreators = async (uids) => {
       };
     });
     return obj;
-  } catch (error) {
+  } catch (error: unknown) {
     return error;
   }
 };

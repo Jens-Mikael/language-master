@@ -1,6 +1,6 @@
 "use client";
-import { useAuth } from "@/context/AuthContext";
-import { getUserInfo } from "@/firebase/hooks/read";
+import { useAuth } from "/context/AuthContext";
+import { getUserInfo } from "/firebase/hooks/read";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";

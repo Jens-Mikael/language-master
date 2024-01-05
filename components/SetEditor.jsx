@@ -1,6 +1,6 @@
 "use client";
-import InputField from "@/components/InputField";
-import NewStudySetCard from "@/components/NewStudySetCard";
+import InputField from "/components/InputField";
+import NewStudySetCard from "/components/NewStudySetCard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   deleteStudySet,
@@ -8,11 +8,10 @@ import {
   getStudySet,
   mutateStudyCardAmount,
   submitStudySet,
-} from "@/firebase/hooks";
+} from "/firebase/hooks";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useEffect } from "react";
 import MobileTap from "./MobileTap";
 
 const SetEditor = ({ uid, type }) => {

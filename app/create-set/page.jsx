@@ -1,6 +1,6 @@
 "use client";
-import SetEditor from "@/components/SetEditor";
-import { useAuth } from "@/context/AuthContext";
+import SetEditor from "/components/SetEditor";
+import { useAuth } from "/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 

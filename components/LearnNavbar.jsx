@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getStudySet } from "@/firebase/hooks";
+import { getStudySet } from "/firebase/hooks";
 
 const LearnNavbar = ({ keys }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
