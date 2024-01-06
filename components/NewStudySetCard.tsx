@@ -1,9 +1,18 @@
 import InputField from "./InputField";
 import SVG from "react-inlinesvg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { mutateStudyCardAmount } from "/firebase/hooks";
+import { mutateStudyCardAmount } from "@firebase/hooks";
+import { ISetCard } from "../declarations";
 
-const NewStudySetCard = ({ obj, cardId, index, setId, type }) => {
+interface IProps {
+  obj: ISetCard;
+  cardId: string;
+  index: number;
+  setId: string;
+  type: string;
+}
+
+const NewStudySetCard = ({ obj, cardId, index, setId, type }: IProps) => {
   const queryClient = useQueryClient();
   const { mutateAsync: removeCard } = useMutation({
     mutationFn: () => mutateStudyCardAmount("remove", cardId, setId),

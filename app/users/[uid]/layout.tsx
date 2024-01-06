@@ -1,22 +1,28 @@
 "use client";
-import { useAuth } from "/context/AuthContext";
-import { getUserInfo } from "/firebase/hooks/read";
+import { useAuth } from "@context/AuthContext";
+import { getUserInfo } from "@firebase/hooks/read";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
+import { ReactNode } from "react";
+import { IUseAuth } from "../../../declarations";
 
-const UserLayout = ({ children }) => {
+interface IProps {
+  children: ReactNode;
+}
+
+const UserLayout = ({ children }: IProps) => {
   const pathParams = useParams();
   const pathname = usePathname();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [pathParams.uid],
-    queryFn: () => getUserInfo(pathParams.uid),
+    queryFn: () => getUserInfo(pathParams.uid as string),
   });
-  const { currentUser } = useAuth();
+  const { currentUser }: IUseAuth = useAuth();
 
   if (isLoading) return <div>loading</div>;
-  if (isError) return <div>{error}</div>;
+  if (isError) return <div>{error.message}</div>;
 
   return (
     <div className="flex justify-center">

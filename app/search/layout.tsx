@@ -1,15 +1,19 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { editSearchParams } from "/utils/functions";
+import { editSearchParams } from "@utils/functions";
 
-import { useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 
-const SearchPageLayout = ({ children }) => {
+interface IProps {
+  children: ReactNode
+}
+
+const SearchPageLayout = ({ children }: IProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const editParams = useCallback(
-    (obj) => editSearchParams(obj, searchParams),
+    (obj: object) => editSearchParams(obj, searchParams),
     []
   );
 

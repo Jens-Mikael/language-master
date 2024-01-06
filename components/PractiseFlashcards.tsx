@@ -1,49 +1,55 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getStudySet } from "/firebase/hooks";
+import { getStudySet } from "@firebase/hooks";
 import SVG from "react-inlinesvg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import PractiseSuccess from "./PractiseSuccess";
 
-const PractiseFlashcards = ({ keys, setKeys }) => {
-  const [currentKey, setCurrentKey] = useState();
+interface IProps {
+  keys: string[];
+  setKeys: (keys: string[]) => void;
+}
+
+const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
+  const [currentKey, setCurrentKey] = useState("");
+  const [initLoading, setInitLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [success, setSuccess] = useState(false);
   const [side, setSide] = useState("term");
   const [fails, setFails] = useState(0);
   const pathParams = useParams();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: [pathParams.id],
-    queryFn: () => getStudySet(pathParams.id),
+    queryFn: () => getStudySet(pathParams.id as string),
   });
-  const reset = (e) => {
+  const reset = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       setSuccess(false);
       setFails(0);
       setCount(0);
-      setKeys(Object.keys(data.body));
-      setCurrentKey(Object.keys(data.body)[0]);
+      setKeys(Object.keys(data!.body));
+      setCurrentKey(Object.keys(data!.body)[0]);
       document.removeEventListener("keydown", reset);
     }
   };
+
   useEffect(() => {
-    if (data) {
+    if (data && !isLoading) {
       setKeys(Object.keys(data.body));
       setCurrentKey(Object.keys(data.body)[0]);
+      setInitLoading(false);
     }
-  }, [data, setKeys]);
+  }, [data, setKeys, isLoading]);
 
   useEffect(() => {
     if (keys) {
-      console.log("dew");
       setCurrentKey(keys[count]);
       if (keys.length <= count) {
         setCount(0);
         setFails((prev) => (count > prev ? count : prev));
         setCurrentKey(keys[0]);
-        console.log("ran");
       }
     }
   }, [keys, count]);
@@ -56,16 +62,12 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
 
   const handleClick = () => {
     if (keys.length <= 1) setSuccess(true);
-    setKeys((prev) => {
-      return prev.filter((num, i) => i != count);
-    });
+    setKeys(keys.filter((num, i: number) => i !== count));
   };
 
   const shuffleKeys = () => {
-    setKeys((prev) => prev.sort((a, b) => 0.5 - Math.random()));
+    setKeys(keys.sort((a, b) => 0.5 - Math.random()));
   };
-
-
 
   const variants = {
     visible: { scale: 1, x: 0, rotateY: side === "definition" ? 180 : 0 },
@@ -84,8 +86,8 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
     },
   };
 
-  if (isLoading || !keys) return <div>loading...</div>;
-  if (error) return <div>erro</div>;
+  if (isLoading || initLoading || !currentKey) return <div>loading...</div>;
+  if (isError) return <div>{error.message}</div>;
 
   return (
     <div className="h-full">
@@ -93,7 +95,7 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
         <>
           <PractiseSuccess
             fails={fails}
-            bodyLength={Object.keys(data.body).length}
+            bodyLength={Object.keys(data!.body).length}
           />
         </>
       ) : (
@@ -114,12 +116,12 @@ const PractiseFlashcards = ({ keys, setKeys }) => {
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 `}
                   >
-                    {data.body[currentKey].term}
+                    {data?.body[currentKey].term}
                   </div>
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all transform-y-180 opacity-95 `}
                   >
-                    {data.body[currentKey].definition}
+                    {data?.body[currentKey].definition}
                   </div>
                 </motion.div>
               </AnimatePresence>

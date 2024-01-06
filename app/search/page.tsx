@@ -1,17 +1,18 @@
 "use client";
 
-import MobileTap from "/components/MobileTap";
-import { useAuth } from "/context/AuthContext";
-import { useSearch } from "/context/SearchContext";
-import { editSearchParams } from "/utils/functions";
+import MobileTap from "@components/MobileTap";
+import { useAuth } from "@context/AuthContext";
+import { useSearch } from "@context/SearchContext";
+import { editSearchParams } from "@utils/functions";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { IUseAuth, IUseSearch } from "../../declarations";
 
 const AllSearchResultsPage = () => {
   const searchParams = useSearchParams();
-  const { currentUser } = useAuth();
+  const { currentUser }: IUseAuth = useAuth();
   const {
     users,
     studySets,
@@ -20,14 +21,14 @@ const AllSearchResultsPage = () => {
     creatorsIsError,
     creatorsError,
     creatorsIsLoading,
-  } = useSearch();
+  }: IUseSearch = useSearch();
   const editParams = useCallback(
-    (obj) => editSearchParams(obj, searchParams),
+    (obj: object) => editSearchParams(obj, searchParams),
     []
   );
 
   if (isSearchLoading) return <div>loading</div>;
-  if (creatorsIsError) return <div>{creatorsError.message}</div>;
+  if (creatorsIsError) return <div>{creatorsError?.message}</div>;
   return (
     <div className=" flex flex-col gap-10">
       {(!users || users?.length === 0) &&

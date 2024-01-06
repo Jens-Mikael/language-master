@@ -1,6 +1,6 @@
 "use client";
-import InputField from "/components/InputField";
-import NewStudySetCard from "/components/NewStudySetCard";
+import InputField from "@components/InputField";
+import NewStudySetCard from "@components/NewStudySetCard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   deleteStudySet,
@@ -8,30 +8,36 @@ import {
   getStudySet,
   mutateStudyCardAmount,
   submitStudySet,
-} from "/firebase/hooks";
+} from "@firebase/hooks";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import MobileTap from "./MobileTap";
+import { IStudySet } from "../declarations";
 
-const SetEditor = ({ uid, type }) => {
+interface IProps {
+  uid: string;
+  type: string;
+}
+
+const SetEditor = ({ uid, type }: IProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<IStudySet>({
     queryKey: [type],
-    queryFn: () =>
+    queryFn: (): Promise<IStudySet> =>
       type === "studyDraft" ? getStudyDraft(uid) : getStudySet(type),
   });
   const { mutateAsync: addStudyCard } = useMutation({
-    mutationFn: () => mutateStudyCardAmount("add", null, data.id),
+    mutationFn: () => mutateStudyCardAmount("add", null, data?.id!),
     onSuccess: () => {
       console.log(type);
       queryClient.invalidateQueries({ queryKey: [type] });
     },
   });
   const { mutateAsync: submitSet } = useMutation({
-    mutationFn: () => submitStudySet(data.id, uid),
+    mutationFn: () => submitStudySet(data?.id!, uid),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [type] });
     },
@@ -45,7 +51,6 @@ const SetEditor = ({ uid, type }) => {
   });
 
   if (isLoading) return <div>Loading</div>;
-  const max = Math.max(...Object.keys(data.body));
 
   return (
     <div className="min-h-full flex justify-center pt-4">
@@ -53,13 +58,15 @@ const SetEditor = ({ uid, type }) => {
         {/* HEADER */}
         <div className="flex justify-between items-center gap-2">
           <div className="flex flex-col gap-2">
-            <div className="text-2xl font-bold">{type === "studyDraft" ? "Create a new study set" : "Edit set:"}</div>
+            <div className="text-2xl font-bold">
+              {type === "studyDraft" ? "Create a new study set" : "Edit set:"}
+            </div>
           </div>
           <MobileTap
             onClick={() => {
-              if (data.head.title !== "") {
+              if (data?.head.title !== "") {
                 if (type === "studyDraft") {
-                  submitSet();
+                  if (data) submitSet();
                   router.push("/");
                 } else {
                   router.push(`/sets/${type}`);
@@ -78,9 +85,9 @@ const SetEditor = ({ uid, type }) => {
             <InputField
               label="TITLE"
               placeholder="Enter a title..."
-              id="editSetTitle"
-              value={data.head.title}
-              setId={data.id}
+              cardId="editSetTitle"
+              value={data?.head.title!}
+              setId={data?.id!}
               type="title"
             />
           </div>
@@ -88,9 +95,9 @@ const SetEditor = ({ uid, type }) => {
             <InputField
               label="DESCRIPTION"
               placeholder="Add a description..."
-              id="editSetDesc"
-              value={data.head.description}
-              setId={data.id}
+              cardId="editSetDesc"
+              value={data?.head.description!}
+              setId={data?.id!}
               type="description"
             />
           </div>
@@ -98,7 +105,7 @@ const SetEditor = ({ uid, type }) => {
 
         {/* CARDS */}
         <div className="flex flex-col gap-10">
-          {Object.keys(data.body).map((cardId, i) => (
+          {Object.keys(data!.body).map((cardId, i) => (
             <AnimatePresence mode="popLayout" key={i}>
               <motion.div
                 key={i}
@@ -107,11 +114,11 @@ const SetEditor = ({ uid, type }) => {
                 exit={{ opacity: 0.5, scale: 0.5 }}
               >
                 <NewStudySetCard
-                  obj={data.body[cardId]}
+                  obj={data!.body[cardId]}
                   cardId={cardId}
                   index={i}
                   key={cardId}
-                  setId={data.id}
+                  setId={data!.id}
                   type={type}
                 />
               </motion.div>
@@ -125,7 +132,7 @@ const SetEditor = ({ uid, type }) => {
               + New Card
             </div>
             <div className="absolute left-10 font-bold text-xl">
-              {Object.keys(data.body).length + 1}
+              {Object.keys(data!.body).length + 1}
             </div>
           </MobileTap>
 
@@ -134,7 +141,7 @@ const SetEditor = ({ uid, type }) => {
               <MobileTap>
                 <Link
                   href="/"
-                  onClick={deleteSet}
+                  onClick={() => deleteSet()}
                   className="py-3 px-5 rounded-lg border border-white/40 bg-white/5 hover:bg-white/10 hover:scale-105 transition"
                 >
                   Delete Set

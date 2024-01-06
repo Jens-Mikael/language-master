@@ -1,16 +1,17 @@
 "use client";
 
-import MobileTap from "/components/MobileTap";
-import { useAuth } from "/context/AuthContext";
-import { useSearch } from "/context/SearchContext";
+import { IUseAuth, IUseSearch } from "../../../declarations";
+import MobileTap from "@components/MobileTap";
+import { useAuth } from "@context/AuthContext";
+import { useSearch } from "@context/SearchContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 const SearchUsersPage = () => {
   const searchParams = useSearchParams();
-  const { currentUser } = useAuth();
-  const { users, isSearchLoading } = useSearch();
+  const { currentUser }: IUseAuth = useAuth();
+  const { users, isSearchLoading }: IUseSearch = useSearch();
   if (isSearchLoading) return <div>loading</div>;
   return (
     <div>

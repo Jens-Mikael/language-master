@@ -1,11 +1,12 @@
 "use client";
 import MobileTap from "@components/MobileTap";
-import { useAuth } from "/context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { IUseAuth } from "../../../declarations";
 
 const DefaultUserPage = () => {
-  const { currentUser, isLoading, logout, deleteAccount } = useAuth();
+  const { currentUser, isLoading, logout, deleteAccount }: IUseAuth = useAuth();
   const router = useRouter();
   const pathParams = useParams();
 
@@ -42,7 +43,7 @@ const DefaultUserPage = () => {
           className="border border-white/20 px-2 py-1 rounded-lg w-fit"
           onClick={() => {
             router.push(`/users/${pathParams.uid}/studySets`);
-            logout();
+            if (logout) logout();
           }}
         >
           Log Out
@@ -50,7 +51,7 @@ const DefaultUserPage = () => {
         <MobileTap
           className="border border-red-600/80 text-red-600/80 px-2 py-1 rounded-lg w-fit"
           onClick={() => {
-            deleteAccount();
+            if (deleteAccount) deleteAccount();
             router.push(`/`);
           }}
         >

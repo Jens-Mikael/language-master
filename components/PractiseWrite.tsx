@@ -1,15 +1,23 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, BaseSyntheticEvent, ChangeEvent } from "react";
 import SVG from "react-inlinesvg";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { getStudySet } from "/firebase/hooks";
+import { getStudySet } from "@firebase/hooks";
 import { useAnimate } from "framer-motion";
 import PractiseSuccess from "./PractiseSuccess";
+import { ISetCard, IStudySet } from "../declarations";
+import { InputType } from "zlib";
 
-const PractiseWrite = ({ keys, setKeys }) => {
+interface IProps {
+  keys: string[];
+  setKeys: (keys: string[]) => void;
+}
+
+const PractiseWrite = ({ keys, setKeys }: IProps) => {
   const [input, setInput] = useState("");
   const [side, setSide] = useState("term");
+  const [initLoading, setInitLoading] = useState(true);
   const [triesCount, setTriesCount] = useState(0);
   const [fails, setFails] = useState(0);
   const [count, setCount] = useState(0);
@@ -18,17 +26,17 @@ const PractiseWrite = ({ keys, setKeys }) => {
   const pathParams = useParams();
   const [scope, animate] = useAnimate();
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isError } = useQuery<IStudySet>({
     queryKey: [pathParams.id],
-    queryFn: () => getStudySet(pathParams.id),
+    queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
   });
 
-  const reset = (e) => {
+  const reset = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       setSuccess(false);
       setFails(0);
       setCount(0);
-      setKeys(Object.keys(data.body));
+      setKeys(Object.keys(data!.body));
       setInput("");
       setTriesCount(0);
       document.removeEventListener("keydown", reset);
@@ -38,6 +46,7 @@ const PractiseWrite = ({ keys, setKeys }) => {
   useEffect(() => {
     if (data) {
       setKeys(Object.keys(data.body));
+      setInitLoading(false);
     }
   }, [data, setKeys]);
 
@@ -55,12 +64,12 @@ const PractiseWrite = ({ keys, setKeys }) => {
       setCount((prev) => (keys.length - 1 <= prev ? 0 : prev + 1));
       return;
     }
-    if (input === data.body[keys[count]][side === "term" ? "definition" : "term"]) {
+    if (
+      input === data?.body[keys[count]][side === "term" ? "definition" : "term"]
+    ) {
       if (keys.length <= 1) return setSuccess(true);
       if (triesCount === 0) {
-        setKeys((prev) => {
-          return prev.filter((num, i) => i != count);
-        });
+        setKeys(keys.filter((num, i) => i != count));
         setCount((prev) => (keys.length - 1 <= prev ? 0 : prev));
       } else {
         setCount((prev) => (keys.length - 1 <= prev ? 0 : prev + 1));
@@ -82,7 +91,11 @@ const PractiseWrite = ({ keys, setKeys }) => {
       if (triesCount < 3) {
         setFails((prev) => (prev <= count + 1 ? count + 1 : prev));
         setTriesCount((prev) => prev + 1);
-        setInput(data.body[keys[count]][side === "term" ? "definition" : "term"].slice(0, triesCount + 1));
+        setInput(
+          data!.body[keys[count]][
+            side === "term" ? "definition" : "term"
+          ].slice(0, triesCount + 1)
+        );
         await animate(
           scope.current,
           {
@@ -101,7 +114,9 @@ const PractiseWrite = ({ keys, setKeys }) => {
           { duration: 0 }
         );
       } else {
-        setInput(data.body[keys[count]][side === "term" ? "definition" : "term"]);
+        setInput(
+          data!.body[keys[count]][side === "term" ? "definition" : "term"]
+        );
         setTriesCount(0);
         setShowCorrect(true);
       }
@@ -109,32 +124,32 @@ const PractiseWrite = ({ keys, setKeys }) => {
   };
 
   const shuffleKeys = () => {
-    setKeys((prev) => prev.sort((a, b) => 0.5 - Math.random()));
+    setKeys(keys.sort((a, b) => 0.5 - Math.random()));
   };
 
-
-
-  if (isLoading || !keys) return <div>loading</div>;
+  if (isLoading || initLoading) return <div>loading</div>;
+  if (isError) return <div>{error.message}</div>;
+  console.log(keys[count]);
 
   return (
     <div className="h-full">
       {success ? (
         <PractiseSuccess
           fails={fails}
-          bodyLength={Object.keys(data.body).length}
+          bodyLength={Object.keys(data!.body).length}
         />
       ) : (
         <div className="flex h-full justify-center items-center pb-36 pt-14 px-8">
           <div className="flex flex-col w-full max-w-3xl gap-14">
             <div className="bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20 px-8 sm:px-12 py-10 sm:py-16 flex flex-col gap-10">
               <div className="text-4xl font-light">
-                {data.body[keys[count]][side]}
+                {data?.body[keys[count]][side as keyof ISetCard]}
               </div>
               <div className="bg-white/10 h-0.5" />
               <div className="flex flex-col sm:flex-row gap-10">
                 <textarea
                   className="max-h-13 p-3 scrollbar-none resize-none bg-transparent flex-1 ring-none focus:outline-white/60 outline-white/30 outline outline-2  rounded-lg font-light text-xl transition-all"
-                  rows="1"
+                  rows={1}
                   id="writeTextarea"
                   placeholder="Definition..."
                   onFocus={() => {}}
@@ -142,9 +157,10 @@ const PractiseWrite = ({ keys, setKeys }) => {
                   ref={scope}
                   value={input}
                   onKeyDown={(e) => e.key === "Enter" && handleEnter()}
-                  onChange={(e) => {
+                  onChange={(e: any) => {
                     const textarea = e.target;
-                    if (e.nativeEvent.inputType === "insertLineBreak") return;
+                    if (e.nativeEvent.inputType === "insertLineBreak")
+                      console.log(e);
                     setInput(textarea.value);
                     textarea.style.height = "auto";
                     const scrollHeight = textarea.scrollHeight;

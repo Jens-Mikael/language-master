@@ -4,25 +4,27 @@ import {
   editPublicity,
   getStudySet,
   setToCollection,
-} from "/firebase/hooks";
+} from "@firebase/hooks";
 import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
-import { useAuth } from "/context/AuthContext";
-import MobileTap from "/components/MobileTap";
+import { useAuth } from "@context/AuthContext";
+import MobileTap from "@components/MobileTap";
+import { IUseAuth } from "../../../declarations";
 
 const LearnSetPage = () => {
   const pathname = useParams();
   const queryClient = useQueryClient();
-  const { currentUser } = useAuth();
+  const { currentUser }: IUseAuth = useAuth();
   const { data, isLoading, error } = useQuery({
     queryKey: [pathname.id],
-    queryFn: () => getStudySet(pathname.id),
+    queryFn: () => getStudySet(pathname.id as string),
   });
 
   const { mutateAsync: mutatePublicity } = useMutation({
-    mutationFn: (isPublic) => editPublicity(pathname.id, isPublic),
+    mutationFn: (isPublic: boolean) =>
+      editPublicity(pathname.id as string, isPublic),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [pathname.id] });
     },
@@ -35,7 +37,7 @@ const LearnSetPage = () => {
       <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
           <div className="text-3xl sm:text-4xl font-bold">
-            {data.head.title}
+            {data?.head.title}
           </div>
           <div className="flex gap-5 flex-col md:flex-row">
             <MobileTap className="flex-1">
@@ -73,14 +75,14 @@ const LearnSetPage = () => {
           <div className="flex flex-col gap-8">
             <div className="flex justify-between">
               <div>Set content (32)</div>
-              {data.creator === currentUser?.uid && (
+              {data?.creator === currentUser?.uid && (
                 <div>
                   <label className=" relative inline-flex cursor-pointer select-none items-center">
                     <input
                       type="checkbox"
                       name="autoSaver"
                       className="sr-only peer"
-                      defaultChecked={data.isPublic}
+                      defaultChecked={data?.isPublic}
                       onChange={(e) => mutatePublicity(e.target.checked)}
                     />
                     <div
@@ -100,7 +102,7 @@ const LearnSetPage = () => {
               )}
             </div>
             <div className="flex flex-col gap-3">
-              {Object.keys(data.body).map((key, i) => (
+              {Object.keys(data!.body).map((key, i) => (
                 <div
                   key={key}
                   className="flex bg-white/[0.15] rounded-lg text-lg "
@@ -110,14 +112,14 @@ const LearnSetPage = () => {
                   </div>
                   <div className="border-r-2 border-black/40" />
                   <div className="font-medium flex flex-col sm:flex-row flex-1 gap-3 p-5">
-                    <div className="flex-1">{data.body[key].term}</div>
+                    <div className="flex-1">{data?.body[key].term}</div>
                     <div className="sm:w-0.5 w-full h-0.5 sm:h-full bg-black/40" />
-                    <div className="flex-1">{data.body[key].definition}</div>
+                    <div className="flex-1">{data?.body[key].definition}</div>
                   </div>
                 </div>
               ))}
             </div>
-            {data.creator === currentUser?.uid && (
+            {data?.creator === currentUser?.uid && (
               <div className="flex justify-center">
                 <MobileTap>
                   <Link

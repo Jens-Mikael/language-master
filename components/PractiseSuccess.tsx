@@ -1,7 +1,12 @@
 //import { DonutChart } from "react-circle-chart";
 // import LineChart from "@/components/LineChart";
 
-const PractiseSuccess = ({ fails, bodyLength }) => {
+interface IProps {
+  fails: number;
+  bodyLength: number;
+}
+
+const PractiseSuccess = ({ fails, bodyLength }: IProps) => {
   const donutArgs = {
     size: "md",
     trackColor: "#0A092D",
@@ -88,9 +93,7 @@ const PractiseSuccess = ({ fails, bodyLength }) => {
             </div>
           </div>
         </div>
-        <div>
-          {/* <LineChart /> */}
-        </div>
+        <div>{/* <LineChart /> */}</div>
       </div>
     </div>
   );

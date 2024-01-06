@@ -13,7 +13,7 @@ import {
   useState,
 } from "react";
 import { useMiniSearch } from "react-minisearch";
-import { ILibraryCard, IUseSearch, IUserDisplayInfo } from "../declarations";
+import { ILibraryCard, IUseSearch, IUserInfo } from "../declarations";
 
 const SearchContext = createContext({});
 
@@ -27,7 +27,7 @@ interface IProps {
 
 export const SearchProvider = ({ children }: IProps) => {
   const [enableFetch, setEnableFetch] = useState(false);
-  const [users, setUsers] = useState<IUserDisplayInfo[]>([]);
+  const [users, setUsers] = useState<IUserInfo[]>([]);
   const [studySets, setStudySets] = useState<ILibraryCard[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(true);
   const [initial, setInitial] = useState(true);
@@ -35,7 +35,7 @@ export const SearchProvider = ({ children }: IProps) => {
   const pathname = usePathname();
 
   const { autoSuggest, suggestions, addAllAsync, search, searchResults } =
-    useMiniSearch<ILibraryCard | IUserDisplayInfo>([], miniSearchOptions);
+    useMiniSearch<ILibraryCard | IUserInfo>([], miniSearchOptions);
 
   //fetch public sets
   const { data: setsData } = useQuery<ILibraryCard[]>({
@@ -49,10 +49,10 @@ export const SearchProvider = ({ children }: IProps) => {
   });
 
   //fetch every user
-  const { data: everyUserData } = useQuery<IUserDisplayInfo[]>({
+  const { data: everyUserData } = useQuery<IUserInfo[]>({
     queryKey: ["everyUser"],
     queryFn: async () => {
-      const data: IUserDisplayInfo[] = await getEveryUser();
+      const data: IUserInfo[] = await getEveryUser();
       await addAllAsync(data);
       return data;
     },
@@ -71,7 +71,7 @@ export const SearchProvider = ({ children }: IProps) => {
   });
 
   const Uidize = useCallback(
-    (searchResults: (IUserDisplayInfo | ILibraryCard)[] | null) => {
+    (searchResults: (IUserInfo | ILibraryCard)[] | null) => {
       const filteredArr = searchResults?.filter((obj): obj is ILibraryCard => {
         return (obj as ILibraryCard).creator !== undefined;
       });
@@ -85,11 +85,10 @@ export const SearchProvider = ({ children }: IProps) => {
 
   useMemo(() => {
     if (searchResults && searchResults.length !== 0) {
-      const users: IUserDisplayInfo[] = [];
+      const users: IUserInfo[] = [];
       const studySets: ILibraryCard[] = [];
-      searchResults.forEach((obj: IUserDisplayInfo | ILibraryCard) => {
-        if (obj.hasOwnProperty("displayName"))
-          users.push(obj as IUserDisplayInfo);
+      searchResults.forEach((obj: IUserInfo | ILibraryCard) => {
+        if (obj.hasOwnProperty("displayName")) users.push(obj as IUserInfo);
         else studySets.push(obj as ILibraryCard);
       });
       return (

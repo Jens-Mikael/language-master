@@ -1,11 +1,11 @@
 "use client";
-import LearnNavbar from "/components/LearnNavbar";
-import PractiseFlashcards from "/components/PractiseFlashcards";
+import LearnNavbar from "@components/LearnNavbar";
+import PractiseFlashcards from "@components/PractiseFlashcards";
 import { useState } from "react";
-
+import { ISetCard } from "../../../../declarations";
 
 const Layout = () => {
-  const [keys, setKeys] = useState();
+  const [keys, setKeys] = useState<string[]>([]);
 
   return (
     <div className="absolute z-20 inset-0">

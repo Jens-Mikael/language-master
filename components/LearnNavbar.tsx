@@ -7,7 +7,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getStudySet } from "@firebase/hooks";
 import { IStudySet } from "../declarations";
 
-const LearnNavbar = ({ keys }: string[]) => {
+interface IProps {
+  keys: string[];
+}
+
+const LearnNavbar = ({ keys }: IProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathParams = useParams();
   const pathname = usePathname();
@@ -16,7 +20,6 @@ const LearnNavbar = ({ keys }: string[]) => {
     queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
   });
   const path = pathname.slice(pathname.lastIndexOf("/") + 1);
-  console.log(keys);
 
   if (isError) return <div>{error.message}</div>;
 

@@ -1,11 +1,12 @@
 "use client";
-import SetEditor from "/components/SetEditor";
-import { useAuth } from "/context/AuthContext";
+import SetEditor from "@components/SetEditor";
+import { useAuth } from "@context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { IUseAuth } from "../../declarations";
 
 const CreateSetPage = () => {
-  const { currentUser, isLoading } = useAuth();
+  const { currentUser, isLoading }: IUseAuth = useAuth();
   const router = useRouter();
 
   useEffect(() => {

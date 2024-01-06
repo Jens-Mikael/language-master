@@ -1,13 +1,20 @@
 "use client";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+
+import { ReactNode, useEffect, useState } from "react";
 import { AuthProvider } from "@context/AuthContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SearchProvider } from "@context/SearchContext";
 
-const Providers = ({ children }) => {
+interface IProps {
+  children: ReactNode;
+}
+
+const Providers = ({ children }: IProps) => {
   const [mounted, setMounted] = useState(false);
   const queryClient = new QueryClient();
+
+  useEffect(() => setMounted(true), []);
 
   if (!mounted)
     return (
@@ -25,7 +32,7 @@ const Providers = ({ children }) => {
         <QueryClientProvider client={queryClient}>
           <SearchProvider>
             {children}
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools /> */}
           </SearchProvider>
         </QueryClientProvider>
       </AuthProvider>

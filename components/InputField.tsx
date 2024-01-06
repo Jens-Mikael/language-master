@@ -1,18 +1,34 @@
 "use client";
 
-import { mutateStudySet } from "/firebase/hooks";
+import { mutateStudySet } from "@firebase/hooks";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const InputField = ({ label, placeholder, type, value, cardId, setId }) => {
+interface IProps {
+  label: string;
+  placeholder: string;
+  type: string;
+  value: string;
+  cardId: string;
+  setId: string;
+}
+
+const InputField = ({
+  label,
+  placeholder,
+  type,
+  value,
+  cardId,
+  setId,
+}: IProps) => {
   const [focus, setFocus] = useState(false);
-  const [input, setInput] = useState(value);
+  const [input, setInput] = useState<string>(value);
   const queryClient = useQueryClient();
 
   const { mutate: mutateStudyDraft } = useMutation({
-    mutationFn: (input) => mutateStudySet(type, cardId, input, setId),
+    mutationFn: (input: string) => mutateStudySet(type, cardId, input, setId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studyDraft"] })
+      queryClient.invalidateQueries({ queryKey: ["studyDraft"] });
     },
   });
 
@@ -21,7 +37,7 @@ const InputField = ({ label, placeholder, type, value, cardId, setId }) => {
       <div>
         <textarea
           className="max-h-40 scrollbar-none resize-none bg-transparent w-full ring-none outline-none font-light"
-          rows="1"
+          rows={1}
           placeholder={placeholder}
           onFocus={() => setFocus(true)}
           onBlur={(e) => {

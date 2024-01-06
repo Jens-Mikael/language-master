@@ -1,10 +1,11 @@
 "use client";
 
-import MobileTap from "/components/MobileTap";
-import { useAuth } from "/context/AuthContext";
+import MobileTap from "@components/MobileTap";
+import { useAuth } from "@context/AuthContext";
+import { IUseAuth } from "../declarations";
 
 export default function Home() {
-  const { logout } = useAuth();
+  const { logout }: IUseAuth = useAuth();
   return (
     <div className="min-h-full flex items-center justify-center font-croissantOne p-4">
       <div

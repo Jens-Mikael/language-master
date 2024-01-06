@@ -3,14 +3,18 @@ import "./globals.css";
 import { ubuntu } from "./fonts";
 import Navbar from "@components/Navbar";
 import Footer from "@components/Footer";
- 
+import { ReactNode } from "react";
+
 export const metadata = {
-  title: 'Language Master',
-  description: 'A App built with the puerpose of language mastery',
+  title: "Language Master",
+  description: "A App built with the puerpose of language mastery",
+};
+
+interface IProps {
+  children: ReactNode;
 }
 
-
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: IProps) {
   return (
     <html lang="en" className="">
       <Providers>

@@ -1,25 +1,30 @@
 "use client";
 
-import MobileTap from "/components/MobileTap";
-import { useAuth } from "/context/AuthContext";
-import { useSearch } from "/context/SearchContext";
+import MobileTap from "@components/MobileTap";
+import { useAuth } from "@context/AuthContext";
+import { useSearch } from "@context/SearchContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { IUseAuth, IUseSearch } from "../../../declarations";
 
 const SearchStudySetsPage = () => {
   const searchParams = useSearchParams();
-  const { currentUser } = useAuth();
+  const { currentUser }: IUseAuth = useAuth();
 
-  const { studySets, creatorsIsLoading, creatorsData, isSearchLoading } =
-    useSearch();
+  const {
+    studySets,
+    creatorsIsLoading,
+    creatorsData,
+    isSearchLoading,
+  }: IUseSearch = useSearch();
 
   if (isSearchLoading) return <div>loading</div>;
   return (
     <div>
       {studySets && studySets.length >= 1 ? (
         <div className="grid grid-cols-1 gap-5 sm:gap-5 md:grid-cols-2 w-full">
-          {studySets.map((obj, i) => (
+          {studySets.map((obj) => (
             <MobileTap
               key={obj.id}
               className="group hover:scale-105 transition w-full h-[160px] bg-white/20 rounded-xl text-start truncate relative"

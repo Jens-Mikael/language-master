@@ -14,22 +14,20 @@ export interface IgetUserLibrary {
   title: string;
 }
 
-export interface IuserInfo {
+export interface IUserInfo {
   photoURL: string;
   displayName: string;
-  email: string;
+  email?: string;
+  id?: string;
 }
 
-export interface IUserDisplayInfo {
-  displayName: string;
-  photoURL: string;
-  id: string;
+export interface ICreatorsData {
+  [key: string]: IUserInfo;
 }
 
-export interface IsetCard {
+export interface ISetCard {
   definition: string;
   term: string;
-  timestamp: Timestamp;
 }
 
 export interface ILibraryCard {
@@ -59,13 +57,13 @@ export interface IUseAuth {
 export interface IUseSearch {
   autoSuggest?: (query: string, options?: SearchOptions | undefined) => void;
   suggestions?: Suggestion[] | null;
-  users?: IUserDisplayInfo[];
+  users?: IUserInfo[];
   studySets?: ILibraryCard[];
   isSearchLoading?: boolean;
-  creatorsData?: unknown;
+  creatorsData?: ICreatorsData;
   creatorsIsLoading?: boolean;
   creatorsIsError?: boolean;
-  creatorsError?: Error | null;
+  creatorsError?: Error;
 }
 
 interface IStudySetHead {
@@ -75,7 +73,7 @@ interface IStudySetHead {
 
 export interface IStudySet {
   head: IStudySetHead;
-  body: { [key: string]: DocumentData };
+  body: { [key: string]: ISetCard };
   creator: string;
   id: string;
   isPublic: boolean;
