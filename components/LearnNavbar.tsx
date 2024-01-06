@@ -4,17 +4,21 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getStudySet } from "/firebase/hooks";
+import { getStudySet } from "@firebase/hooks";
+import { IStudySet } from "../declarations";
 
-const LearnNavbar = ({ keys }) => {
+const LearnNavbar = ({ keys }: string[]) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathParams = useParams();
   const pathname = usePathname();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isError } = useQuery<IStudySet>({
     queryKey: [pathParams.id],
-    queryFn: () => getStudySet(pathParams.id),
+    queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
   });
   const path = pathname.slice(pathname.lastIndexOf("/") + 1);
+  console.log(keys);
+
+  if (isError) return <div>{error.message}</div>;
 
   return (
     <div>
@@ -88,18 +92,17 @@ const LearnNavbar = ({ keys }) => {
           </Link>
         </div>
         <div className="absolute items-center flex-col flex font-medium sm:top-5 top-full">
-          {!isLoading && keys ? (
+          {!isLoading && keys?.length > 0 && data ? (
             <div className="text-xl">{`${
               Object.keys(data.body).length - keys.length
             } / ${Object.keys(data.body).length}`}</div>
           ) : (
             <div>/</div>
           )}
-
-          <div>{!isLoading && data.head.title}</div>
+          <div>{!isLoading && data?.head.title}</div>
         </div>
       </div>
-      {!isLoading && keys && (
+      {!isLoading && keys && data && (
         <>
           <div
             style={{

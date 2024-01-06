@@ -13,8 +13,7 @@ import {
   useState,
 } from "react";
 import { useMiniSearch } from "react-minisearch";
-import { ILibraryCard, IUserDisplayInfo } from "../declarations";
-import { Query, SearchOptions } from "minisearch";
+import { ILibraryCard, IUseSearch, IUserDisplayInfo } from "../declarations";
 
 const SearchContext = createContext({});
 
@@ -29,7 +28,7 @@ interface IProps {
 export const SearchProvider = ({ children }: IProps) => {
   const [enableFetch, setEnableFetch] = useState(false);
   const [users, setUsers] = useState<IUserDisplayInfo[]>([]);
-  const [studySets, setStudySets] = useState<any[] | ILibraryCard[]>([]);
+  const [studySets, setStudySets] = useState<ILibraryCard[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(true);
   const [initial, setInitial] = useState(true);
   const searchParams = useSearchParams();
@@ -87,11 +86,11 @@ export const SearchProvider = ({ children }: IProps) => {
   useMemo(() => {
     if (searchResults && searchResults.length !== 0) {
       const users: IUserDisplayInfo[] = [];
-      const studySets: object[] = [];
+      const studySets: ILibraryCard[] = [];
       searchResults.forEach((obj: IUserDisplayInfo | ILibraryCard) => {
         if (obj.hasOwnProperty("displayName"))
           users.push(obj as IUserDisplayInfo);
-        else studySets.push(obj);
+        else studySets.push(obj as ILibraryCard);
       });
       return (
         setUsers(users),

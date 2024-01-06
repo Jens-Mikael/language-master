@@ -10,6 +10,7 @@ import Sidebar from "./Sidebar";
 import MobileTap from "./MobileTap";
 import SearchBar from "./SearchBar";
 import Image from "next/image";
+import { IUseAuth } from "../declarations";
 
 const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,7 +19,7 @@ const Navbar = () => {
   const [input, setInput] = useState("");
   const pathname = usePathname();
 
-  const { currentUser, isLoading, googleAuth, logout } = useAuth();
+  const { currentUser, isLoading, googleAuth }: IUseAuth = useAuth();
 
   return (
     <>
@@ -120,7 +121,7 @@ const Navbar = () => {
                   href={`/users/${currentUser.uid}`}
                 >
                   <Image
-                    src={currentUser.photoURL}
+                    src={currentUser.photoURL!}
                     alt="pfp"
                     height={40}
                     width={40}
@@ -132,7 +133,7 @@ const Navbar = () => {
                 <div className="flex gap-3">
                   <MobileTap
                     className={`bg-blue-500  transition rounded-lg px-2 py-1 hover:bg-indigo-500 hover:scale-105`}
-                    onClick={() => googleAuth()}
+                    onClick={() => googleAuth && googleAuth()}
                   >
                     Log In
                   </MobileTap>

@@ -6,9 +6,16 @@ import SVG from "react-inlinesvg";
 import LibraryDropdown from "./LibraryDropdown";
 import MobileTap from "./MobileTap";
 import Image from "next/image";
-const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+import { IUseAuth } from "../declarations";
+
+interface IProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (isOpen: boolean) => void;
+}
+
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: IProps) => {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
-  const { googleAuth, logout, isLoading, currentUser } = useAuth();
+  const { googleAuth, logout, isLoading, currentUser }: IUseAuth = useAuth();
   const pathname = usePathname();
   return (
     <div
@@ -94,7 +101,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     onClick={() => setSidebarOpen(false)}
                   >
                     <Image
-                      src={currentUser.photoURL}
+                      src={currentUser.photoURL!}
                       alt="pfp"
                       height={40}
                       width={40}
@@ -118,7 +125,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     className="border border-white/20 px-2 py-1 rounded-lg  w-fit"
                     onClick={() => {
                       setSidebarOpen(false);
-                      logout();
+                      if (logout) logout();
                     }}
                   >
                     Log Out
@@ -130,7 +137,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     className="bg-blue-500 hover:bg-indigo-500 hover:scale-105 transition rounded-lg px-3 py-1 w-fit"
                     onClick={() => {
                       setSidebarOpen(false);
-                      googleAuth();
+                      if (googleAuth) googleAuth();
                     }}
                   >
                     Log In

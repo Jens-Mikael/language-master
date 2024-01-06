@@ -5,13 +5,10 @@ import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useSearch } from "@context/SearchContext";
 import { SearchOptions, Suggestion } from "minisearch";
+import { IUseSearch } from "../declarations";
 
 interface IProps {
-  setIsSearchOpen: (isOpen: boolean) => void;
-}
-interface IUseSearch {
-  suggestions?: Suggestion[];
-  autoSuggest?: (query: string, options?: SearchOptions | undefined) => void;
+  setIsSearchOpen?: (isOpen: boolean) => void;
 }
 
 const SearchBar = ({ setIsSearchOpen }: IProps) => {
@@ -26,7 +23,6 @@ const SearchBar = ({ setIsSearchOpen }: IProps) => {
 
   const { suggestions, autoSuggest }: IUseSearch = useSearch();
 
-  useEffect(() => autoSuggest(input), [input]);
   return (
     <div
       className={`grow w-full max-w-3xl items-center justify-center text-sm relative flex`}
@@ -42,6 +38,7 @@ const SearchBar = ({ setIsSearchOpen }: IProps) => {
         placeholder="Search for anything..."
         value={input}
         onChange={(e) => {
+          if (autoSuggest) autoSuggest(e.target.value);
           setInput(e.target.value);
         }}
         onClick={() => setShowSugg(true)}
@@ -54,7 +51,7 @@ const SearchBar = ({ setIsSearchOpen }: IProps) => {
         onKeyUp={(e) => {
           if (e.key === "Enter") {
             setShowSugg(false);
-            setIsSearchOpen(false);
+            if (setIsSearchOpen) setIsSearchOpen(false);
             e.currentTarget.blur();
             router.push(`/search?${setSearchParams({ query: input })}`);
           }

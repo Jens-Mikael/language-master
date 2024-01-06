@@ -11,23 +11,35 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   deleteUser,
+  User,
 } from "firebase/auth";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { IUseAuth } from "../declarations";
 
-const AuthContext = createContext();
+const AuthContext = createContext({});
 
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+interface IProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: IProps) => {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [uid, setUid] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   //AUTH METHODS
 
-  const googleAuth = async () => {
+  const googleAuth = async (): Promise<User | unknown> => {
     const googleProvider = new GoogleAuthProvider();
     try {
       const res = await signInWithPopup(auth, googleProvider);
@@ -36,11 +48,11 @@ export const AuthProvider = ({ children }) => {
         return user;
       }
     } catch (err) {
-      return err.message;
+      return err;
     }
   };
 
-  const facebookAuth = async () => {
+  const facebookAuth = async (): Promise<User | unknown> => {
     const facebookProvider = new FacebookAuthProvider();
     try {
       const res = await signInWithPopup(auth, facebookProvider);
@@ -49,11 +61,11 @@ export const AuthProvider = ({ children }) => {
         return user;
       }
     } catch (err) {
-      return err.message;
+      return err;
     }
   };
 
-  const githubAuth = async () => {
+  const githubAuth = async (): Promise<User | unknown> => {
     const githubProvider = new GithubAuthProvider();
     try {
       const res = await signInWithPopup(auth, githubProvider);
@@ -62,21 +74,21 @@ export const AuthProvider = ({ children }) => {
         return user;
       }
     } catch (err) {
-      return err.message;
+      return err;
     }
   };
 
-  const signUp = async (email, password, username) => {
+  const signUp = async (email: string, password: string, username: string) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       const user = res.user;
       return updateProfile(user, { displayName: username });
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
     }
   };
 
-  const logIn = async (email, password) => {
+  const logIn = async (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
@@ -85,7 +97,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteAccount = async () => {
-    return deleteUser(currentUser);
+    return currentUser && deleteUser(currentUser);
   };
 
   useEffect(() => {
@@ -97,7 +109,7 @@ export const AuthProvider = ({ children }) => {
     return;
   }, []);
 
-  const value = {
+  const value: IUseAuth = {
     currentUser,
     uid,
     googleAuth,

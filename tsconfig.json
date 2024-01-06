@@ -117,7 +117,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "components/Footer.jsx"
-, "components/LibraryDropdown.tsx", "components/SearchBar.tsx"  ],
+    "components/Footer.tsx"
+, "components/LibraryDropdown.tsx", "components/SearchBar.tsx", "app/sets/layout.jsx"  ],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,4 @@
-import { IsetCard, ILibraryCard } from "../../declarations";
+import { IsetCard, ILibraryCard, IStudySet } from "../../declarations";
 import { firestore } from "../firebase-init";
 import {
   getDoc,
@@ -143,29 +143,24 @@ export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
   }
 };
 
-export const getStudySet = async (id: string) => {
+export const getStudySet = async (id: string): Promise<IStudySet> => {
   const docRef = doc(firestore, `studySets/${id}`);
   const bodyCollectionRef = collection(firestore, `studySets/${id}/body`);
   const body: { [key: string]: DocumentData } = {};
-  try {
-    const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    const docsSnap = await getDocs(docQuery);
-    docsSnap.forEach((doc) => {
-      body[doc.id] = doc.data();
-    });
-    return {
-      body,
-      head: data?.head,
-      creator: data?.creator,
-      id,
-      isPublic: data?.isPublic,
-    };
-  } catch (error: unknown) {
-    console.log(error);
-    return error;
-  }
+  const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
+  const docSnap = await getDoc(docRef);
+  const data = docSnap.data();
+  const docsSnap = await getDocs(docQuery);
+  docsSnap.forEach((doc) => {
+    body[doc.id] = doc.data();
+  });
+  return {
+    body,
+    head: data?.head,
+    creator: data?.creator,
+    id,
+    isPublic: data?.isPublic,
+  };
 };
 
 export const mutateStudySet = (

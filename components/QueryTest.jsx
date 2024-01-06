@@ -14,7 +14,6 @@ const QueryTest = () => {
     (text) => {
       const newData = text;
       //queryClient.setQueryData(["string"], newData);
-
       return newData;
     },
     {

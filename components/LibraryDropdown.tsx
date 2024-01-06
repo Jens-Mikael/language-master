@@ -1,27 +1,28 @@
 import { useAuth } from "@context/AuthContext";
 import { getUserLibrary } from "@firebase/hooks";
 import Link from "next/link";
-import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
-import { IgetUserLibrary, IuseQuery, ILibraryCard } from "../declarations";
+import { ILibraryCard, IUseAuth } from "../declarations";
+import { ReactElement } from "react";
 
 interface ILibraryDropdown {
   setIsLibraryOpen: (isOpen: boolean) => void;
-  setSidebarOpen: (isOpen: boolean) => void;
+  setSidebarOpen?: (isOpen: boolean) => void;
 }
 
 const LibraryDropdown = ({
   setIsLibraryOpen,
   setSidebarOpen,
-}: ILibraryDropdown) => {
+}: ILibraryDropdown): ReactElement<any, any> => {
   const pathname = usePathname();
-  const { currentUser } = useAuth();
+  const { currentUser }: IUseAuth = useAuth();
   const { data, isLoading, isError, error } = useQuery<ILibraryCard[]>({
-    queryKey: ["userSets", { user: currentUser.uid }],
-    queryFn: (): Promise<ILibraryCard[]> => getUserLibrary(currentUser.uid),
+    queryKey: ["userSets", { user: currentUser?.uid }],
+    queryFn: (): Promise<ILibraryCard[]> => getUserLibrary(currentUser?.uid!),
   });
   if (isLoading) return <div>loadin</div>;
-  if (isError) return console.log(error);
+  if (isError) return <div>{error.message}</div>;
   return (
     <div className="flex sm:z-20 gap-3 pt-2 sm:absolute sm:top-full sm:right-0 sm:mt-2 sm:border border-white/20 sm:rounded-xl flex-col overflow-hidden bg-[#0A092D]">
       {data?.map((i: ILibraryCard) => (
