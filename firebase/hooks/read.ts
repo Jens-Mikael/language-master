@@ -1,8 +1,8 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from "../firebase-init";
-import { IUserDisplayInfo, IuserInfo } from "../../utils/declarations";
+import { IUserInfo } from "../../utils/declarations";
 
-export const getUserInfo = async (uid: string): Promise<IuserInfo> => {
+export const getUserInfo = async (uid: string): Promise<IUserInfo> => {
   const docRef = doc(firestore, `users/${uid}`);
   try {
     const docSnap = await getDoc(docRef);
@@ -12,9 +12,9 @@ export const getUserInfo = async (uid: string): Promise<IuserInfo> => {
   }
 };
 
-export const getEveryUser = async (): Promise<IUserDisplayInfo[]> => {
+export const getEveryUser = async (): Promise<IUserInfo[]> => {
   const userCollection = collection(firestore, `users`);
-  const arr: IUserDisplayInfo[] = [];
+  const arr: IUserInfo[] = [];
   const userDocs = await getDocs(userCollection);
   userDocs.forEach((doc) => {
     const data = doc.data();
