@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import MobileTap from "./MobileTap";
-import { IStudySet } from "../declarations";
+import { IStudySet } from "../utils/declarations";
 
 interface IProps {
   uid: string;

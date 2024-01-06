@@ -20,7 +20,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { IUseAuth } from "../declarations";
+import { IUseAuth } from "../utils/declarations";
 
 const AuthContext = createContext({});
 

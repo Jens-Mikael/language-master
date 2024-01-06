@@ -3,7 +3,7 @@ import MobileTap from "@components/MobileTap";
 import { useAuth } from "@context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { IUseAuth } from "../../../declarations";
+import { IUseAuth } from "../../../utils/declarations";
 
 const DefaultUserPage = () => {
   const { currentUser, isLoading, logout, deleteAccount }: IUseAuth = useAuth();

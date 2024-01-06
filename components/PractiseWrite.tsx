@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { getStudySet } from "@firebase/hooks";
 import { useAnimate } from "framer-motion";
 import PractiseSuccess from "./PractiseSuccess";
-import { ISetCard, IStudySet } from "../declarations";
+import { ISetCard, IStudySet } from "../utils/declarations";
 import { InputType } from "zlib";
 
 interface IProps {

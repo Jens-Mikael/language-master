@@ -5,7 +5,7 @@ import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getStudySet } from "@firebase/hooks";
-import { IStudySet } from "../declarations";
+import { IStudySet } from "../utils/declarations";
 
 interface IProps {
   keys: string[];

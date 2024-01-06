@@ -11,7 +11,7 @@ import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useAuth } from "@context/AuthContext";
 import MobileTap from "@components/MobileTap";
-import { IUseAuth } from "../../../declarations";
+import { IUseAuth } from "../../../utils/declarations";
 
 const LearnSetPage = () => {
   const pathname = useParams();

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { IUseAuth } from "../../../declarations";
+import { IUseAuth } from "../../../utils/declarations";
 
 interface IProps {
   children: ReactNode;

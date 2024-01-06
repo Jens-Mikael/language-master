@@ -4,7 +4,7 @@ import { useAuth } from "@context/AuthContext";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IUseAuth } from "../../../declarations";
+import { IUseAuth } from "../../../utils/declarations";
 import { getStudySet } from "@firebase/hooks";
 
 const EditSetPage = () => {

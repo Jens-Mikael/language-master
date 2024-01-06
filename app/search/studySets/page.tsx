@@ -6,7 +6,7 @@ import { useSearch } from "@context/SearchContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { IUseAuth, IUseSearch } from "../../../declarations";
+import { IUseAuth, IUseSearch } from "../../../utils/declarations";
 
 const SearchStudySetsPage = () => {
   const searchParams = useSearchParams();

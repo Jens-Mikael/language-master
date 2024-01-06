@@ -5,7 +5,7 @@ import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useSearch } from "@context/SearchContext";
 import { SearchOptions, Suggestion } from "minisearch";
-import { IUseSearch } from "../declarations";
+import { IUseSearch } from "../utils/declarations";
 
 interface IProps {
   setIsSearchOpen?: (isOpen: boolean) => void;

@@ -4,7 +4,7 @@ import {
   ISetCard,
   IUserInfo,
   ICreatorsData,
-} from "../../declarations";
+} from "../../utils/declarations";
 import { firestore } from "../firebase-init";
 import {
   getDoc,

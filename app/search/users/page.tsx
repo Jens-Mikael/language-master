@@ -1,6 +1,6 @@
 "use client";
 
-import { IUseAuth, IUseSearch } from "../../../declarations";
+import { IUseAuth, IUseSearch } from "../../../utils/declarations";
 import MobileTap from "@components/MobileTap";
 import { useAuth } from "@context/AuthContext";
 import { useSearch } from "@context/SearchContext";

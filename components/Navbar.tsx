@@ -10,7 +10,7 @@ import Sidebar from "./Sidebar";
 import MobileTap from "./MobileTap";
 import SearchBar from "./SearchBar";
 import Image from "next/image";
-import { IUseAuth } from "../declarations";
+import { IUseAuth } from "../utils/declarations";
 
 const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

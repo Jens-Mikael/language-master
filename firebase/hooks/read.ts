@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from "../firebase-init";
-import { IUserDisplayInfo, IuserInfo } from "../../declarations";
+import { IUserDisplayInfo, IuserInfo } from "../../utils/declarations";
 
 export const getUserInfo = async (uid: string): Promise<IuserInfo> => {
   const docRef = doc(firestore, `users/${uid}`);

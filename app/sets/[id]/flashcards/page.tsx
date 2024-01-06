@@ -2,7 +2,7 @@
 import LearnNavbar from "@components/LearnNavbar";
 import PractiseFlashcards from "@components/PractiseFlashcards";
 import { useState } from "react";
-import { ISetCard } from "../../../../declarations";
+import { ISetCard } from "../../../../utils/declarations";
 
 const Layout = () => {
   const [keys, setKeys] = useState<string[]>([]);

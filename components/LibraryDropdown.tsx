@@ -3,7 +3,7 @@ import { getUserLibrary } from "@firebase/hooks";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
-import { ILibraryCard, IUseAuth } from "../declarations";
+import { ILibraryCard, IUseAuth } from "../utils/declarations";
 import { ReactElement } from "react";
 
 interface ILibraryDropdown {

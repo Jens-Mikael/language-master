@@ -2,7 +2,7 @@
 
 import MobileTap from "@components/MobileTap";
 import { useAuth } from "@context/AuthContext";
-import { IUseAuth } from "../declarations";
+import { IUseAuth } from "../utils/declarations";
 
 export default function Home() {
   const { logout }: IUseAuth = useAuth();

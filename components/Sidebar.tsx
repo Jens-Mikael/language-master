@@ -6,7 +6,7 @@ import SVG from "react-inlinesvg";
 import LibraryDropdown from "./LibraryDropdown";
 import MobileTap from "./MobileTap";
 import Image from "next/image";
-import { IUseAuth } from "../declarations";
+import { IUseAuth } from "../utils/declarations";
 
 interface IProps {
   sidebarOpen: boolean;

@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { IUseAuth, IUseSearch } from "../../declarations";
+import { IUseAuth, IUseSearch } from "../../utils/declarations";
 
 const AllSearchResultsPage = () => {
   const searchParams = useSearchParams();
@@ -73,7 +73,13 @@ const AllSearchResultsPage = () => {
               );
             })}
           </div>
-          <Link className="self-end font-bold text-blue-600 hover:text-indigo-600/90 transition" href={`/search/users?${editParams({})}`}> View All</Link>
+          <Link
+            className="self-end font-bold text-blue-600 hover:text-indigo-600/90 transition"
+            href={`/search/users?${editParams({})}`}
+          >
+            {" "}
+            View All
+          </Link>
         </div>
       )}
       {studySets && studySets.length >= 1 && (
@@ -122,7 +128,13 @@ const AllSearchResultsPage = () => {
               );
             })}
           </div>
-          <Link className="self-end font-bold text-blue-600 hover:text-indigo-600/90 transition" href={`/search/studySets?${editParams({})}`}> View All</Link>
+          <Link
+            className="self-end font-bold text-blue-600 hover:text-indigo-600/90 transition"
+            href={`/search/studySets?${editParams({})}`}
+          >
+            {" "}
+            View All
+          </Link>
         </div>
       )}
     </div>

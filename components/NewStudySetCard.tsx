@@ -2,7 +2,7 @@ import InputField from "./InputField";
 import SVG from "react-inlinesvg";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { mutateStudyCardAmount } from "@firebase/hooks";
-import { ISetCard } from "../declarations";
+import { ISetCard } from "../utils/declarations";
 
 interface IProps {
   obj: ISetCard;

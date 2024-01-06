@@ -13,7 +13,7 @@ import {
   useState,
 } from "react";
 import { useMiniSearch } from "react-minisearch";
-import { ILibraryCard, IUseSearch, IUserInfo } from "../declarations";
+import { ILibraryCard, IUseSearch, IUserInfo } from "../utils/declarations";
 
 const SearchContext = createContext({});
 
