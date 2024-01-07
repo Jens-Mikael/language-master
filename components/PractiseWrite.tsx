@@ -168,8 +168,8 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
                   onKeyDown={(e) => e.key === "Enter" && handleEnter()}
                   onChange={(e: any) => {
                     const textarea = e.target;
-                    if (e.nativeEvent.inputType === "insertLineBreak")
-                      console.log(e);
+                    if (e.nativeEvent.inputType === "insertLineBreak") return;
+
                     setInput(textarea.value);
                     textarea.style.height = "auto";
                     const scrollHeight = textarea.scrollHeight;
