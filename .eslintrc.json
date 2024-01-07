@@ -1,6 +1,6 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "quotes": 0
+    "quotes": [2, ["backtick", "single"]]
   }
 }
