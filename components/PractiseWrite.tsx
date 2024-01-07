@@ -13,7 +13,7 @@ import { getStudySet } from "@firebase/hooks";
 import { useAnimate } from "framer-motion";
 import PractiseSuccess from "./PractiseSuccess";
 import { ISetCard, IStudySet } from "../utils/declarations";
-import { InputType } from "zlib";
+import { isBrowser } from "react-device-detect";
 
 interface IProps {
   keys: string[];
@@ -37,7 +37,7 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
     queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
   });
 
-  const reset = useCallback(
+  const browserReset = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         setSuccess(false);
@@ -46,11 +46,18 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
         setKeys(Object.keys(data!.body));
         setInput("");
         setTriesCount(0);
-        document.removeEventListener("keydown", reset);
+        document.removeEventListener("keydown", browserReset);
       }
     },
     [setKeys, data]
   );
+
+  const mobileReset = () => {
+    setSuccess(false);
+    setFails(0);
+    setCount(0);
+    setKeys(Object.keys(data!.body));
+  };
 
   useEffect(() => {
     if (data) {
@@ -60,11 +67,10 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
   }, [data, setKeys]);
 
   useEffect(() => {
-    if (success) {
-      document.addEventListener("keydown", reset);
-      console.log("add");
+    if (success && isBrowser) {
+      document.addEventListener("keydown", browserReset);
     }
-  }, [success, reset]);
+  }, [success, browserReset]);
 
   const handleEnter = async () => {
     if (showCorrect) {
@@ -76,9 +82,9 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
     if (
       input === data?.body[keys[count]][side === "term" ? "definition" : "term"]
     ) {
-      if (keys.length <= 1) return setSuccess(true);
       if (triesCount === 0) {
-        setKeys(keys.filter((num, i) => i != count));
+        setKeys(keys.filter((num, i) => i !== count));
+        if (keys.length <= 1) return setSuccess(true);
         setCount((prev) => (keys.length - 1 <= prev ? 0 : prev));
       } else {
         setCount((prev) => (keys.length - 1 <= prev ? 0 : prev + 1));
@@ -138,7 +144,6 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
 
   if (isLoading || initLoading) return <div>loading</div>;
   if (isError) return <div>{error.message}</div>;
-  console.log(keys[count]);
 
   return (
     <div className="h-full">
@@ -146,12 +151,13 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
         <PractiseSuccess
           fails={fails}
           bodyLength={Object.keys(data!.body).length}
+          mobileReset={!isBrowser ? mobileReset : undefined}
         />
       ) : (
-        <div className="flex h-full justify-center items-center pb-36 pt-14 px-8">
-          <div className="flex flex-col w-full max-w-3xl gap-14">
-            <div className="bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20 px-8 sm:px-12 py-10 sm:py-16 flex flex-col gap-10">
-              <div className="text-4xl font-light">
+        <div className="flex h-full justify-center items-center px-8">
+          <div className="flex flex-col w-full max-w-3xl gap-10 sm:gap-14">
+            <div className="bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20 px-8 sm:px-12 py-10 sm:py-16 flex flex-col gap-6 sm:gap-10">
+              <div className="text-3xl sm:text-4xl font-light">
                 {data?.body[keys[count]][side as keyof ISetCard]}
               </div>
               <div className="bg-white/10 h-0.5" />

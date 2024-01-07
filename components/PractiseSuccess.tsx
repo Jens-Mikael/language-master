@@ -1,12 +1,15 @@
 //import { DonutChart } from "react-circle-chart";
 // import LineChart from "@/components/LineChart";
+import { isMobile } from "react-device-detect";
+import MobileTap from "./MobileTap";
 
 interface IProps {
   fails: number;
   bodyLength: number;
+  mobileReset?: () => void;
 }
 
-const PractiseSuccess = ({ fails, bodyLength }: IProps) => {
+const PractiseSuccess = ({ fails, bodyLength, mobileReset }: IProps) => {
   const donutArgs = {
     size: "md",
     trackColor: "#0A092D",
@@ -67,19 +70,7 @@ const PractiseSuccess = ({ fails, bodyLength }: IProps) => {
         <div className="font-bold text-5xl">Nice Work!</div>
         <div className="flex flex-col gap-10">
           <div className="font-bold text-2xl">How you're doing</div>
-          <div className="flex gap-14">
-            <div>
-              {/* <DonutChart
-                {...donutArgs}
-                items={[
-                  {
-                    value: Math.round(
-                      ((bodyLength - fails) / bodyLength) * 100
-                    ),
-                  },
-                ]}
-              /> */}
-            </div>
+          <div className="flex flex-col gap-14">
             <div className="flex flex-col gap-2">
               <div className="flex justify-between px-4 py-2 rounded-full font-medium w-[300px] bg-green-400/20 text-green-400">
                 <div>Done</div>
@@ -89,11 +80,19 @@ const PractiseSuccess = ({ fails, bodyLength }: IProps) => {
                 <div>Still learning</div>
                 <div>{fails}</div>
               </div>
-              <div className="p-5 text-center">Press Enter to continue</div>
             </div>
+            {isMobile ? (
+              <MobileTap
+                onClick={() => mobileReset && mobileReset()}
+                className="bg-blue-500 px-4 py-3 w-fit rounded-xl self-center"
+              >
+                Press to continue
+              </MobileTap>
+            ) : (
+              <div className="p-5 text-center">Press Enter to continue</div>
+            )}
           </div>
         </div>
-        <div>{/* <LineChart /> */}</div>
       </div>
     </div>
   );

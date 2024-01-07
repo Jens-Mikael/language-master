@@ -5,6 +5,7 @@ import { getStudySet } from "@firebase/hooks";
 import SVG from "react-inlinesvg";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+import { isBrowser } from "react-device-detect";
 import PractiseSuccess from "./PractiseSuccess";
 
 interface IProps {
@@ -13,7 +14,6 @@ interface IProps {
 }
 
 const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
-  const [currentKey, setCurrentKey] = useState("");
   const [initLoading, setInitLoading] = useState(true);
   const [count, setCount] = useState(0);
   const [success, setSuccess] = useState(false);
@@ -25,48 +25,46 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
     queryFn: () => getStudySet(pathParams.id as string),
   });
 
-  const reset = useCallback(
+  const browseReset = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Enter") {
         setSuccess(false);
         setFails(0);
         setCount(0);
         setKeys(Object.keys(data!.body));
-        setCurrentKey(Object.keys(data!.body)[0]);
-        document.removeEventListener("keydown", reset);
+        document.removeEventListener("keydown", browseReset);
       }
     },
     [setKeys, data]
   );
 
+  const mobileReset = () => {
+    setSuccess(false);
+    setFails(0);
+    setCount(0);
+    setKeys(Object.keys(data!.body));
+  };
+
   useEffect(() => {
     if (data && !isLoading) {
       setKeys(Object.keys(data.body));
-      setCurrentKey(Object.keys(data.body)[0]);
       setInitLoading(false);
     }
   }, [data, setKeys, isLoading]);
 
   useEffect(() => {
-    if (keys) {
-      setCurrentKey(keys[count]);
-      if (keys.length <= count) {
-        setCount(0);
-        setFails((prev) => (count > prev ? count : prev));
-        setCurrentKey(keys[0]);
-      }
+    if (success && isBrowser) {
+      document.addEventListener("keydown", browseReset);
     }
-  }, [keys, count]);
-
-  useEffect(() => {
-    if (success) {
-      document.addEventListener("keydown", reset);
-    }
-  }, [success, reset]);
+  }, [success, browseReset]);
 
   const handleClick = () => {
-    if (keys.length <= 1) setSuccess(true);
     setKeys(keys.filter((num, i: number) => i !== count));
+    if (keys.length <= 1) return setSuccess(true);
+    if (count >= keys.length - 1) {
+      setCount(0);
+      setFails((prev) => (count > prev ? count : prev));
+    }
   };
 
   const shuffleKeys = () => {
@@ -90,8 +88,10 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
     },
   };
 
-  if (isLoading || initLoading || !currentKey) return <div>loading...</div>;
+  if (isLoading || initLoading) return <div>loading...</div>;
   if (isError) return <div>{error.message}</div>;
+
+  console.log(count);
 
   return (
     <div className="h-full">
@@ -100,15 +100,16 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
           <PractiseSuccess
             fails={fails}
             bodyLength={Object.keys(data!.body).length}
+            mobileReset={!isBrowser ? mobileReset : undefined}
           />
         </>
       ) : (
         <>
           <div className="h-full items-center flex justify-center px-5">
-            <div className="flex flex-col justify-around gap-5 h-full max-w-5xl w-full pb-5 pt-[120px] sm:pt-5">
+            <div className="flex flex-col justify-around gap-5 h-full max-w-5xl w-full pt-10 pb-5 sm:pt-5">
               <AnimatePresence mode="popLayout">
                 <motion.div
-                  key={currentKey}
+                  key={keys[count]}
                   transition={{ duration: 0.5 }}
                   initial="entry"
                   animate="visible"
@@ -120,12 +121,12 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 `}
                   >
-                    {data?.body[currentKey].term}
+                    {data?.body[keys[count]].term}
                   </div>
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all transform-y-180 opacity-95 `}
                   >
-                    {data?.body[currentKey].definition}
+                    {data?.body[keys[count]].definition}
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -142,11 +143,11 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                     onClick={() => {
                       setCount((prev) => {
                         if (count >= keys.length - 1) {
-                          setCurrentKey(keys[0]);
+                          setFails((prev) =>
+                            count + 1 > prev ? count + 1 : prev
+                          );
                           return 0;
-                        }
-                        setCurrentKey(keys[prev + 1]);
-                        return prev + 1;
+                        } else return prev + 1;
                       });
                     }}
                     className="p-2 border-2 border-white/20 hover:bg-white/10 transition rounded-full"

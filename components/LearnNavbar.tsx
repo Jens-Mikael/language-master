@@ -24,9 +24,10 @@ const LearnNavbar = ({ keys }: IProps) => {
   if (isError) return <div>{error.message}</div>;
 
   return (
-    <div>
+    <div className="flex flex-col sm:gap-0 gap-20">
       <div className="flex justify-center items-center relative px-6 py-4">
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full relative">
+          {/* DROPDOWN */}
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -83,6 +84,8 @@ const LearnNavbar = ({ keys }: IProps) => {
               </>
             )}
           </div>
+
+          {/* CLOSE */}
           <Link
             href={`/sets/${pathParams.id}`}
             className="bg-white/0 hover:bg-white/10 rounded-lg border-2 border-white/30 p-1.5 items-center flex h-min"
@@ -94,30 +97,31 @@ const LearnNavbar = ({ keys }: IProps) => {
             />
           </Link>
         </div>
-        <div className="absolute items-center flex-col flex font-medium sm:top-5 top-full">
-          {!isLoading && keys?.length > 0 && data ? (
+        {/* INFO */}
+        <div className="absolute items-center flex-col flex font-medium top-full mt-1 sm:top-5 sm:mt-0">
+          {!isLoading && keys?.length >= 0 && data ? (
             <div className="text-xl">{`${
               Object.keys(data.body).length - keys.length
             } / ${Object.keys(data.body).length}`}</div>
           ) : (
             <div>/</div>
           )}
-          <div>{!isLoading && data?.head.title}</div>
+          <div className="">
+            {!isLoading && data?.head.title}
+          </div>
         </div>
       </div>
       {!isLoading && keys && data && (
-        <>
-          <div
-            style={{
-              width: `${Math.round(
-                ((Object.keys(data.body).length - keys.length) /
-                  Object.keys(data.body).length) *
-                  100
-              ).toString()}%`,
-            }}
-            className={`h-0.5 bg-blue-500 transition-[width] duration-500`}
-          />
-        </>
+        <div
+          style={{
+            width: `${Math.round(
+              ((Object.keys(data.body).length - keys.length) /
+                Object.keys(data.body).length) *
+                100
+            ).toString()}%`,
+          }}
+          className={`h-0.5 bg-blue-500 transition-[width] duration-500`}
+        />
       )}
     </div>
   );
