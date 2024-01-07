@@ -65,8 +65,8 @@ const PractiseSuccess = ({ fails, bodyLength, mobileReset }: IProps) => {
     width: "full",
   };
   return (
-    <div className="h-full flex justify-center py-20">
-      <div className="flex flex-col gap-20">
+    <div className="h-full flex justify-center py-10 sm:py-20">
+      <div className="flex flex-col gap-10 sm:gap-20">
         <div className="font-bold text-5xl">Nice Work!</div>
         <div className="flex flex-col gap-10">
           <div className="font-bold text-2xl">How you're doing</div>

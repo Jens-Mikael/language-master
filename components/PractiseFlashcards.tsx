@@ -94,7 +94,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
   console.log(count);
 
   return (
-    <div className="h-full">
+    <div className="h-full ">
       {success ? (
         <>
           <PractiseSuccess
@@ -105,7 +105,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
         </>
       ) : (
         <>
-          <div className="h-full items-center flex justify-center px-5">
+          <div className="h-full items-center flex justify-center px-5 overflow-hidden">
             <div className="flex flex-col justify-around gap-5 h-full max-w-5xl w-full pt-10 pb-5 sm:pt-5">
               <AnimatePresence mode="popLayout">
                 <motion.div
