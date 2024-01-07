@@ -25,16 +25,19 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
     queryFn: () => getStudySet(pathParams.id as string),
   });
 
-  const reset = useCallback((e: KeyboardEvent) => {
-    if (e.key === "Enter") {
-      setSuccess(false);
-      setFails(0);
-      setCount(0);
-      setKeys(Object.keys(data!.body));
-      setCurrentKey(Object.keys(data!.body)[0]);
-      document.removeEventListener("keydown", reset);
-    }
-  }, []);
+  const reset = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        setSuccess(false);
+        setFails(0);
+        setCount(0);
+        setKeys(Object.keys(data!.body));
+        setCurrentKey(Object.keys(data!.body)[0]);
+        document.removeEventListener("keydown", reset);
+      }
+    },
+    [setKeys, data]
+  );
 
   useEffect(() => {
     if (data && !isLoading) {
