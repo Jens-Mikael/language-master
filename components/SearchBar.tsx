@@ -18,7 +18,7 @@ const SearchBar = ({ setIsSearchOpen }: IProps) => {
   const router = useRouter();
   const setSearchParams = useCallback(
     (queryObj: object) => editSearchParams(queryObj, searchParams),
-    []
+    [searchParams]
   );
 
   const { suggestions, autoSuggest }: IUseSearch = useSearch();

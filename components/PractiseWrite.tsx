@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, BaseSyntheticEvent, ChangeEvent } from "react";
+import { useState, useEffect, BaseSyntheticEvent, ChangeEvent, useCallback } from "react";
 import SVG from "react-inlinesvg";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -31,7 +31,7 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
     queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
   });
 
-  const reset = (e: KeyboardEvent) => {
+  const reset = useCallback((e: KeyboardEvent) => {
     if (e.key === "Enter") {
       setSuccess(false);
       setFails(0);
@@ -41,7 +41,7 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
       setTriesCount(0);
       document.removeEventListener("keydown", reset);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (data) {

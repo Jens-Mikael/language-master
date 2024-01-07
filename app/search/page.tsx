@@ -24,7 +24,7 @@ const AllSearchResultsPage = () => {
   }: IUseSearch = useSearch();
   const editParams = useCallback(
     (obj: object) => editSearchParams(obj, searchParams),
-    []
+    [searchParams]
   );
 
   if (isSearchLoading) return <div>loading</div>;

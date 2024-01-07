@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getStudySet } from "@firebase/hooks";
 import SVG from "react-inlinesvg";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import PractiseSuccess from "./PractiseSuccess";
 
 interface IProps {
@@ -24,7 +24,8 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
     queryKey: [pathParams.id],
     queryFn: () => getStudySet(pathParams.id as string),
   });
-  const reset = (e: KeyboardEvent) => {
+
+  const reset = useCallback((e: KeyboardEvent) => {
     if (e.key === "Enter") {
       setSuccess(false);
       setFails(0);
@@ -33,7 +34,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
       setCurrentKey(Object.keys(data!.body)[0]);
       document.removeEventListener("keydown", reset);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (data && !isLoading) {

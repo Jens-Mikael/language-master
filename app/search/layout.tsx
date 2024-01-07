@@ -14,7 +14,7 @@ const SearchPageLayout = ({ children }: IProps) => {
   const pathname = usePathname();
   const editParams = useCallback(
     (obj: object) => editSearchParams(obj, searchParams),
-    []
+    [searchParams]
   );
 
   return (

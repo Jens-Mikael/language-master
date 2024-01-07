@@ -18,7 +18,7 @@ const UserStudySetsPage = () => {
   return (
     <div className="flex flex-col gap-5">
       {data?.map((obj) => (
-        <MobileTap>
+        <MobileTap key={obj.id}>
           <Link
             className="px-8 py-4 rounded-xl w-full bg-white/20 hover:scale-105 transition flex flex-col gap-2 text-start"
             href={`/sets/${obj.id}`}

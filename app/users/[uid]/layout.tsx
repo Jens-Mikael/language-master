@@ -33,15 +33,15 @@ const UserLayout = ({ children }: IProps) => {
             <div className="flex items-center">
               <Image
                 className="rounded-full h-min"
-                src={data.photoURL}
+                src={data!.photoURL}
                 alt="pfp"
                 width={72}
                 height={72}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <div className="font-bold text-2xl">{data.displayName}</div>
-              <div className="italic text-sm text-white/70">{data.email}</div>
+              <div className="font-bold text-2xl">{data?.displayName}</div>
+              <div className="italic text-sm text-white/70">{data?.email}</div>
             </div>
           </div>
         </div>
