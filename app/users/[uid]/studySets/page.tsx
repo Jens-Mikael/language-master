@@ -19,7 +19,7 @@ const UserStudySetsPage = () => {
   return (
     <div className="flex flex-col gap-5">
       {data?.length === 0 ? (
-        <div>User either has not created any sets or they private</div>
+        <div>User either has not created any sets or they are private</div>
       ) : (
         data?.map((obj) => (
           <MobileTap key={obj.id}>

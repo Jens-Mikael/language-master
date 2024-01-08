@@ -90,9 +90,13 @@ export const getStudyDraft = async (uid: string): Promise<IStudySet> => {
   const draftId = await createStudyDraft(uid);
 
   //get studyDraft
+  console.log(draftId);
+
   const studyDraftRef = doc(firestore, `studySets/${draftId}`);
+
   const bodyCollectionRef = collection(firestore, `studySets/${draftId}/body`);
   const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
+
   const body: { [key: string]: ISetCard } = {};
   const studyDraftSnap = await getDoc(studyDraftRef);
   const docsSnap = await getDocs(docQuery);
@@ -199,61 +203,48 @@ export const mutateStudyCardAmount = async (
   setId: string
 ) => {
   const collectionRef = collection(firestore, `studySets/${setId}/body`);
-  try {
-    if (type === "add") {
-      return addDoc(collectionRef, {
-        definition: "",
-        term: "",
-        timestamp: serverTimestamp(),
-      });
-    } else if (type === "remove") {
-      const cardDocRef = doc(firestore, `studySets/${setId}/body/${cardId}`);
-      return deleteDoc(cardDocRef);
-    } else {
-      console.log("else ran in mutateCardAmount");
-    }
-  } catch (error: unknown) {
-    console.log(error);
-    return error;
+  if (type === "add") {
+    return addDoc(collectionRef, {
+      definition: "",
+      term: "",
+      timestamp: serverTimestamp(),
+    });
+  } else if (type === "remove") {
+    const cardDocRef = doc(firestore, `studySets/${setId}/body/${cardId}`);
+    return deleteDoc(cardDocRef);
+  } else {
+    console.log("else ran in mutateCardAmount");
   }
 };
 
 export const submitStudySet = async (id: string, uid: string) => {
   const userDocRef = doc(firestore, `users/${uid}`);
-  try {
-    await setDoc(
-      userDocRef,
-      {
-        studySets: {
-          draft: "",
-          created: arrayUnion(id),
-        },
+  await setDoc(
+    userDocRef,
+    {
+      studySets: {
+        draft: "",
+        created: arrayUnion(id),
       },
-      { merge: true }
-    );
-    return;
-  } catch (error) {
-    return error;
-  }
+    },
+    { merge: true }
+  );
+  return;
 };
 
 export const deleteStudySet = async (id: string, uid: string) => {
   const studySetRef = doc(firestore, `studySets/${id}`);
   const userRef = doc(firestore, `users/${uid}`);
-  try {
-    await setDoc(
-      userRef,
-      {
-        studySets: {
-          created: arrayRemove(id),
-        },
+  await setDoc(
+    userRef,
+    {
+      studySets: {
+        created: arrayRemove(id),
       },
-      { merge: true }
-    );
-    return deleteDoc(studySetRef);
-  } catch (error) {
-    return error;
-  }
+    },
+    { merge: true }
+  );
+  return deleteDoc(studySetRef);
 };
 
 export const setToCollection = async (id: string) => {
@@ -305,12 +296,7 @@ export const addTimestamp = async (id: string) => {
 
 export const editPublicity = async (id: string, isPublic: boolean) => {
   const docRef = doc(firestore, `studySets/${id}`);
-  console.log(isPublic);
-  try {
-    return updateDoc(docRef, { isPublic: isPublic });
-  } catch (error) {
-    return error;
-  }
+  return updateDoc(docRef, { isPublic: isPublic });
 };
 
 export const getPublicSets = async (): Promise<ILibraryCard[]> => {

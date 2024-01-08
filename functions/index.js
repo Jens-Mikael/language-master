@@ -16,7 +16,7 @@ exports.userCreated = functions.auth.user().onCreate((user) => {
       },
       studySets: {
         created: [],
-        draft: [],
+        draft: "",
       },
     });
 });
