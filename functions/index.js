@@ -14,6 +14,10 @@ exports.userCreated = functions.auth.user().onCreate((user) => {
         displayName: user.displayName,
         photoURL: user.photoURL,
       },
+      studySets: {
+        created: [],
+        draft: [],
+      },
     });
 });
 

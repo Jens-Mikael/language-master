@@ -24,7 +24,7 @@ const SetEditor = ({ uid, type }: IProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error } = useQuery<IStudySet>({
+  const { data, isLoading, error, isError } = useQuery<IStudySet>({
     queryKey: [type],
     queryFn: (): Promise<IStudySet> =>
       type === "studyDraft" ? getStudyDraft(uid) : getStudySet(type),
@@ -51,6 +51,10 @@ const SetEditor = ({ uid, type }: IProps) => {
   });
 
   if (isLoading) return <div>Loading</div>;
+  if (isError) {
+    console.log(error);
+    return <div>{error.message}</div>;
+  }
 
   return (
     <div className="min-h-full flex justify-center pt-4">

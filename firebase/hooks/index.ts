@@ -23,8 +23,6 @@ import {
   serverTimestamp,
   query,
   where,
-  limit,
-  DocumentData,
 } from "firebase/firestore";
 
 export const isUsernameAvailable = async (
@@ -44,10 +42,8 @@ const createStudyDraft = async (uid: string): Promise<string> => {
 
   const userDocSnap = await getDoc(userDocRef);
   //if a draft exists, return ID
-  if (userDocSnap.exists()) {
-    const draftId = userDocSnap.data().studySets.draft;
-    if (draftId !== "") return draftId;
-  }
+  if (userDocSnap.data()?.studySets.draft !== "")
+    return userDocSnap.data()?.studySets.draft;
   //create a new draft
   const docRef = await addDoc(collection(firestore, "studySets"), {
     creator: uid,
@@ -120,28 +116,28 @@ export const getStudyDraft = async (uid: string): Promise<IStudySet> => {
 export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
-  try {
-    const userDocSnap = await getDoc(userDocRef);
-    const createdSets = userDocSnap.data()?.studySets.created;
-    const setsQuery = query(
-      collection(firestore, `studySets`),
-      where("__name__", "in", createdSets)
-    );
-    const arr: ILibraryCard[] = [];
-    const docsSnap = await getDocs(setsQuery);
-    docsSnap.forEach((doc) => {
-      const data = doc.data();
-      arr.push({
-        title: data.head.title,
-        description: data.head.description,
-        id: doc.id,
-        creator: data.creator,
-      });
+  const userDocSnap = await getDoc(userDocRef);
+  if (!userDocSnap.exists()) throw new Error("User does not exist");
+
+  const data = userDocSnap.data();
+  const createdSets = data?.studySets.created;
+  if (createdSets.length <= 0) return [];
+  const setsQuery = query(
+    collection(firestore, `studySets`),
+    where("__name__", "in", createdSets)
+  );
+  const arr: ILibraryCard[] = [];
+  const docsSnap = await getDocs(setsQuery);
+  docsSnap.forEach((doc) => {
+    const data = doc.data();
+    arr.push({
+      title: data.head.title,
+      description: data.head.description,
+      id: doc.id,
+      creator: data.creator,
     });
-    return arr;
-  } catch (err: any) {
-    return err;
-  }
+  });
+  return arr;
 };
 
 export const getStudySet = async (id: string): Promise<IStudySet> => {
