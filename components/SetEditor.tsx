@@ -1,6 +1,9 @@
 "use client";
 import InputField from "@components/InputField";
 import NewStudySetCard from "@components/NewStudySetCard";
+import PropagateLoader from "react-spinners/PropagateLoader";
+
+import SVG from "react-inlinesvg";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   deleteStudySet,
@@ -14,6 +17,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import MobileTap from "./MobileTap";
 import { IStudySet } from "../utils/declarations";
+import { writeArchiveSet } from "@firebase/hooks/write";
+import { useState } from "react";
 
 interface IProps {
   uid: string;
@@ -21,6 +26,7 @@ interface IProps {
 }
 
 const SetEditor = ({ uid, type }: IProps) => {
+  const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -50,6 +56,15 @@ const SetEditor = ({ uid, type }: IProps) => {
     },
   });
 
+  const { mutateAsync: setArchieve, isPending: isArchivePending } = useMutation(
+    {
+      mutationFn: (archive: boolean) => writeArchiveSet(type, archive),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [type] });
+      },
+    }
+  );
+
   if (isLoading) return <div>Loading</div>;
   if (isError) {
     console.log(error);
@@ -57,7 +72,34 @@ const SetEditor = ({ uid, type }: IProps) => {
   }
 
   return (
-    <div className="min-h-full flex justify-center pt-4">
+    <div className="min-h-full flex justify-center items-center pt-4">
+      {/* SUBMIT BOX */}
+      <div
+        className={`${
+          isSubmitOpen ? "translate-y-0" : "-translate-y-full"
+        } fixed inset-0 flex z-20 transition-transform duration-300`}
+      >
+        <div className="relative flex-1 flex items-center justify-center">
+          <div className="z-20 bg-[#0A092D] border border-white/50 rounded-xl w-1/3 h-[350px] p-8 flex items-center flex-col justify-center gap-10">
+            {false ? (
+              <>
+                <div className="text-3xl ">
+                  Are you sure you want to Archive <i>{data?.head.title}</i> ?
+                </div>
+                <MobileTap className="bg-blue-500 hover:bg-indigo-600 text-lg font-bold transition rounded-lg px-7 py-4">
+                  Submit
+                </MobileTap>
+              </>
+            ) : (
+              <PropagateLoader color="#ffffff" />
+            )}
+          </div>
+          <div
+            className="absolute inset-0"
+            onClick={() => setIsSubmitOpen(false)}
+          />
+        </div>
+      </div>
       <div className="w-full max-w-5xl flex flex-col gap-20">
         {/* HEADER */}
         <div className="flex justify-between items-center gap-2">
@@ -105,6 +147,18 @@ const SetEditor = ({ uid, type }: IProps) => {
               type="description"
             />
           </div>
+        </div>
+        <div className="flex justify-end">
+          <MobileTap
+            className="border-2 border-white rounded-full p-2 hover:bg-white/20 transition"
+            onClick={() => setIsSubmitOpen(true)}
+          >
+            <SVG
+              className="h-6 w-6 fill-white"
+              src="/icons/archive.svg"
+              loader={<div className="h-6 w-6" />}
+            />
+          </MobileTap>
         </div>
 
         {/* CARDS */}

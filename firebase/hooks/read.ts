@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { firestore } from "../firebase-init";
 import { IUserInfo } from "../../utils/declarations";
 
