@@ -128,6 +128,7 @@ export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
   if (createdSets.length <= 0) return [];
   const setsQuery = query(
     collection(firestore, `studySets`),
+    orderBy("timestamp", "asc"),
     where("__name__", "in", createdSets)
   );
   const arr: ILibraryCard[] = [];
@@ -240,6 +241,7 @@ export const deleteStudySet = async (id: string, uid: string) => {
     {
       studySets: {
         created: arrayRemove(id),
+        archive: arrayRemove(id),
       },
     },
     { merge: true }

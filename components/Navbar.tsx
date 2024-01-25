@@ -43,38 +43,39 @@ const Navbar = () => {
               } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
             />
           </Link>
-
-          <div className="h-full relative sm:block hidden">
-            <button
-              className={` h-full items-center flex group`}
-              onClick={() => setIsLibraryOpen((prev) => !prev)}
-            >
-              <div className="flex gap-2">
-                Your Library
-                <SVG
-                  src="/icons/arrow-down.svg"
-                  className={`h-6 w-6 fill-white transition ${
-                    isLibraryOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                  loader={<div className="h-6 w-6" />}
-                />
-              </div>
-              <div
-                className={`${
-                  pathname === "/library" ? "h-1" : "group-hover:h-1 h-0"
-                } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
-              />
-            </button>
-            {isLibraryOpen && (
-              <>
-                <LibraryDropdown setIsLibraryOpen={setIsLibraryOpen} />
+          {currentUser && !isLoading &&  (
+            <div className="h-full relative sm:block hidden">
+              <button
+                className={` h-full items-center flex group`}
+                onClick={() => setIsLibraryOpen((prev) => !prev)}
+              >
+                <div className="flex gap-2">
+                  Your Library
+                  <SVG
+                    src="/icons/arrow-down.svg"
+                    className={`h-6 w-6 fill-white transition ${
+                      isLibraryOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                    loader={<div className="h-6 w-6" />}
+                  />
+                </div>
                 <div
-                  className="z-10 fixed inset-0"
-                  onClick={() => setIsLibraryOpen(false)}
+                  className={`${
+                    pathname === "/library" ? "h-1" : "group-hover:h-1 h-0"
+                  } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
                 />
-              </>
-            )}
-          </div>
+              </button>
+              {isLibraryOpen && (
+                <>
+                  <LibraryDropdown setIsLibraryOpen={setIsLibraryOpen} />
+                  <div
+                    className="z-10 fixed inset-0"
+                    onClick={() => setIsLibraryOpen(false)}
+                  />
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* SEARCH BAR */}
