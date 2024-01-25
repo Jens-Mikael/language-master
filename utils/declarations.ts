@@ -35,6 +35,7 @@ export interface ILibraryCard {
   description: string;
   id: string;
   creator: string;
+  timestamp: Timestamp;
 }
 
 export interface IUseAuth {

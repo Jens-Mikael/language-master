@@ -9,12 +9,13 @@ const UserStudySetsPage = () => {
   const pathParams = useParams();
   const { data, error, isLoading, isError } = useQuery({
     queryKey: ["userSets", { user: pathParams.uid }],
-    queryFn: () => getUserLibrary(pathParams.uid as string),
+    queryFn: () => getUserLibrary(pathParams.uid as string, 20),
   });
 
   if (isLoading) return <div>loading</div>;
+  console.log(error);
+
   if (isError) return <div>{error.message}</div>;
-  console.log(data);
 
   return (
     <div className="flex flex-col gap-5">
