@@ -26,6 +26,7 @@ interface IProps {
 }
 
 export const SearchProvider = ({ children }: IProps) => {
+  const [enableInitFetch, setEnableInitFetch] = useState(false);
   const [enableFetch, setEnableFetch] = useState(false);
   const [users, setUsers] = useState<IUserInfo[]>([]);
   const [studySets, setStudySets] = useState<ILibraryCard[]>([]);
@@ -43,9 +44,11 @@ export const SearchProvider = ({ children }: IProps) => {
     queryFn: async () => {
       const data: ILibraryCard[] = await getPublicSets();
       await addAllAsync(data);
+      console.log("fetched");
       return data;
     },
     refetchOnWindowFocus: false,
+    enabled: enableInitFetch,
   });
 
   //fetch every user
@@ -54,9 +57,12 @@ export const SearchProvider = ({ children }: IProps) => {
     queryFn: async () => {
       const data: IUserInfo[] = await getEveryUser();
       await addAllAsync(data);
+      console.log("fetched");
+
       return data;
     },
     refetchOnWindowFocus: false,
+    enabled: enableInitFetch,
   });
 
   const {
@@ -121,6 +127,9 @@ export const SearchProvider = ({ children }: IProps) => {
       setIsSearchLoading(true);
     }
   }, [searchParams.get("query"), setsData, everyUserData]);
+  useEffect(() => {
+    if (searchParams.get("query")) setEnableInitFetch(true);
+  }, [searchParams.get("query")]);
 
   const value = {
     autoSuggest,
@@ -132,6 +141,7 @@ export const SearchProvider = ({ children }: IProps) => {
     creatorsIsLoading,
     creatorsIsError,
     creatorsError,
+    setEnableInitFetch,
   };
 
   return (

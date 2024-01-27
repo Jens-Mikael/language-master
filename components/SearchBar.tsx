@@ -21,7 +21,8 @@ const SearchBar = ({ setIsSearchOpen }: IProps) => {
     [searchParams]
   );
 
-  const { suggestions, autoSuggest }: IUseSearch = useSearch();
+  const { suggestions, autoSuggest, setEnableInitFetch }: IUseSearch =
+    useSearch();
 
   return (
     <div
@@ -42,11 +43,12 @@ const SearchBar = ({ setIsSearchOpen }: IProps) => {
           setInput(e.target.value);
         }}
         onClick={() => setShowSugg(true)}
-        onFocus={() => setShowSugg(true)}
+        onFocus={() => {
+          if (setEnableInitFetch) setEnableInitFetch(true);
+          setShowSugg(true);
+        }}
         onBlur={(e) => {
-          if (e?.relatedTarget?.hasAttribute("name")) {
-            if (e?.relatedTarget) setShowSugg(false);
-          }
+          if (!e?.relatedTarget?.hasAttribute("link-name")) setShowSugg(false);
         }}
         onKeyUp={(e) => {
           if (e.key === "Enter") {

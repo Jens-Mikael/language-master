@@ -36,7 +36,6 @@ const ArchivePage = () => {
   if (currentUser?.uid !== pathParams.uid || !currentUser)
     return <div>loading</div>;
   if (isError) return <div>{error.message}</div>;
-  console.log(data);
   return (
     <>
       <div className="flex flex-col gap-5">
@@ -73,14 +72,12 @@ const ArchivePage = () => {
           ))
         )}
       </div>
-      {isSubmitOpen && (
-        <SubmitBox
-          isSubmitOpen={isSubmitOpen}
-          setIsSubmitOpen={setIsSubmitOpen}
-          setId={selectedSet}
-          action="unArchive"
-        />
-      )}
+      <SubmitBox
+        isSubmitOpen={isSubmitOpen}
+        setIsSubmitOpen={setIsSubmitOpen}
+        setId={selectedSet}
+        action="unArchive"
+      />
     </>
   );
 };

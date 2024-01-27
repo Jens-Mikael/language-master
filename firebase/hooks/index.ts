@@ -119,22 +119,17 @@ export const getStudyDraft = async (uid: string): Promise<IStudySet> => {
   };
 };
 
-export const getUserLibrary = async (
-  uid: string,
-  reqLimit: number
-): Promise<ILibraryCard[]> => {
+export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
   const userDocSnap = await getDoc(userDocRef);
   if (!userDocSnap.exists()) throw new Error("User does not exist");
-
   const data = userDocSnap.data();
   const createdSets = data?.studySets.created;
   if (createdSets.length <= 0) return [];
   const setsQuery = query(
     collection(firestore, `studySets`),
-    where("__name__", "in", createdSets),
-    limit(reqLimit)
+    where("__name__", "in", createdSets)
   );
   const arr: ILibraryCard[] = [];
   const docsSnap = await getDocs(setsQuery);
@@ -147,6 +142,7 @@ export const getUserLibrary = async (
         id: doc.id,
         creator: data.creator,
         timestamp: data?.timestamp,
+        isPublic: data.isPublic,
       });
     }
   });
@@ -163,7 +159,6 @@ export const getStudySet = async (id: string): Promise<IStudySet | null> => {
   if (!docSnap.exists()) return null;
   const data = docSnap.data();
   if (data?.isArchieved) return null;
-  console.log("ran");
   const docsSnap = await getDocs(docQuery);
   docsSnap.forEach((doc) => {
     body[doc.id] = {
@@ -171,6 +166,7 @@ export const getStudySet = async (id: string): Promise<IStudySet | null> => {
       term: doc.data().term,
     };
   });
+  console.log("ran read");
   return {
     body,
     head: data?.head,

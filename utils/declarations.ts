@@ -36,6 +36,7 @@ export interface ILibraryCard {
   id: string;
   creator: string;
   timestamp: Timestamp;
+  isPublic?: boolean;
 }
 
 export interface IUseAuth {
@@ -65,6 +66,7 @@ export interface IUseSearch {
   creatorsIsLoading?: boolean;
   creatorsIsError?: boolean;
   creatorsError?: Error;
+  setEnableInitFetch?: (enableInitFetch: boolean) => void;
 }
 
 interface IStudySetHead {

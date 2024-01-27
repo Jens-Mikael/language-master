@@ -3,7 +3,6 @@ import InputField from "@components/InputField";
 import NewStudySetCard from "@components/NewStudySetCard";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  deleteStudySet,
   getStudyDraft,
   getStudySet,
   mutateStudyCardAmount,
@@ -11,10 +10,8 @@ import {
 } from "@firebase/hooks";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
 import MobileTap from "./MobileTap";
-import { IStudySet } from "../utils/declarations";
-import { useState } from "react";
+import SetSettings from "./SetSettings";
 
 interface IProps {
   uid: string;
@@ -22,13 +19,12 @@ interface IProps {
 }
 
 const SetEditor = ({ uid, type }: IProps) => {
-  const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error, isError } = useQuery<IStudySet>({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: [type],
-    queryFn: (): Promise<IStudySet> =>
+    queryFn: () =>
       type === "studyDraft" ? getStudyDraft(uid) : getStudySet(type),
   });
   const { mutateAsync: addStudyCard } = useMutation({
@@ -45,24 +41,15 @@ const SetEditor = ({ uid, type }: IProps) => {
     },
   });
 
-  const { mutateAsync: deleteSet } = useMutation({
-    mutationFn: () => deleteStudySet(type, uid),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [type] });
-    },
-  });
-
-  
-
   if (isLoading) return <div>Loading</div>;
   if (isError) {
     console.log(error);
     return <div>{error.message}</div>;
   }
+  console.log(type);
 
   return (
     <div className="min-h-full flex justify-center items-center pt-4">
-      
       <div className="w-full max-w-5xl flex flex-col gap-20">
         {/* HEADER */}
         <div className="flex justify-between items-center gap-2">
@@ -111,9 +98,15 @@ const SetEditor = ({ uid, type }: IProps) => {
             />
           </div>
         </div>
-        <div className="flex justify-end">
-          
-        </div>
+        {type !== "studyDraft" && (
+          <div className="flex justify-end">
+            <SetSettings
+              setId={type}
+              title={data?.head.title!}
+              isPublic={data?.isPublic!}
+            />
+          </div>
+        )}
 
         {/* CARDS */}
         <div className="flex flex-col gap-10">
@@ -148,7 +141,7 @@ const SetEditor = ({ uid, type }: IProps) => {
             </div>
           </MobileTap>
 
-          {type != "studyDraft" && (
+          {/* {type != "studyDraft" && (
             <div className="flex justify-end">
               <MobileTap>
                 <Link
@@ -160,7 +153,7 @@ const SetEditor = ({ uid, type }: IProps) => {
                 </Link>
               </MobileTap>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { croissantOne } from "@app/fonts";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@context/AuthContext";
 import LibraryDropdown from "./LibraryDropdown";
 import Sidebar from "./Sidebar";
@@ -16,10 +16,14 @@ const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [input, setInput] = useState("");
   const pathname = usePathname();
 
   const { currentUser, isLoading, googleAuth }: IUseAuth = useAuth();
+  const rootPath = pathname.slice(0, pathname.indexOf("/", 1));
+  console.log(pathname.indexOf("/", 1))
+  useEffect(() => {
+    if (rootPath !== "/search") setSidebarOpen(false);
+  }, [pathname]);
 
   return (
     <>
@@ -43,45 +47,53 @@ const Navbar = () => {
               } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
             />
           </Link>
-          {currentUser && !isLoading &&  (
-            <div className="h-full relative sm:block hidden">
-              <button
-                className={` h-full items-center flex group`}
-                onClick={() => setIsLibraryOpen((prev) => !prev)}
-              >
-                <div className="flex gap-2">
-                  Your Library
-                  <SVG
-                    src="/icons/arrow-down.svg"
-                    className={`h-6 w-6 fill-white transition ${
-                      isLibraryOpen ? "rotate-180" : "rotate-0"
-                    }`}
-                    loader={<div className="h-6 w-6" />}
-                  />
-                </div>
-                <div
-                  className={`${
-                    pathname === "/library" ? "h-1" : "group-hover:h-1 h-0"
-                  } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
-                />
-              </button>
-              {isLibraryOpen && (
-                <>
-                  <LibraryDropdown setIsLibraryOpen={setIsLibraryOpen} />
+          {isLoading ? (
+            <div className="w-[119px]" />
+          ) : (
+            currentUser && (
+              <div className="h-full relative sm:block hidden">
+                <button
+                  className={` h-full items-center flex group`}
+                  onClick={() => setIsLibraryOpen((prev) => !prev)}
+                >
+                  <div className="flex gap-2">
+                    Your Library
+                    <SVG
+                      src="/icons/arrow-down.svg"
+                      className={`h-6 w-6 fill-white transition ${
+                        isLibraryOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                      loader={<div className="h-6 w-6" />}
+                    />
+                  </div>
                   <div
-                    className="z-10 fixed inset-0"
-                    onClick={() => setIsLibraryOpen(false)}
+                    className={`${
+                      pathname === "/library" ? "h-1" : "group-hover:h-1 h-0"
+                    } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
                   />
-                </>
-              )}
-            </div>
+                </button>
+                {isLibraryOpen && (
+                  <>
+                    <LibraryDropdown setIsLibraryOpen={setIsLibraryOpen} />
+                    <div
+                      className="z-10 fixed inset-0"
+                      onClick={() => setIsLibraryOpen(false)}
+                    />
+                  </>
+                )}
+              </div>
+            )
           )}
         </div>
 
         {/* SEARCH BAR */}
 
         {isSearchOpen && (
-          <div className="lg:hidden fixed z-20 lg:z-0 inset-0  ">
+          <div
+            className={`lg:hidden fixed z-20 lg:z-0 ${
+              rootPath === "/search" ? "inset-x-0" : "inset-0"
+            }`}
+          >
             <div className="bg-[#0A092D] p-2 gap-3 flex justify-center border-b lg:border-b-0 border-white/20">
               <MobileTap
                 onClick={() => setIsSearchOpen(false)}
@@ -95,7 +107,9 @@ const Navbar = () => {
               </MobileTap>
               <SearchBar setIsSearchOpen={setIsSearchOpen} />
             </div>
-            <div onClick={() => setIsSearchOpen(false)} className="h-full" />
+            {rootPath !== "/search" && (
+              <div onClick={() => setIsSearchOpen(false)} className="h-full" />
+            )}
           </div>
         )}
         <div className="lg:flex hidden flex-1 items-center">
@@ -119,7 +133,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   className="rounded-full hover:scale-105 transition overflow-hidden"
-                  href={`/users/${currentUser.uid}`}
+                  href={`/users/${currentUser.uid}/studySets`}
                 >
                   <Image
                     src={currentUser.photoURL!}
