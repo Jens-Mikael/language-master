@@ -1,21 +1,22 @@
 "use client";
 import { editPublicity, getStudySet } from "@firebase/hooks";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useAuth } from "@context/AuthContext";
 import MobileTap from "@components/MobileTap";
 import { IUseAuth } from "../../../utils/declarations";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SubmitBox from "@components/SubmitBox";
 
 const LearnSetPage = () => {
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const pathname = useParams();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { currentUser }: IUseAuth = useAuth();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: [pathname.id],
     queryFn: () => getStudySet(pathname.id as string),
   });
@@ -27,9 +28,13 @@ const LearnSetPage = () => {
       queryClient.invalidateQueries({ queryKey: [pathname.id] });
     },
   });
+  useEffect(() => {
+    if (!isLoading && !data && !isError) router.push("/");
+  }, [data, isLoading]);
 
   if (isLoading) return <div>loading...</div>;
-  if (error) return <div>error</div>;
+  if (isError) return <div>{error.message}</div>;
+  if (!data) return <div>loading...</div>;
   return (
     <div className="flex justify-center gap-10">
       {/* SUBMIT BOX */}

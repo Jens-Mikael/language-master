@@ -13,6 +13,7 @@ interface IProps {
   isSubmitOpen: boolean;
   setIsSubmitOpen: (isOpen: boolean) => void;
   action: string;
+  setId?: string;
 }
 
 const SubmitBox = ({
@@ -20,6 +21,7 @@ const SubmitBox = ({
   isSubmitOpen,
   setIsSubmitOpen,
   action,
+  setId,
 }: IProps) => {
   const { uid }: IUseAuth = useAuth();
   const pathname = useParams();
@@ -27,13 +29,21 @@ const SubmitBox = ({
   const router = useRouter();
 
   const { mutateAsync: handleSubmit, isPending: isPending } = useMutation({
-    mutationFn: (archive?: boolean) =>
+    mutationFn: (archive: boolean) =>
       action === "delete"
         ? deleteStudySet(pathname.id as string, uid!)
-        : writeArchiveSet(pathname.id as string, archive!, uid!),
+        : writeArchiveSet(
+            action === "archive" ? (pathname.id as string) : setId!,
+            archive,
+            uid!
+          ),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [pathname.id] });
-      router.push("/");
+      queryClient.invalidateQueries(
+        action === "unArchive"
+          ? { queryKey: ["userArchive", { user: pathname.uid }] }
+          : { queryKey: [pathname.id] }
+      );
+      setIsSubmitOpen(false);
     },
   });
   return (
@@ -43,7 +53,7 @@ const SubmitBox = ({
       } fixed inset-0 flex z-20 transition-transform duration-300`}
     >
       <div className="relative flex-1 flex items-center justify-center">
-        <div className="z-20 bg-[#0A092D] border border-white/50 rounded-xl w-full max-w-[500px] p-8 flex justify-between flex-col gap-12 mx-5">
+        <div className="z-20 bg-[#0A092D] border border-white/50 rounded-xl w-full max-w-[500px] min-h-[200px] p-8 flex justify-center  flex-col gap-12 mx-5">
           {!isPending ? (
             <>
               <div className="flex flex-col gap-2">
@@ -70,7 +80,7 @@ const SubmitBox = ({
                   Close
                 </MobileTap>
                 <MobileTap
-                  onClick={() => handleSubmit(true)}
+                  onClick={() => handleSubmit(action === "archive")}
                   className="bg-blue-500 hover:bg-indigo-600 text-lg font-bold transition rounded-lg px-5 py-3"
                 >
                   Submit
@@ -78,7 +88,9 @@ const SubmitBox = ({
               </div>
             </>
           ) : (
-            <PropagateLoader color="#ffffff" />
+            <div className="self-center h-full justify-center">
+              <PropagateLoader color="#ffffff" />
+            </div>
           )}
         </div>
         <div

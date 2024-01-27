@@ -1,18 +1,18 @@
+"use client";
+import MobileTap from "@components/MobileTap";
+import SVG from "react-inlinesvg";
 import { useAuth } from "@context/AuthContext";
-import { getUserLibrary } from "@firebase/hooks";
+import { getUserArchive } from "@firebase/hooks/read";
 import { useQuery } from "@tanstack/react-query";
 import { IUseAuth } from "@utils/declarations";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import SubmitBox from "@components/SubmitBox";
 
 const ArchivePage = () => {
-  const {
-    currentUser,
-    isLoading: userLoading,
-    logout,
-    deleteAccount,
-  }: IUseAuth = useAuth();
+  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
+  const [selectedSet, setSelectedSet] = useState("");
+  const { currentUser, isLoading: userLoading }: IUseAuth = useAuth();
   const router = useRouter();
   const pathParams = useParams();
   const {
@@ -21,8 +21,8 @@ const ArchivePage = () => {
     isLoading: queryLoading,
     isError,
   } = useQuery({
-    queryKey: ["userSets", { user: pathParams.uid }],
-    queryFn: () => getUserLibrary(pathParams.uid as string, 20),
+    queryKey: ["userArchive", { user: pathParams.uid }],
+    queryFn: () => getUserArchive(pathParams.uid as string, 20),
   });
 
   useEffect(() => {
@@ -35,6 +35,54 @@ const ArchivePage = () => {
   if (userLoading || queryLoading) return <div>loading</div>;
   if (currentUser?.uid !== pathParams.uid || !currentUser)
     return <div>loading</div>;
-  if (error) return <div>{error.message}</div>;
-  return;
+  if (isError) return <div>{error.message}</div>;
+  console.log(data);
+  return (
+    <>
+      <div className="flex flex-col gap-5">
+        {data?.length === 0 ? (
+          <div>You have no archived study sets</div>
+        ) : (
+          data?.map((obj) => (
+            <div>
+              <div
+                key={obj.id}
+                className="px-8 py-4 rounded-xl w-full bg-white/20 hover:scale-[1.02] transition flex justify-between text-start items-center"
+              >
+                <div className=" flex flex-col gap-2">
+                  <div className="text-lg font-medium">{obj.title}</div>
+                  <div className="text-sm italic font-medium">
+                    {obj.description}
+                  </div>
+                </div>
+                <MobileTap
+                  onClick={() => {
+                    setIsSubmitOpen(true);
+                    setSelectedSet(obj.id);
+                  }}
+                  className="p-2 rounded-full border-2 border-white hover:bg-white/20"
+                >
+                  <SVG
+                    className="h-7 w-7 fill-white"
+                    src="/icons/unarchive.svg"
+                    loader={<div className="h-7 w-7" />}
+                  />
+                </MobileTap>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+      {isSubmitOpen && (
+        <SubmitBox
+          isSubmitOpen={isSubmitOpen}
+          setIsSubmitOpen={setIsSubmitOpen}
+          setId={selectedSet}
+          action="unArchive"
+        />
+      )}
+    </>
+  );
 };
+
+export default ArchivePage;

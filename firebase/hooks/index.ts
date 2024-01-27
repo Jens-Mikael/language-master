@@ -154,13 +154,16 @@ export const getUserLibrary = async (
   return arr;
 };
 
-export const getStudySet = async (id: string): Promise<IStudySet> => {
+export const getStudySet = async (id: string): Promise<IStudySet | null> => {
   const docRef = doc(firestore, `studySets/${id}`);
   const bodyCollectionRef = collection(firestore, `studySets/${id}/body`);
   const body: { [key: string]: ISetCard } = {};
   const docQuery = query(bodyCollectionRef, orderBy("timestamp", "asc"));
   const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) return null;
   const data = docSnap.data();
+  if (data?.isArchieved) return null;
+  console.log("ran");
   const docsSnap = await getDocs(docQuery);
   docsSnap.forEach((doc) => {
     body[doc.id] = {

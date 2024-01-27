@@ -25,7 +25,7 @@ const UserStudySetsPage = () => {
         data?.map((obj) => (
           <MobileTap key={obj.id}>
             <Link
-              className="px-8 py-4 rounded-xl w-full bg-white/20 hover:scale-105 transition flex flex-col gap-2 text-start"
+              className="px-8 py-4 rounded-xl w-full bg-white/20 hover:scale-[1.02] transition flex flex-col gap-2 text-start"
               href={`/sets/${obj.id}`}
             >
               <div className="text-lg font-medium">{obj.title}</div>

@@ -22,8 +22,8 @@ export const writeArchiveSet = async (
   });
   //update userDoc
   batch.update(userDocRef, {
-    "studySets.archive": arrayUnion(id),
-    "studySets.created": arrayRemove(id),
+    "studySets.archive": archive ? arrayUnion(id) : arrayRemove(id),
+    "studySets.created": archive ? arrayRemove(id) : arrayUnion(id),
   });
 
   return batch.commit();

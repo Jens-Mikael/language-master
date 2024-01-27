@@ -1,4 +1,12 @@
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+  where,
+} from "firebase/firestore";
 import { firestore } from "../firebase-init";
 import { ILibraryCard, IUserInfo } from "../../utils/declarations";
 import { timestampSort } from "@utils/functions";
@@ -28,20 +36,27 @@ export const getEveryUser = async (): Promise<IUserInfo[]> => {
   return arr;
 };
 
-export const getUserArchive = async (uid: string): Promise<ILibraryCard[]> => {
+export const getUserArchive = async (
+  uid: string,
+  reqLimit: number
+): Promise<ILibraryCard[]> => {
   const userDocRef = doc(firestore, `users/${uid}`);
-  const studySetsColl = collection(firestore, `studySets`);
   const docSnap = await getDoc(userDocRef);
   const data = docSnap.data();
   if (!data?.studySets?.archive || data?.studySets?.archive?.length <= 0)
     return [];
-  const docsSnap = await getDocs(studySetsColl);
+  const studySetsQuery = query(
+    collection(firestore, `studySets`),
+    where("__name__", "in", data.studySets.archive),
+    limit(reqLimit)
+  );
+  const docsSnap = await getDocs(studySetsQuery);
   const arr: ILibraryCard[] = [];
   docsSnap.forEach((doc) => {
     const data = doc.data();
     arr.push({
-      title: data.title,
-      description: data.description,
+      title: data.head.title,
+      description: data.head.description,
       id: doc.id,
       creator: data.creator,
       timestamp: data.timestamp,
