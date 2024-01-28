@@ -15,9 +15,9 @@ const LearnNavbar = ({ keys }: IProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathParams = useParams();
   const pathname = usePathname();
-  const { data, isLoading, error, isError } = useQuery<IStudySet>({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: [pathParams.id],
-    queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
+    queryFn: () => getStudySet(pathParams.id as string),
   });
   const path = pathname.slice(pathname.lastIndexOf("/") + 1);
 
