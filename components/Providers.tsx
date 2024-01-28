@@ -32,7 +32,7 @@ const Providers = ({ children }: IProps) => {
         <QueryClientProvider client={queryClient}>
           <SearchProvider>
             {children}
-            {/* <ReactQueryDevtools /> */}
+            <ReactQueryDevtools />
           </SearchProvider>
         </QueryClientProvider>
       </AuthProvider>

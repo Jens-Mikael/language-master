@@ -1,39 +1,43 @@
 "use client";
-import {
-  addTimestamp,
-  editPublicity,
-  getStudySet,
-  setToCollection,
-} from "@firebase/hooks";
-import { useParams } from "next/navigation";
+import { editPublicity, getStudySet } from "@firebase/hooks";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useAuth } from "@context/AuthContext";
 import MobileTap from "@components/MobileTap";
 import { IUseAuth } from "../../../utils/declarations";
+import { useEffect, useState } from "react";
+import SetSettings from "@components/SetSettings";
 
 const LearnSetPage = () => {
   const pathname = useParams();
-  const queryClient = useQueryClient();
+  const router = useRouter();
   const { currentUser }: IUseAuth = useAuth();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: [pathname.id],
     queryFn: () => getStudySet(pathname.id as string),
   });
 
-  const { mutateAsync: mutatePublicity } = useMutation({
-    mutationFn: (isPublic: boolean) =>
-      editPublicity(pathname.id as string, isPublic),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [pathname.id] });
-    },
-  });
+  useEffect(() => {
+    if (!isLoading && !data && !isError) router.push("/");
+  }, [data, isLoading]);
 
   if (isLoading) return <div>loading...</div>;
-  if (error) return <div>error</div>;
+  if (isError) return <div>{error.message}</div>;
+  if (!data) return <div>loading...</div>;
   return (
     <div className="flex justify-center gap-10">
+      {/* SUBMIT BOX */}
+      {/* {data?.creator === currentUser?.uid && (
+        <SubmitBox
+          title={data?.head.title}
+          isSubmitOpen={isSubmitOpen}
+          setIsSubmitOpen={setIsSubmitOpen}
+          action="archive"
+        />
+      )} */}
+
       <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
           <div className="text-3xl sm:text-4xl font-bold">
@@ -76,29 +80,11 @@ const LearnSetPage = () => {
             <div className="flex justify-between">
               <div>Set content (32)</div>
               {data?.creator === currentUser?.uid && (
-                <div>
-                  <label className=" relative inline-flex cursor-pointer select-none items-center">
-                    <input
-                      type="checkbox"
-                      name="autoSaver"
-                      className="sr-only peer"
-                      defaultChecked={data?.isPublic}
-                      onChange={(e) => mutatePublicity(e.target.checked)}
-                    />
-                    <div
-                      className={`h-7 w-14 items-center rounded-full duration-200 peer-checked:bg-indigo-600 bg-red-600`}
-                    />
-                    <div
-                      className={`absolute left-1.5 h-5 w-5 rounded-full bg-white duration-200 peer-checked:translate-x-6 `}
-                    />
-                    <div className="pointer-events-none absolute peer-checked:hidden bottom-full mb-2">
-                      Private
-                    </div>
-                    <div className="pointer-events-none absolute peer-checked:block hidden bottom-full mb-2">
-                      Public
-                    </div>
-                  </label>
-                </div>
+                <SetSettings
+                  setId={pathname.id as string}
+                  title={data.head.title}
+                  isPublic={data.isPublic}
+                />
               )}
             </div>
             <div className="flex flex-col gap-3">
@@ -119,18 +105,6 @@ const LearnSetPage = () => {
                 </div>
               ))}
             </div>
-            {data?.creator === currentUser?.uid && (
-              <div className="flex justify-center">
-                <MobileTap>
-                  <Link
-                    href={`/edit-set/${pathname.id}`}
-                    className="rounded-xl sm:text-lg font-medium px-7 sm:px-10 py-3 sm:py-5 bg-blue-600 hover:bg-indigo-700 hover:scale-105 transition"
-                  >
-                    Edit set
-                  </Link>
-                </MobileTap>
-              </div>
-            )}
           </div>
         </div>
       </div>

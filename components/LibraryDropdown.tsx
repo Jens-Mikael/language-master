@@ -19,7 +19,8 @@ const LibraryDropdown = ({
   const { currentUser }: IUseAuth = useAuth();
   const { data, isLoading, isError, error } = useQuery<ILibraryCard[]>({
     queryKey: ["userSets", { user: currentUser?.uid }],
-    queryFn: (): Promise<ILibraryCard[]> => getUserLibrary(currentUser?.uid!),
+    queryFn: (): Promise<ILibraryCard[]> =>
+      getUserLibrary(currentUser?.uid!),
   });
   if (isLoading) return <div>loadin</div>;
   if (isError) return <div>{error.message}</div>;
@@ -31,32 +32,39 @@ const LibraryDropdown = ({
         </div>
       ) : (
         <>
-          {data?.map((i: ILibraryCard) => (
-            <>
-              <Link
-                onClick={() => {
-                  if (setSidebarOpen) {
-                    setSidebarOpen(false);
-                  } else setIsLibraryOpen(false);
-                }}
-                key={i.id}
-                href={`/sets/${i.id}`}
-                className={`relative pl-4 group`}
-              >
-                <div
-                  className={`${
-                    pathname === `/sets/${i.id}` ? "w-1" : "group-hover:w-1 w-0"
-                  } absolute left-0 h-full bg-blue-500 rounded transition-all`}
-                />
-                {i.title}
-              </Link>
-            </>
-          ))}
-          <div
+          {data?.map((i: ILibraryCard, num) => {
+            if (num >= 5) return;
+            return (
+              <>
+                <Link
+                  onClick={() => {
+                    if (setSidebarOpen) {
+                      setSidebarOpen(false);
+                    } else setIsLibraryOpen(false);
+                  }}
+                  key={num}
+                  href={`/sets/${i.id}`}
+                  className={`relative px-4 group`}
+                >
+                  <div
+                    className={`${
+                      pathname === `/sets/${i.id}`
+                        ? "w-1"
+                        : "group-hover:w-1 w-0"
+                    } absolute left-0 h-full bg-blue-500 rounded transition-all`}
+                  />
+                  {i.title}
+                </Link>
+              </>
+            );
+          })}
+          <Link
+            onClick={() => setIsLibraryOpen(false)}
+            href={`/users/${currentUser?.uid}/studySets`}
             className={`py-2 px-4 border-t border-white/20 cursor-pointer transition hover:text-indigo-500`}
           >
             View all sets
-          </div>
+          </Link>
         </>
       )}
     </div>
