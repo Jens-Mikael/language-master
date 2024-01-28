@@ -24,12 +24,14 @@ const UserStudySetsPage = () => {
         <div>User either has not created any sets or they are private</div>
       ) : (
         data?.map((obj) => (
-          <div className="px-8 py-4 rounded-xl w-full bg-white/20  flex justify-between items-center gap-5 text-start">
+          <div className="px-8 py-4 rounded-xl w-full bg-white/20 flex md:flex-row flex-col justify-between items-center gap-5 text-start">
             <Link
               href={`/sets/${obj.id}`}
-              className="flex flex-col gap-2 flex-1 hover:scale-[1.02] transition"
+              className="flex flex-col gap-2 flex-1 hover:scale-[1.02] transition group"
             >
-              <div className="text-lg font-medium">{obj.title}</div>
+              <div className="text-lg font-medium group-hover:underline">
+                {obj.title}
+              </div>
               <div className="text-sm italic font-medium">
                 {obj.description}
               </div>

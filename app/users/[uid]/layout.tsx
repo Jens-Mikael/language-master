@@ -99,7 +99,7 @@ const UserLayout = ({ children }: IProps) => {
             </>
           )}
 
-          <div className="w-full border-b-2 border-white/20" />
+          <div className="flex-1 border-b-2 border-white/20" />
         </div>
         {/* CONTENT */}
         {children}

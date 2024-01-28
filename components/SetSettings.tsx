@@ -34,9 +34,9 @@ const SetSettings = ({ setId, isPublic, title }: ISetSettings) => {
         setId={setId}
         action={action}
       />
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-3 sm:gap-4 items-center">
         <div>
-          <label className="relative inline-flex cursor-pointer select-none items-center gap-2 w-[108px] h-10">
+          <label className="relative inline-flex cursor-pointer select-none items-center gap-2 w-[100px] sm:w-[108px] h-10">
             <input
               type="checkbox"
               name="autoSaver"
@@ -48,12 +48,12 @@ const SetSettings = ({ setId, isPublic, title }: ISetSettings) => {
               className={`h-full w-full items-center rounded-full duration-200 peer-checked:bg-indigo-600 bg-red-600 absolute`}
             />
             <SVG
-              className="h-5 w-5 z-10 fill-white peer-checked:hidden ml-3"
+              className="h-5 w-5 z-10 fill-white peer-checked:hidden ml-2.5 sm:ml-3"
               src="/icons/lock-closed.svg"
               loader={<div className="h-5 w-5 ml-2" />}
             />
             <SVG
-              className="h-5 w-5 z-10 fill-white peer-checked:block hidden ml-3"
+              className="h-5 w-5 z-10 fill-white peer-checked:block hidden ml-2.5 sm:ml-3"
               src="/icons/lock-open.svg"
               loader={<div className="h-5 w-5 ml-2" />}
             />
@@ -73,8 +73,8 @@ const SetSettings = ({ setId, isPublic, title }: ISetSettings) => {
           >
             <SVG
               src="/icons/edit.svg"
-              className="h-6 w-6 fill-white "
-              loader={<div className="h-6 w-6" />}
+              className="sm:h-6 sm:w-6 h-5 w-5  fill-white "
+              loader={<div className="sm:h-6 sm:w-6 h-5 w-5 " />}
             />
           </Link>
         )}
@@ -87,9 +87,9 @@ const SetSettings = ({ setId, isPublic, title }: ISetSettings) => {
           }}
         >
           <SVG
-            className="h-6 w-6 fill-white"
+            className="sm:h-6 sm:w-6 h-5 w-5  fill-white"
             src="/icons/archive.svg"
-            loader={<div className="h-6 w-6" />}
+            loader={<div className="sm:h-6 sm:w-6 h-5 w-5 " />}
           />
         </MobileTap>
         <MobileTap
@@ -100,9 +100,9 @@ const SetSettings = ({ setId, isPublic, title }: ISetSettings) => {
           }}
         >
           <SVG
-            className="h-6 w-6 fill-white"
+            className="sm:h-6 sm:w-6 h-5 w-5  fill-white"
             src="/icons/trash.svg"
-            loader={<div className="h-6 w-6" />}
+            loader={<div className="sm:h-6 sm:w-6 h-5 w-5 " />}
           />
         </MobileTap>
       </div>

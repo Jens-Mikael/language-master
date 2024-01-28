@@ -106,7 +106,7 @@ const LearnNavbar = ({ keys }: IProps) => {
           ) : (
             <div>/</div>
           )}
-          <div className="">
+          <div className="text-center">
             {!isLoading && data?.head.title}
           </div>
         </div>
