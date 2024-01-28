@@ -19,10 +19,10 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const { currentUser, isLoading, googleAuth }: IUseAuth = useAuth();
-  const rootPath = pathname.slice(0, pathname.indexOf("/", 1));
-  console.log(pathname.indexOf("/", 1))
+
+  console.log(pathname.indexOf("/", 1));
   useEffect(() => {
-    if (rootPath !== "/search") setSidebarOpen(false);
+    if (!pathname.includes("search")) setIsSearchOpen(false);
   }, [pathname]);
 
   return (
@@ -91,7 +91,7 @@ const Navbar = () => {
         {isSearchOpen && (
           <div
             className={`lg:hidden fixed z-20 lg:z-0 ${
-              rootPath === "/search" ? "inset-x-0" : "inset-0"
+              pathname.includes("search") ? "inset-x-0" : "inset-0"
             }`}
           >
             <div className="bg-[#0A092D] p-2 gap-3 flex justify-center border-b lg:border-b-0 border-white/20">
@@ -107,7 +107,7 @@ const Navbar = () => {
               </MobileTap>
               <SearchBar setIsSearchOpen={setIsSearchOpen} />
             </div>
-            {rootPath !== "/search" && (
+            {!pathname.includes("search") && (
               <div onClick={() => setIsSearchOpen(false)} className="h-full" />
             )}
           </div>
