@@ -32,9 +32,9 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
   const pathParams = useParams();
   const [scope, animate] = useAnimate();
 
-  const { data, isLoading, error, isError } = useQuery<IStudySet>({
+  const { data, isLoading, error, isError } = useQuery({
     queryKey: [pathParams.id],
-    queryFn: (): Promise<IStudySet> => getStudySet(pathParams.id as string),
+    queryFn: () => getStudySet(pathParams.id as string),
   });
 
   const browserReset = useCallback(
