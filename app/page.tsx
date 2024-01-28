@@ -11,9 +11,7 @@ export default function Home() {
       <div
         onClick={logout}
         className="w-full max-w-5xl dark:bg-white/10 rounded-3xl p-14 text-6xl"
-      >
-        hbjhbjhbj
-      </div>
+      ></div>
       <MobileTap className="text-red-400"></MobileTap>
     </div>
   );

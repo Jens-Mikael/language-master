@@ -77,8 +77,9 @@ const LearnSetPage = () => {
           <div>Created by</div>
           {/* EDIT SET */}
           <div className="flex flex-col gap-8">
-            <div className="flex justify-between">
+            <div className="flex justify-between sm:flex-row flex-col gap-5">
               <div>Set content (32)</div>
+              <div className="self-end">
               {data?.creator === currentUser?.uid && (
                 <SetSettings
                   setId={pathname.id as string}
@@ -86,6 +87,7 @@ const LearnSetPage = () => {
                   isPublic={data.isPublic}
                 />
               )}
+              </div>
             </div>
             <div className="flex flex-col gap-3">
               {Object.keys(data!.body).map((key, i) => (

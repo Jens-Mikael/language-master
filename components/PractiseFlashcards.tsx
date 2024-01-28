@@ -15,6 +15,7 @@ interface IProps {
 
 const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
   const [initLoading, setInitLoading] = useState(true);
+  const [isCorrect, setIsCorrect] = useState(true);
   const [count, setCount] = useState(0);
   const [success, setSuccess] = useState(false);
   const [side, setSide] = useState("term");
@@ -85,6 +86,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
       scale: 0.5,
       x: "-100vh",
       rotate: -30,
+      rotateY: side === "definition" ? 180 : 0,
     },
   };
 
@@ -106,7 +108,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
       ) : (
         <>
           <div className="h-full items-center flex justify-center px-5 overflow-hidden">
-            <div className="flex flex-col justify-around gap-5 h-full max-w-5xl w-full pt-10 pb-5 sm:pt-5">
+            <div className="flex flex-col justify-around gap-5 h-full max-w-3xl w-full pt-10 pb-5 sm:pt-5">
               <AnimatePresence mode="popLayout">
                 <motion.div
                   key={keys[count]}
@@ -114,31 +116,34 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                   initial="entry"
                   animate="visible"
                   whileTap={{ rotateY: side === "term" ? 180 : 0 }}
-                  exit="exitRight"
+                  exit={isCorrect ? "exitRight" : "exitLeft"}
                   variants={variants}
-                  className="transformStyle-3d relative cursor-pointer flex items-center justify-center text-4xl font-light w-full h-3/5 sm:h-full bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20"
+                  className="transformStyle-3d relative cursor-pointer flex items-center text-center justify-center text-4xl font-light w-full h-3/5 sm:h-full bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20"
                 >
                   <div
-                    className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 `}
+                    className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 p-5 `}
                   >
                     {data?.body[keys[count]].term}
                   </div>
                   <div
-                    className={`backface-hidden transformStyle-3d absolute transition-all transform-y-180 opacity-95 `}
+                    className={`backface-hidden transformStyle-3d absolute transition-all transform-y-180 opacity-95 p-5 `}
                   >
                     {data?.body[keys[count]].definition}
                   </div>
                 </motion.div>
               </AnimatePresence>
               <div className="flex justify-between">
-                <button className="hover:bg-white/10 transition rounded-full p-2 h-min">
+                <button
+                  onClick={shuffleKeys}
+                  className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
+                >
                   <SVG
-                    src="/icons/undo.svg"
+                    src="/icons/shuffle.svg"
                     className="h-7 w-7 fill-white"
                     loader={<div className="h-7 w-7" />}
                   />
                 </button>
-                <div className="flex gap-10">
+                <div className="flex gap-5 sm:gap-10">
                   <button
                     onClick={() => {
                       setCount((prev) => {
@@ -149,6 +154,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                           return 0;
                         } else return prev + 1;
                       });
+                      setIsCorrect(false);
                     }}
                     className="p-2 border-2 border-white/20 hover:bg-white/10 transition rounded-full"
                   >
@@ -161,6 +167,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                   <button
                     onClick={() => {
                       handleClick();
+                      setIsCorrect(true);
                     }}
                     className="p-2 border-2 border-white/20 hover:bg-white/10 transition rounded-full"
                   >
@@ -171,32 +178,19 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                     />
                   </button>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={shuffleKeys}
-                    className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
-                  >
-                    <SVG
-                      src="/icons/shuffle.svg"
-                      className="h-7 w-7 fill-white"
-                      loader={<div className="h-7 w-7" />}
-                    />
-                  </button>
-                  <button
-                    onClick={() =>
-                      setSide((prev) =>
-                        prev === "term" ? "definition" : "term"
-                      )
-                    }
-                    className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
-                  >
-                    <SVG
-                      src="/icons/switch-card.svg"
-                      className="h-7 w-7 fill-white"
-                      loader={<div className="h-7 w-7" />}
-                    />
-                  </button>
-                </div>
+
+                <button
+                  onClick={() =>
+                    setSide((prev) => (prev === "term" ? "definition" : "term"))
+                  }
+                  className="border-2 border-white/20 hover:bg-white/10 h-min p-2 rounded-full"
+                >
+                  <SVG
+                    src="/icons/switch-card.svg"
+                    className="h-7 w-7 fill-white"
+                    loader={<div className="h-7 w-7" />}
+                  />
+                </button>
               </div>
             </div>
           </div>
