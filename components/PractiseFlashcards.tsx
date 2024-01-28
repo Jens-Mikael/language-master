@@ -15,7 +15,6 @@ interface IProps {
 
 const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
   const [initLoading, setInitLoading] = useState(true);
-  const [isCorrect, setIsCorrect] = useState(true);
   const [count, setCount] = useState(0);
   const [success, setSuccess] = useState(false);
   const [side, setSide] = useState("term");
@@ -73,7 +72,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
   };
 
   const variants = {
-    visible: { scale: 1, x: 0, rotateY: side === "definition" ? 180 : 0 },
+    visible: { scale: 1, x: 0, rotateY: 0 },
     entry: { scale: 0.25, x: "-100vh" },
     exitRight: {
       opacity: 0,
@@ -115,20 +114,24 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                   transition={{ duration: 0.5 }}
                   initial="entry"
                   animate="visible"
-                  whileTap={{ rotateY: side === "term" ? 180 : 0 }}
-                  exit={isCorrect ? "exitRight" : "exitLeft"}
+                  whileTap={{ rotateY: 180 }}
+                  exit="exitRight"
                   variants={variants}
                   className="transformStyle-3d relative cursor-pointer flex items-center text-center justify-center text-4xl font-light w-full h-3/5 sm:h-full bg-white/10 rounded-lg shadow-[0px_0px_12px_0px_rgba(255,255,255,0.75)] shadow-white/20"
                 >
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all rotate-0 opacity-95 p-5 `}
                   >
-                    {data?.body[keys[count]].term}
+                    {side === "term"
+                      ? data?.body[keys[count]].term
+                      : data?.body[keys[count]].definition}
                   </div>
                   <div
                     className={`backface-hidden transformStyle-3d absolute transition-all transform-y-180 opacity-95 p-5 `}
                   >
-                    {data?.body[keys[count]].definition}
+                    {side === "term"
+                      ? data?.body[keys[count]].definition
+                      : data?.body[keys[count]].term}
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -154,7 +157,6 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                           return 0;
                         } else return prev + 1;
                       });
-                      setIsCorrect(false);
                     }}
                     className="p-2 border-2 border-white/20 hover:bg-white/10 transition rounded-full"
                   >
@@ -167,7 +169,6 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
                   <button
                     onClick={() => {
                       handleClick();
-                      setIsCorrect(true);
                     }}
                     className="p-2 border-2 border-white/20 hover:bg-white/10 transition rounded-full"
                   >
