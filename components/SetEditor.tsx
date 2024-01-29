@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MobileTap from "./MobileTap";
 import SetSettings from "./SetSettings";
-import { Suspense } from "react";
 
 interface IProps {
   uid: string;
