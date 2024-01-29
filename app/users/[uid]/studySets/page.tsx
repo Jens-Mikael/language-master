@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import SetSettings from "@components/SetSettings";
 import { useAuth } from "@context/AuthContext";
 import { getUserLibrary } from "@firebase/hooks";

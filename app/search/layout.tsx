@@ -61,9 +61,8 @@ const SearchPageLayout = ({ children }: IProps) => {
           <div className="w-full border-b-2 border-white/20" />
         </div>
         {/* RESULTS */}
-        <Suspense>
+        
         {children}
-        </Suspense>
       </div>
     </div>
   );

@@ -58,9 +58,7 @@ const SearchUsersPage = () => {
 };
 
 const SuspensedSearchUsersPage = () => (
-  <Suspense>
     <SearchUsersPage />
-  </Suspense>
 );
 
 export default SuspensedSearchUsersPage;

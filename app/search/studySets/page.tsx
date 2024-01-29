@@ -75,9 +75,7 @@ const SearchStudySetsPage = () => {
 };
 
 const SuspensedSearchStudySetsPage = () => (
-  <Suspense>
     <SearchStudySetsPage />
-  </Suspense>
 );
 
 export default SuspensedSearchStudySetsPage;

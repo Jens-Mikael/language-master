@@ -141,10 +141,6 @@ const AllSearchResultsPage = () => {
   );
 };
 
-const SuspensedAllSearchResultsPage = () => (
-  <Suspense>
-    <AllSearchResultsPage />
-  </Suspense>
-);
+const SuspensedAllSearchResultsPage = () => <AllSearchResultsPage />;
 
 export default SuspensedAllSearchResultsPage;
