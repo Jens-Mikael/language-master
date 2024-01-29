@@ -11,6 +11,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.17.1",
     "@tanstack/react-query-devtools": "^5.13.4",
+    "@vercel/analytics": "^1.1.2",
     "autoprefixer": "10.4.15",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",

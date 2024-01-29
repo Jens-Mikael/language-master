@@ -4,6 +4,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactNode, useEffect, useState } from "react";
 import { AuthProvider } from "@context/AuthContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Analytics } from "@vercel/analytics/react";
 import { SearchProvider } from "@context/SearchContext";
 
 interface IProps {
@@ -21,7 +22,10 @@ const Providers = ({ children }: IProps) => {
       <>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
-            <SearchProvider>{children}</SearchProvider>
+            <SearchProvider>
+              {children}
+              <Analytics />
+            </SearchProvider>
           </QueryClientProvider>
         </AuthProvider>
       </>
@@ -32,7 +36,7 @@ const Providers = ({ children }: IProps) => {
         <QueryClientProvider client={queryClient}>
           <SearchProvider>
             {children}
-            <ReactQueryDevtools />
+            <Analytics />
           </SearchProvider>
         </QueryClientProvider>
       </AuthProvider>
