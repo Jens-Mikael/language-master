@@ -46,7 +46,6 @@ const SetEditor = ({ uid, type }: IProps) => {
     console.log(error);
     return <div>{error.message}</div>;
   }
-  console.log(type);
 
   return (
     <div className="min-h-full flex justify-center items-center pt-4">

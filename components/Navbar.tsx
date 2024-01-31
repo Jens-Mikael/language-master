@@ -20,7 +20,6 @@ const Navbar = () => {
 
   const { currentUser, isLoading, googleAuth }: IUseAuth = useAuth();
 
-  console.log(pathname.indexOf("/", 1));
   useEffect(() => {
     if (!pathname.includes("search")) setIsSearchOpen(false);
   }, [pathname]);

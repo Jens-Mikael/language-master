@@ -18,9 +18,13 @@ const LibraryDropdown = ({
   const pathname = usePathname();
   const { currentUser }: IUseAuth = useAuth();
   const { data, isLoading, isError, error } = useQuery<ILibraryCard[]>({
-    queryKey: ["userSets", { user: currentUser?.uid }],
+    queryKey: [
+      "userSets",
+      { user: currentUser?.uid },
+      { currentUser: currentUser?.uid },
+    ],
     queryFn: (): Promise<ILibraryCard[]> =>
-      getUserLibrary(currentUser?.uid!),
+      getUserLibrary(currentUser?.uid!, true),
   });
   if (isLoading) return <div>loadin</div>;
   if (isError) return <div>{error.message}</div>;
