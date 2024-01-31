@@ -92,8 +92,6 @@ export const getStudyDraft = async (uid: string): Promise<IStudySet> => {
   const draftId = await createStudyDraft(uid);
 
   //get studyDraft
-  console.log(draftId);
-
   const studyDraftRef = doc(firestore, `studySets/${draftId}`);
 
   const bodyCollectionRef = collection(firestore, `studySets/${draftId}/body`);
@@ -119,7 +117,10 @@ export const getStudyDraft = async (uid: string): Promise<IStudySet> => {
   };
 };
 
-export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
+export const getUserLibrary = async (
+  uid: string,
+  isCreator: boolean
+): Promise<ILibraryCard[]> => {
   const userDocRef = doc(firestore, `users/${uid}`);
 
   const userDocSnap = await getDoc(userDocRef);
@@ -127,10 +128,20 @@ export const getUserLibrary = async (uid: string): Promise<ILibraryCard[]> => {
   const data = userDocSnap.data();
   const createdSets = data?.studySets.created;
   if (createdSets.length <= 0) return [];
-  const setsQuery = query(
-    collection(firestore, `studySets`),
-    where("__name__", "in", createdSets)
-  );
+  let setsQuery;
+  console.log(isCreator);
+  if (isCreator) {
+    setsQuery = query(
+      collection(firestore, `studySets`),
+      where("__name__", "in", createdSets)
+    );
+  } else {
+    setsQuery = query(
+      collection(firestore, `studySets`),
+      where("__name__", "in", createdSets),
+      where("isPublic", "==", true)
+    );
+  }
   const arr: ILibraryCard[] = [];
   const docsSnap = await getDocs(setsQuery);
   docsSnap.forEach((doc) => {

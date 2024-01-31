@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import SetSettings from "@components/SetSettings";
 import { useAuth } from "@context/AuthContext";
 import { getUserLibrary } from "@firebase/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { IStudySet, IUseAuth } from "@utils/declarations";
+import { IUseAuth } from "@utils/declarations";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -11,8 +11,16 @@ const UserStudySetsPage = () => {
   const pathParams = useParams();
   const { currentUser }: IUseAuth = useAuth();
   const { data, error, isLoading, isError } = useQuery({
-    queryKey: ["userSets", { user: pathParams.uid }],
-    queryFn: () => getUserLibrary(pathParams.uid as string),
+    queryKey: [
+      "userSets",
+      { user: pathParams.uid },
+      { currentUser: currentUser?.uid },
+    ],
+    queryFn: () =>
+      getUserLibrary(
+        pathParams.uid as string,
+        pathParams.uid === currentUser?.uid
+      ),
   });
 
   if (isLoading) return <div>loading</div>;
@@ -24,7 +32,11 @@ const UserStudySetsPage = () => {
         <div>User either has not created any sets or they are private</div>
       ) : (
         data?.map((obj) => (
-          <div className="px-8 py-4 rounded-xl w-full bg-white/20 flex md:flex-row flex-col justify-between items-center gap-5 text-start">
+          <div
+            className={`px-8 py-4 rounded-xl w-full bg-white/20 flex md:flex-row flex-col justify-between gap-5 text-start ${
+              pathParams.uid === currentUser?.uid && "items-center"
+            }`}
+          >
             <Link
               href={`/sets/${obj.id}`}
               className="flex flex-col gap-2 flex-1 hover:scale-[1.02] transition group"
