@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { IUseAuth } from "../../../utils/declarations";
+import Loader from "@components/Loader";
 
 interface IProps {
   children: ReactNode;
@@ -21,11 +22,11 @@ const UserLayout = ({ children }: IProps) => {
   });
   const { currentUser }: IUseAuth = useAuth();
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) return <Loader />;
   if (isError) return <div>{error.message}</div>;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center flex-1">
       <div className="max-w-5xl w-full flex flex-col gap-5">
         {/* HEADER */}
         <div className="flex">

@@ -9,6 +9,7 @@ import MobileTap from "@components/MobileTap";
 import { IUseAuth } from "../../../utils/declarations";
 import { useEffect, useState } from "react";
 import SetSettings from "@components/SetSettings";
+import Loader from "@components/Loader";
 
 const LearnSetPage = () => {
   const pathname = useParams();
@@ -23,21 +24,11 @@ const LearnSetPage = () => {
     if (!isLoading && !data && !isError) router.push("/");
   }, [data, isLoading]);
 
-  if (isLoading) return <div>loading...</div>;
+  if (isLoading) return <Loader />;
   if (isError) return <div>{error.message}</div>;
-  if (!data) return <div>loading...</div>;
+  if (!data) return <Loader />;
   return (
-    <div className="flex justify-center gap-10">
-      {/* SUBMIT BOX */}
-      {/* {data?.creator === currentUser?.uid && (
-        <SubmitBox
-          title={data?.head.title}
-          isSubmitOpen={isSubmitOpen}
-          setIsSubmitOpen={setIsSubmitOpen}
-          action="archive"
-        />
-      )} */}
-
+    <div className="flex justify-center gap-10 flex-1">
       <div className="max-w-5xl w-full">
         <div className="flex flex-col gap-14">
           <div className="text-3xl sm:text-4xl font-bold">
@@ -80,13 +71,13 @@ const LearnSetPage = () => {
             <div className="flex justify-between sm:flex-row flex-col gap-5">
               <div>Set content (32)</div>
               <div className="self-end">
-              {data?.creator === currentUser?.uid && (
-                <SetSettings
-                  setId={pathname.id as string}
-                  title={data.head.title}
-                  isPublic={data.isPublic}
-                />
-              )}
+                {data?.creator === currentUser?.uid && (
+                  <SetSettings
+                    setId={pathname.id as string}
+                    title={data.head.title}
+                    isPublic={data.isPublic}
+                  />
+                )}
               </div>
             </div>
             <div className="flex flex-col gap-3">

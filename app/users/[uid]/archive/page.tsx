@@ -8,6 +8,7 @@ import { IUseAuth } from "@utils/declarations";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubmitBox from "@components/SubmitBox";
+import Loader from "@components/Loader";
 
 const ArchivePage = () => {
   const [isSubmitOpen, setIsSubmitOpen] = useState(false);
@@ -32,9 +33,9 @@ const ArchivePage = () => {
     }
   }, [userLoading, currentUser, pathParams]);
 
-  if (userLoading || queryLoading) return <div>loading</div>;
+  if (userLoading || queryLoading) return <Loader />;
   if (currentUser?.uid !== pathParams.uid || !currentUser)
-    return <div>loading</div>;
+    return <Loader />;
   if (isError) return <div>{error.message}</div>;
   return (
     <>

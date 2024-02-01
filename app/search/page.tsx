@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback } from "react";
 import { IUseAuth, IUseSearch } from "../../utils/declarations";
+import Loader from "@components/Loader";
 
 const AllSearchResultsPage = () => {
   const searchParams = useSearchParams();
@@ -27,7 +28,7 @@ const AllSearchResultsPage = () => {
     [searchParams]
   );
 
-  if (isSearchLoading) return <div>loading</div>;
+  if (isSearchLoading) return <Loader />;
   if (creatorsIsError) return <div>{creatorsError?.message}</div>;
   return (
     <div className=" flex flex-col gap-10">

@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { isBrowser } from "react-device-detect";
 import PractiseSuccess from "./PractiseSuccess";
+import Loader from "./Loader";
 
 interface IProps {
   keys: string[];
@@ -89,7 +90,7 @@ const PractiseFlashcards = ({ keys, setKeys }: IProps) => {
     },
   };
 
-  if (isLoading || initLoading) return <div>loading...</div>;
+  if (isLoading || initLoading) return <Loader />;
   if (isError) return <div>{error.message}</div>;
 
   console.log(count);

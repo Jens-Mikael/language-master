@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { ILibraryCard, IUseAuth } from "../utils/declarations";
 import { ReactElement } from "react";
+import Loader from "./Loader";
 
 interface ILibraryDropdown {
   setIsLibraryOpen: (isOpen: boolean) => void;
@@ -26,7 +27,7 @@ const LibraryDropdown = ({
     queryFn: (): Promise<ILibraryCard[]> =>
       getUserLibrary(currentUser?.uid!, true),
   });
-  if (isLoading) return <div>loadin</div>;
+  if (isLoading) return <></>;
   if (isError) return <div>{error.message}</div>;
   return (
     <div className="flex sm:z-20 gap-3 pt-2 sm:absolute sm:top-full sm:right-0 sm:mt-2 sm:border border-white/20 sm:rounded-xl flex-col overflow-hidden bg-[#0A092D]">

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { IUseAuth, IUseSearch } from "../../../utils/declarations";
 import { Suspense } from "react";
+import Loader from "@components/Loader";
 
 const SearchStudySetsPage = () => {
   const searchParams = useSearchParams();
@@ -20,7 +21,7 @@ const SearchStudySetsPage = () => {
     isSearchLoading,
   }: IUseSearch = useSearch();
 
-  if (isSearchLoading) return <div>loading</div>;
+  if (isSearchLoading) return <Loader />;
   return (
     <div>
       {studySets && studySets.length >= 1 ? (
@@ -74,8 +75,6 @@ const SearchStudySetsPage = () => {
   );
 };
 
-const SuspensedSearchStudySetsPage = () => (
-    <SearchStudySetsPage />
-);
+const SuspensedSearchStudySetsPage = () => <SearchStudySetsPage />;
 
 export default SuspensedSearchStudySetsPage;

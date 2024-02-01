@@ -14,6 +14,7 @@ import { useAnimate } from "framer-motion";
 import PractiseSuccess from "./PractiseSuccess";
 import { ISetCard, IStudySet } from "../utils/declarations";
 import { isBrowser } from "react-device-detect";
+import Loader from "./Loader";
 
 interface IProps {
   keys: string[];
@@ -142,7 +143,7 @@ const PractiseWrite = ({ keys, setKeys }: IProps) => {
     setKeys(keys.sort((a, b) => 0.5 - Math.random()));
   };
 
-  if (isLoading || initLoading) return <div>loading</div>;
+  if (isLoading || initLoading) return <Loader />;
   if (isError) return <div>{error.message}</div>;
 
   return (
