@@ -30,7 +30,7 @@ const UserLayout = ({ children }: IProps) => {
       <div className="max-w-5xl w-full flex flex-col gap-5">
         {/* HEADER */}
         <div className="flex">
-          <div className="flex gap-5">
+        <div className="flex gap-5">
             <div className="flex items-center">
               <Image
                 className="rounded-full h-min"
