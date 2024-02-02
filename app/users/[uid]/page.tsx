@@ -4,6 +4,7 @@ import { useAuth } from "@context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { IUseAuth } from "../../../utils/declarations";
+import Loader from "@components/Loader";
 
 const DefaultUserPage = () => {
   const { currentUser, isLoading, logout, deleteAccount }: IUseAuth = useAuth();
@@ -17,9 +18,9 @@ const DefaultUserPage = () => {
     }
   }, [isLoading, currentUser, pathParams]);
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) return <Loader />;
   if (currentUser?.uid !== pathParams.uid || !currentUser)
-    return <div>loading</div>;
+    return <Loader />;
 
   return (
     <div className="flex flex-col gap-5">

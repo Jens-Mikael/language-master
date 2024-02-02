@@ -6,7 +6,7 @@ import { editSearchParams } from "@utils/functions";
 import { ReactNode, Suspense, useCallback } from "react";
 
 interface IProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const SearchPageLayout = ({ children }: IProps) => {
@@ -18,7 +18,7 @@ const SearchPageLayout = ({ children }: IProps) => {
   );
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center flex-1">
       <div className="flex flex-col max-w-5xl gap-8 w-full">
         {/* HEADER */}
         <div className="text-xl font-bold">{`Results for "${searchParams.get(
@@ -61,7 +61,7 @@ const SearchPageLayout = ({ children }: IProps) => {
           <div className="w-full border-b-2 border-white/20" />
         </div>
         {/* RESULTS */}
-        
+
         {children}
       </div>
     </div>

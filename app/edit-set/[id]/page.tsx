@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IUseAuth } from "../../../utils/declarations";
 import { getStudySet } from "@firebase/hooks";
+import Loader from "@components/Loader";
 
 const EditSetPage = () => {
   const { currentUser, isLoading: userLoading }: IUseAuth = useAuth();
@@ -25,7 +26,7 @@ const EditSetPage = () => {
       if (!currentUser || !data) router.push("/");
   }, [currentUser, router, userLoading, dataLoading, data]);
 
-  if (dataLoading || userLoading) return <div>loading</div>;
+  if (dataLoading || userLoading) return <Loader />;
   if (isError) return <div>{error.message}</div>;
   if (currentUser?.uid === data?.creator)
     return (

@@ -1,4 +1,5 @@
 "use client";
+import Loader from "@components/Loader";
 import SetSettings from "@components/SetSettings";
 import { useAuth } from "@context/AuthContext";
 import { getUserLibrary } from "@firebase/hooks";
@@ -23,7 +24,7 @@ const UserStudySetsPage = () => {
       ),
   });
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) return <Loader />;
   if (isError) return <div>{error.message}</div>;
 
   return (

@@ -6,6 +6,7 @@ import { AuthProvider } from "@context/AuthContext";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Analytics } from "@vercel/analytics/react";
 import { SearchProvider } from "@context/SearchContext";
+import { SkeletonTheme } from "react-loading-skeleton";
 
 interface IProps {
   children: ReactNode;
@@ -23,8 +24,13 @@ const Providers = ({ children }: IProps) => {
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <SearchProvider>
-              {children}
-              <Analytics />
+              <SkeletonTheme
+                baseColor="rgb(71 85 105)"
+                highlightColor="rgb(100 116 139)"
+              >
+                {children}
+                <Analytics />
+              </SkeletonTheme>
             </SearchProvider>
           </QueryClientProvider>
         </AuthProvider>
@@ -35,8 +41,13 @@ const Providers = ({ children }: IProps) => {
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <SearchProvider>
-            {children}
-            <Analytics />
+            <SkeletonTheme
+              baseColor="rgb(71 85 105)"
+              highlightColor="rgb(100 116 139)"
+            >
+              {children}
+              <Analytics />
+            </SkeletonTheme>
           </SearchProvider>
         </QueryClientProvider>
       </AuthProvider>

@@ -1,18 +1,12 @@
-"use client";
-
-import MobileTap from "@components/MobileTap";
-import { useAuth } from "@context/AuthContext";
-import { IUseAuth } from "../utils/declarations";
+import Loader from "@components/Loader";
+import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
-  const { logout }: IUseAuth = useAuth();
   return (
-    <div className="min-h-full flex items-center justify-center font-croissantOne p-4">
-      <div
-        onClick={logout}
-        className="w-full max-w-5xl dark:bg-white/10 rounded-3xl p-14 text-6xl"
-      ></div>
-      <MobileTap className="text-red-400"></MobileTap>
+    <div className="flex-1 text-slate-500 ">
+      <Skeleton className="h-20" baseColor="rgb(100 116 139)" />
     </div>
   );
 }
+
+//rgb(79 70 229)

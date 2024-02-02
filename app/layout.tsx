@@ -1,5 +1,7 @@
 import Providers from "@components/Providers";
 import "./globals.css";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { ubuntu } from "./fonts";
 import Navbar from "@components/Navbar";
 import Footer from "@components/Footer";
@@ -23,7 +25,7 @@ export default function RootLayout({ children }: IProps) {
         >
           <div className="bg-[#0A092D] min-h-screen flex flex-col">
             <Navbar />
-            <div className="px-7 py-10 sm:p-10 flex-1">{children}</div>
+            <div className="px-7 py-10 sm:p-10 grow flex">{children}</div>
             <Footer />
           </div>
         </body>

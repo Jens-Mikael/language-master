@@ -1,7 +1,7 @@
 "use client";
 import InputField from "@components/InputField";
 import NewStudySetCard from "@components/NewStudySetCard";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import {
   getStudyDraft,
   getStudySet,
@@ -12,6 +12,9 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MobileTap from "./MobileTap";
 import SetSettings from "./SetSettings";
+import Loader from "./Loader";
+import { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 
 interface IProps {
   uid: string;
@@ -21,19 +24,52 @@ interface IProps {
 const SetEditor = ({ uid, type }: IProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [cardLoaders, setCardLoaders] = useState<string[]>([]);
+  const [removedCards, setRemovedCards] = useState<string[]>([]);
 
   const { data, isLoading, error, isError } = useQuery({
     queryKey: [type],
-    queryFn: () =>
-      type === "studyDraft" ? getStudyDraft(uid) : getStudySet(type),
+    queryFn: async () => {
+      const data =
+        type === "studyDraft"
+          ? await getStudyDraft(uid)
+          : await getStudySet(type);
+      const body = Object.keys(data!.body);
+      //filter cardLoaders
+
+      setCardLoaders((prev) => prev.filter((id) => !body.includes(id)));
+      //filter removedCards
+      setRemovedCards((prev) => prev.filter((id) => body.includes(id)));
+      return data;
+    },
   });
-  const { mutateAsync: addStudyCard } = useMutation({
-    mutationFn: () => mutateStudyCardAmount("add", null, data?.id!),
+  const { mutateAsync: editStudyCardAmount } = useMutation({
+    mutationFn: async ({
+      action,
+      cardId,
+    }: {
+      action: string;
+      cardId?: string;
+    }) => {
+      const res = await mutateStudyCardAmount(
+        action,
+        action === "add" ? null : cardId!,
+        data?.id!
+      );
+      if (res && action === "add") {
+        setCardLoaders((prev) => [...prev, res.id]);
+      }
+    },
+
+    onMutate: ({ action, cardId }) => {
+      if (action === "remove" && cardId)
+        return setRemovedCards((prev) => [...prev, cardId]);
+    },
     onSuccess: () => {
-      console.log(type);
       queryClient.invalidateQueries({ queryKey: [type] });
     },
   });
+
   const { mutateAsync: submitSet } = useMutation({
     mutationFn: () => submitStudySet(data?.id!, uid),
     onSuccess: () => {
@@ -41,14 +77,20 @@ const SetEditor = ({ uid, type }: IProps) => {
     },
   });
 
-  if (isLoading) return <div>Loading</div>;
+  useEffect(() => {
+    if (cardLoaders.length >= 1) {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+  }, [cardLoaders]);
+
+  if (isLoading) return <Loader />;
   if (isError) {
     console.log(error);
     return <div>{error.message}</div>;
   }
-
+  console.log(removedCards, cardLoaders);
   return (
-    <div className="min-h-full flex justify-center items-center pt-4">
+    <div className="min-h-full w-full flex justify-center items-center pt-4">
       <div className="w-full max-w-5xl flex flex-col gap-20">
         {/* HEADER */}
         <div className="flex justify-between items-center gap-2">
@@ -108,37 +150,75 @@ const SetEditor = ({ uid, type }: IProps) => {
         )}
 
         {/* CARDS */}
-        <div className="flex flex-col gap-10">
-          {Object.keys(data!.body).map((cardId, i) => (
-            <AnimatePresence mode="popLayout" key={i}>
-              <motion.div
-                key={i}
-                initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0.5, scale: 0.5 }}
-              >
-                <NewStudySetCard
-                  obj={data!.body[cardId]}
-                  cardId={cardId}
-                  index={i}
+        <div className="flex flex-col gap-10 transition-[height]">
+          <AnimatePresence mode="popLayout">
+            {[...Object.keys(data!.body), ...cardLoaders].map((cardId, i) => {
+              if (removedCards.includes(cardId as string)) return;
+              return (
+                <motion.div
+                  layout
                   key={cardId}
-                  setId={data!.id}
-                  type={type}
-                />
-              </motion.div>
-            </AnimatePresence>
-          ))}
-          <MobileTap
-            onClick={() => addStudyCard()}
-            className="group w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
-          >
-            <div className="border-b-4 border-blue-500 pb-2 font-bold text-xl group-hover:border-indigo-600 transition w-fit">
-              + New Card
-            </div>
-            <div className="absolute left-10 font-bold text-xl">
-              {Object.keys(data!.body).length + 1}
-            </div>
-          </MobileTap>
+                  initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0 }}
+                >
+                  {!Object.keys(data!.body).includes(cardId) ? (
+                    <div className="w-full bg-white/10 rounded-xl ">
+                      <div className="flex justify-between p-5 border-b-2 border-black/30">
+                        <div className="h-10 w-10">
+                          <Skeleton className=" h-10 w-10" />
+                        </div>
+                        <div className="h-10 w-10">
+                          <Skeleton className=" h-10 w-10" />
+                        </div>
+                      </div>
+                      <div className="flex sm:flex-row flex-col px-5 pt-9 pb-7 gap-8">
+                        <div className="flex-1">
+                          <Skeleton className="flex-1 h-10" />
+                        </div>
+                        <div className="flex-1">
+                          <Skeleton className="flex-1 h-10" />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <NewStudySetCard
+                      obj={data!.body[cardId]}
+                      cardId={cardId as string}
+                      index={i}
+                      key={cardId}
+                      setId={data!.id}
+                      type={type}
+                      removeCard={(cardId: string) =>
+                        editStudyCardAmount({ action: "remove", cardId })
+                      }
+                    />
+                  )}
+                </motion.div>
+              );
+            })}
+            <motion.div
+              layout
+              key="something in the whey she moves"
+              initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+            >
+              <MobileTap
+                onClick={() => {
+                  editStudyCardAmount({ action: "add" });
+                }}
+                className="group w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
+              >
+                <div className="border-b-4 border-blue-500 pb-2 font-bold text-xl group-hover:border-indigo-600 transition w-fit">
+                  + New Card
+                </div>
+                <div className="absolute left-10 font-bold text-xl">
+                  {Object.keys(data!.body).length + 1}
+                </div>
+              </MobileTap>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>
@@ -146,3 +226,5 @@ const SetEditor = ({ uid, type }: IProps) => {
 };
 
 export default SetEditor;
+
+//sm:h-[182px] h-[262px]
