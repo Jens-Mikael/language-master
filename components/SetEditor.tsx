@@ -1,7 +1,7 @@
 "use client";
 import InputField from "@components/InputField";
 import NewStudySetCard from "@components/NewStudySetCard";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import {
   getStudyDraft,
   getStudySet,
@@ -13,7 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import MobileTap from "./MobileTap";
 import SetSettings from "./SetSettings";
 import Loader from "./Loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 
 interface IProps {
@@ -56,7 +56,9 @@ const SetEditor = ({ uid, type }: IProps) => {
         action === "add" ? null : cardId!,
         data?.id!
       );
-      if (res) setCardLoaders((prev) => [...prev, res.id]);
+      if (res && action === "add") {
+        setCardLoaders((prev) => [...prev, res.id]);
+      }
     },
 
     onMutate: ({ action, cardId }) => {
@@ -74,6 +76,12 @@ const SetEditor = ({ uid, type }: IProps) => {
       queryClient.invalidateQueries({ queryKey: [type] });
     },
   });
+
+  useEffect(() => {
+    if (cardLoaders.length >= 1) {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+  }, [cardLoaders]);
 
   if (isLoading) return <Loader />;
   if (isError) {
@@ -142,17 +150,17 @@ const SetEditor = ({ uid, type }: IProps) => {
         )}
 
         {/* CARDS */}
-        <div className="flex flex-col gap-10">
-          <AnimatePresence  mode="popLayout">
+        <div className="flex flex-col gap-10 transition-[height]">
+          <AnimatePresence mode="popLayout">
             {[...Object.keys(data!.body), ...cardLoaders].map((cardId, i) => {
               if (removedCards.includes(cardId as string)) return;
               return (
                 <motion.div
-                  key={cardId}
                   layout
+                  key={cardId}
                   initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
+                  exit={{ opacity: 0, scale: 0 }}
                 >
                   {!Object.keys(data!.body).includes(cardId) ? (
                     <div className="w-full bg-white/10 rounded-xl ">
@@ -191,14 +199,15 @@ const SetEditor = ({ uid, type }: IProps) => {
             })}
             <motion.div
               layout
-              className="transition-all"
               key="something in the whey she moves"
               initial={{ opacity: 0.5, scale: 0.5, y: "20%" }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5 }}
             >
               <MobileTap
-                onClick={() => editStudyCardAmount({ action: "add" })}
+                onClick={() => {
+                  editStudyCardAmount({ action: "add" });
+                }}
                 className="group w-full relative bg-white/10 rounded-xl flex items-center justify-center p-10 hover:scale-105 transition cursor-pointer"
               >
                 <div className="border-b-4 border-blue-500 pb-2 font-bold text-xl group-hover:border-indigo-600 transition w-fit">
