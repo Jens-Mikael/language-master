@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { croissantOne } from "@app/fonts";
+import { bebasNeue } from "@app/fonts";
 import SVG from "react-inlinesvg";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -26,23 +26,23 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex border-b border-white/20 px-3 sm:px-5 md:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
+      <div className="flex border-b border-white/20 px-5 md:px-10 whitespace-nowrap sm:gap-8 h-[60px] justify-between">
         {/* FIRST SECTION */}
         <div className="flex gap-3 sm:gap-4 md:gap-5 items-center">
           <Link
             href="/"
-            className={`${croissantOne.className} text-2xl sm:text-3xl py-3 pr-2 flex h-full items-center`}
+            className={`${bebasNeue.className} text-3xl sm:text-4xl py-3 pr-2 flex h-full items-center`}
           >
             Language Mastery
           </Link>
           <Link
-            href="/home"
+            href="/"
             className={`relative h-full items-center sm:flex hidden group`}
           >
             Home
             <div
               className={`${
-                pathname === "/home" ? "h-1" : "group-hover:h-1 h-0"
+                pathname === "/" ? "h-1" : "group-hover:h-1 h-0"
               } absolute bottom-0 w-full bg-blue-500 rounded transition-all`}
             />
           </Link>

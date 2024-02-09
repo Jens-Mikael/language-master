@@ -42,10 +42,10 @@ const UserStudySetsPage = () => {
               href={`/sets/${obj.id}`}
               className="flex flex-col gap-2 flex-1 hover:scale-[1.02] transition group"
             >
-              <div className="text-lg font-medium group-hover:underline">
+              <div className="text-lg font-medium group-hover:underline text-center sm:text-start">
                 {obj.title}
               </div>
-              <div className="text-sm italic font-medium">
+              <div className="text-sm italic font-medium text-center  sm:text-start">
                 {obj.description}
               </div>
             </Link>

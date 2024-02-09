@@ -73,17 +73,7 @@ const UserLayout = ({ children }: IProps) => {
           >
             StudySets
           </Link>
-          <div className="w-10 border-b-2 border-white/20" />
-          <Link
-            href={`/users/${pathParams.uid}/folders`}
-            className={`h-full py-3 text-sm font-medium border-b-2 transition cursor-pointer ${
-              pathname === `/users/${pathParams.uid}/folders`
-                ? "border-indigo-500"
-                : "border-white/20 hover:border-indigo-500"
-            }`}
-          >
-            Folders
-          </Link>
+          
           {pathParams.uid === currentUser?.uid && (
             <>
               <div className="w-10 border-b-2 border-white/20" />

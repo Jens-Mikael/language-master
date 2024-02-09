@@ -1,4 +1,4 @@
-import { Croissant_One, Ubuntu } from "next/font/google";
+import { Croissant_One, Ubuntu, Bebas_Neue } from "next/font/google";
 
 export const croissantOne = Croissant_One({
   subsets: ["latin"],
@@ -7,4 +7,8 @@ export const croissantOne = Croissant_One({
 export const ubuntu = Ubuntu({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
+});
+export const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: ["400"],
 });
